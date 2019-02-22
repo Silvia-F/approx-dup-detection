@@ -1,0 +1,7 @@
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+  <feature name="approx-dup-detection-feature" version="1.0-SNAPSHOT">
+    <bundle>mvn:org.pentaho.dataintegration/approx-dup-detection/1.0-SNAPSHOT</bundle>
+  </feature>
+
+</features>

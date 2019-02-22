@@ -1,0 +1,104 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.pentaho</groupId>
+		<artifactId>pentaho-ce-bundle-parent-pom</artifactId>
+		<version>RELEASE</version>
+	</parent>
+
+	<artifactId>approx-dup-detection</artifactId>
+	<groupId>org.pentaho.dataintegration</groupId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+
+	<name>"Approximate Duplicate Detection"</name>
+	<description>"Approximate Duplicate Detection Step"</description>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<repositories>
+		<repository>
+			<id>pentaho-nexus</id>
+			<name>PentahoNexus</name>
+			<url>http://nexus.pentaho.org/content/groups/omni</url>
+		</repository>
+	</repositories>
+
+	<properties>
+		<dependency.pentaho-kettle.kettle-core.version>8.1.0.0-365</dependency.pentaho-kettle.kettle-core.version>
+		<dependency.pentaho-metaverse-api>8.1.0.0-365</dependency.pentaho-metaverse-api>
+		<!-- Plugin dependencies -->
+		<target.jdk.version>1.8</target.jdk.version>
+		<plugin.maven-bundle-plugin.version>2.5.3</plugin.maven-bundle-plugin.version>
+		<plugin.maven-compiler-plugin.version>3.1</plugin.maven-compiler-plugin.version>
+		<mockito.version>1.9.5</mockito.version>
+		<junit.version>4.4</junit.version>
+		<guava.version>17.0</guava.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-core</artifactId>
+			<version>${dependency.pentaho-kettle.kettle-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-engine</artifactId>
+			<version>${dependency.pentaho-kettle.kettle-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-ui-swt</artifactId>
+			<version>${dependency.pentaho-kettle.kettle-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-metaverse-api</artifactId>
+			<version>${dependency.pentaho-metaverse-api}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${plugin.maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${target.jdk.version}</source>
+					<target>${target.jdk.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+                <groupId>org.apache.karaf.tooling</groupId>
+                <artifactId>features-maven-plugin</artifactId>
+                <version>2.3.7</version>
+                <executions>
+                    <execution>
+                        <id>create-kar</id>
+                        <goals>
+                            <goal>create-kar</goal>
+                        </goals>
+                        <configuration>
+                            <featuresFile>src/main/resources/approx-dup-detection-feature.xml</featuresFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+		</plugins>
+	</build>
+</project>
