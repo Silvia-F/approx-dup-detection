@@ -34,40 +34,39 @@ import org.pentaho.di.trans.step.StepMetaInterface;
  */
 public class ApproxDupDetection extends BaseStep implements StepInterface {
   
-  private static Class<?> PKG = ApproxDupDetectionMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+	private static Class<?> PKG = ApproxDupDetectionMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
   
-  public ApproxDupDetection( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
-    Trans trans ) {
-    super( stepMeta, stepDataInterface, copyNr, transMeta, trans );
-  }
+	public ApproxDupDetection( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
+			Trans trans ) {
+		super( stepMeta, stepDataInterface, copyNr, transMeta, trans );
+	}
   
-  /**
-     * Initialize and do work where other steps need to wait for...
-     *
-     * @param stepMetaInterface
-     *          The metadata to work with
-     * @param stepDataInterface
-     *          The data to initialize
-     */
-    public boolean init( StepMetaInterface stepMetaInterface, StepDataInterface stepDataInterface ) {
-      return super.init( stepMetaInterface, stepDataInterface );
-    }
+	/**
+	* Initialize and do work where other steps need to wait for...
+	*
+	* @param stepMetaInterface
+	*          The metadata to work with
+	* @param stepDataInterface
+	*          The data to initialize
+	*/
+	public boolean init( StepMetaInterface stepMetaInterface, StepDataInterface stepDataInterface ) {
+		return super.init( stepMetaInterface, stepDataInterface );
+	}
 
-  public boolean processRow( StepMetaInterface smi, StepDataInterface sdi ) throws KettleException {
-    Object[] r = getRow(); // get row, set busy!
-    if ( r == null ) {
-      // no more input to be expected...
-      setOutputDone();
-      return false;
-    }
-    
-    putRow( getInputRowMeta(), r ); // copy row to possible alternate rowset(s).
+	public boolean processRow( StepMetaInterface smi, StepDataInterface sdi ) throws KettleException {
+		Object[] r = getRow(); // get row, set busy!
+		if ( r == null ) {
+			// no more input to be expected...
+			setOutputDone();
+			return false;
+		}
+		putRow( getInputRowMeta(), r ); // copy row to possible alternate rowset(s).
 
-    if ( checkFeedback( getLinesRead() ) ) {
-      if ( log.isBasic() )
-        logBasic( BaseMessages.getString( PKG, "ApproxDupDetection.Log.LineNumber" ) + getLinesRead() );
-    }
+		if ( checkFeedback( getLinesRead() ) ) {
+			if ( log.isBasic() )
+				logBasic( BaseMessages.getString( PKG, "ApproxDupDetection.Log.LineNumber" ) + getLinesRead() );
+		}
       
-    return true;
-  }
+		return true;
+	}
 }

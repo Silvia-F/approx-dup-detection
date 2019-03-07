@@ -23,12 +23,12 @@ import org.pentaho.di.trans.step.StepDataInterface;
 
 
 public class ApproxDupDetectionData extends BaseStepData implements StepDataInterface {
-  // Add any execution-specific data here
+	// Add any execution-specific data here
 
-  /**
-   * 
-   */
-  public ApproxDupDetectionData() {
-    super();
-  }
+	/**
+	* 
+	*/
+	public ApproxDupDetectionData() {
+		super();
+	}
 }
