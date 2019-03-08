@@ -42,7 +42,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 
 	private ApproxDupDetectionMeta meta;
 
-	private static final int TAB_WIDTH = 350;
+	private static final int TAB_WIDTH = 450;
 	
 	private Text wThreshold;
 	private Button wRadioButton1;
@@ -98,7 +98,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		props.setLook( wStepname );
 		wStepname.addModifyListener( lsMod );
 
-		//Format the text field
 		fdStepname = new FormData();
 		fdStepname.left = new FormAttachment( props.getMiddlePct(), 0 );
 		fdStepname.top = new FormAttachment( 0, Const.MARGIN );
@@ -143,25 +142,36 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		wTabFolder.setSelection( 0 );
 
 		//Content for the first tab
-		/*wRadioButton1 = new Button(wTab1Contents, SWT.RADIO);
+		wRadioButton1 = new Button(wTab1Contents, SWT.RADIO);
 		wRadioButton1.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RadioButton1"));
 		wRadioButton1.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
 		FormData fdRadioButton1 = new FormDataBuilder().left()
 		.top()
 		.result();
 		wRadioButton1.setLayoutData(fdRadioButton1);
-
+		
+		
 		//Contents for the second tab
-		wThreshold = new Text( shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+		Label wlThreshold = new Label( wTab2Contents, SWT.RIGHT );
+		wlThreshold.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Threshold.Label" ) );
+		props.setLook( wlThreshold );
+
+		FormData fdlThreshold = new FormData();
+		fdlThreshold.top = new FormAttachment(wTabFolder, 2 * Const.MARGIN);
+		fdlThreshold.left = new FormAttachment( 0, 0 );
+		fdlThreshold.right = new FormAttachment( props.getMiddlePct(), -Const.MARGIN );
+		wlThreshold.setLayoutData( fdlThreshold );
+		
+		wThreshold = new Text( wTab2Contents, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
 		wThreshold.setText( "0.4" );
 		props.setLook( wThreshold );
 		wThreshold.addModifyListener( lsMod );
 
 		FormData fdThreshold = new FormData();
 		fdThreshold.left = new FormAttachment( props.getMiddlePct(), 0 );
-		fdThreshold.right = new FormAttachment( props.getMiddlePct(), 0 );
-		wThreshold.setLayoutData( fdThreshold );*/
-
+		fdThreshold.right = new FormAttachment( 100, -Const.MARGIN );
+		wThreshold.setLayoutData( fdThreshold );
+		
 		//Cancel and OK buttons for the bottom of the window.
 		wCancel = new Button( shell, SWT.PUSH );
 		wCancel.setText( BaseMessages.getString( PKG, "System.Button.Cancel" ) );
