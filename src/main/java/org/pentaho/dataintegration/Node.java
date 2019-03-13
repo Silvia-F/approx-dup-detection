@@ -2,10 +2,12 @@ package org.pentaho.dataintegration;
 
 public class Node {
 	
+	private String data;
 	private int rank;
 	private Node parent;
 	
-	public Node() { // The constructor corresponds to the makeSet operation
+	public Node(String data) { // The constructor corresponds to the makeSet operation
+		this.data = data;
 		this.parent = this;
 		this.rank = 0;
 	}
@@ -34,4 +36,8 @@ public class Node {
 	public void union(Node node) {
 		this.link(node);
 	}	
+	
+	public String getData() {
+		return this.data;
+	}
 }

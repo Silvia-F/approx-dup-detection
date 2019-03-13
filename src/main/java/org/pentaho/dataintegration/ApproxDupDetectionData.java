@@ -20,15 +20,29 @@ package org.pentaho.dataintegration;
 
 import org.pentaho.di.trans.step.BaseStepData;
 import org.pentaho.di.trans.step.StepDataInterface;
+import java.util.Vector;
 
-
+/**
+ * 
+ * This class holds temporary data for the similarity calculations
+ * 
+ */
 public class ApproxDupDetectionData extends BaseStepData implements StepDataInterface {
-	// Add any execution-specific data here
+
+	protected Vector<Node> graph;
 
 	/**
-	* 
+	* Create a new ApproxDupDetectionData instance
 	*/
 	public ApproxDupDetectionData() {
 		super();
+		graph = new Vector<Node>();
+	}
+	
+	/**
+	 * Add node to the graph
+	 */
+	public void addNode(String data) {
+		graph.add(new Node(data));
 	}
 }

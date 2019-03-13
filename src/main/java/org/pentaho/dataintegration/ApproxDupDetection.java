@@ -35,6 +35,11 @@ import org.pentaho.di.trans.step.StepMetaInterface;
 public class ApproxDupDetection extends BaseStep implements StepInterface {
   
 	private static Class<?> PKG = ApproxDupDetectionMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+	
+	private ApproxDupDetectionData data;
+	private ApproxDupDetectionMeta meta;
+	
+	protected int threshold;
   
 	public ApproxDupDetection( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
 			Trans trans ) {
@@ -50,7 +55,10 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	*          The data to initialize
 	*/
 	public boolean init( StepMetaInterface stepMetaInterface, StepDataInterface stepDataInterface ) {
-		return super.init( stepMetaInterface, stepDataInterface );
+		meta = (ApproxDupDetectionMeta) stepMetaInterface;
+		data = (ApproxDupDetectionData) stepDataInterface;
+
+		return super.init(stepMetaInterface, stepDataInterface);
 	}
 
 	public boolean processRow( StepMetaInterface smi, StepDataInterface sdi ) throws KettleException {

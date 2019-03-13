@@ -48,7 +48,7 @@ import java.util.List;
 
 
 /**
- * Skeleton for PDI Step plugin.
+ * This class holds meta data for fields.
  */
 @Step( id = "ApproxDupDetection", image = "ApproxDupDetection.svg", name = "Approximate Duplicate Detection",
 		description = "Approximate Duplicate Detection Step", categoryDescription = "Lookup" )
