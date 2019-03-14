@@ -27,6 +27,7 @@ import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
+import java.util.Vector;
 
 /**
  * Describe your step plugin.
@@ -65,10 +66,26 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		Object[] r = getRow(); // get row, set busy!
 		if ( r == null ) {
 			// no more input to be expected...
+			detectApproxDups(data.getGraph());
+			
 			setOutputDone();
 			return false;
 		}
+		
 		putRow( getInputRowMeta(), r ); // copy row to possible alternate rowset(s).
+		
+		if (first) {
+			first = false;
+		}
+		
+		if (!first) {
+			String data_str = new String();
+			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
+				data_str = data_str.concat(getInputRowMeta().getString(r, i));
+				data_str = data_str.concat(" ");
+			}
+			data.addNode(data_str);
+		}
 
 		if ( checkFeedback( getLinesRead() ) ) {
 			if ( log.isBasic() )
@@ -76,5 +93,10 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		}
       
 		return true;
+	}
+	
+	private void detectApproxDups(Vector<Node> graph) {
+		graph.sort(null);
+		
 	}
 }

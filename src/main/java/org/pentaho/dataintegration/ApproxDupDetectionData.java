@@ -45,4 +45,8 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	public void addNode(String data) {
 		graph.add(new Node(data));
 	}
+	
+	public Vector<Node> getGraph() {
+		return graph;
+	}
 }

@@ -1,6 +1,6 @@
 package org.pentaho.dataintegration;
 
-public class Node {
+public class Node implements Comparable<Node> {
 	
 	private String data;
 	private int rank;
@@ -39,5 +39,9 @@ public class Node {
 	
 	public String getData() {
 		return this.data;
+	}
+	
+	public int compareTo(Node n2) {
+		return this.getData().compareTo(n2.getData());
 	}
 }
