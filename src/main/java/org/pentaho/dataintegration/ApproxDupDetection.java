@@ -27,7 +27,10 @@ import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
+import org.pentaho.di.core.util.Utils;
+import java.util.LinkedList;
 import java.util.Vector;
+
 
 /**
  * Describe your step plugin.
@@ -67,6 +70,10 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		if ( r == null ) {
 			// no more input to be expected...
 			detectApproxDups(data.getGraph());
+			System.out.println("QUEUE");
+			for (int i = 0; i < data.getGraph().size(); i++) {
+				System.out.println(data.getGraph().get(i).findSet());
+			}
 			
 			setOutputDone();
 			return false;
@@ -96,7 +103,42 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	}
 	
 	private void detectApproxDups(Vector<Node> graph) {
-		graph.sort(null);
-		
+		double matchThreshold = 0.4;
+		LinkedList<Node> queue = new LinkedList<Node>();
+		graph.sort(null);		
+		queue.addFirst(graph.get(0));;
+		for (int i = 1; i < graph.size(); i++) {
+			boolean changed = false;
+			Node node = graph.get(i);
+			for (int j = 0; j < queue.size(); j++) {
+				Node queueNode = queue.get(j);
+				if (node.findSet().equals(queueNode.findSet())) {
+					queue.remove(j);
+					queue.addFirst(node);
+					changed = true;
+					break;
+				}
+			}
+			for (int j = 0; j < queue.size(); j++) {
+				Node queueNode = queue.get(j);
+				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getData(), queueNode.getData()) /
+						Math.max(node.getData().length(), queueNode.getData().length())) > matchThreshold) {
+					node.union(queueNode);
+					queue.remove(j);
+					queue.addFirst(node);
+					if (queue.size() > 4) {
+						queue.removeLast();
+					}
+					changed = true;
+					break;
+				}				
+			}
+			if (!changed) {
+				queue.addFirst(node);
+				if (queue.size() > 4) {
+					queue.removeLast();
+				}
+			}
+		}			
 	}
 }

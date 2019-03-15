@@ -44,4 +44,10 @@ public class Node implements Comparable<Node> {
 	public int compareTo(Node n2) {
 		return this.getData().compareTo(n2.getData());
 	}
+	
+	//DEBUG
+	public String toString() {
+		return this.getData();
+	}
+	
 }
