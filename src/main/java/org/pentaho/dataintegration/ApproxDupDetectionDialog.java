@@ -209,6 +209,9 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 			}
 		} );
 	
+		//get parameters from meta
+		getFields();
+		
 		//Show shell
 		setSize();
 		meta.setChanged( changed );
@@ -220,6 +223,11 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		}
 		return stepname;
 	}
+	
+	private void getFields() {
+		if (meta.getMatchThreshold() != 0)
+			wThreshold.setText(String.valueOf(meta.getMatchThreshold()));
+	}
 
 	private void cancel() {
 		dispose();
@@ -227,6 +235,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	
 	private void ok() {
 		stepname = wStepname.getText();
+		meta.setMatchThreshold(Double.parseDouble(wThreshold.getText()));
 		dispose();
 	}
 }

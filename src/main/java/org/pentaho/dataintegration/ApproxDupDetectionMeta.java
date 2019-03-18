@@ -21,13 +21,12 @@ package org.pentaho.dataintegration;
 import org.pentaho.di.core.annotations.Step;
 import org.pentaho.di.core.CheckResult;
 import org.pentaho.di.core.CheckResultInterface;
+import org.pentaho.di.core.Const;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettleStepException;
 import org.pentaho.di.core.exception.KettleXMLException;
 import org.pentaho.di.core.row.RowMetaInterface;
-import org.pentaho.di.core.row.ValueMetaInterface;
-import org.pentaho.di.core.row.value.ValueMetaFactory;
 import org.pentaho.di.core.variables.VariableSpace;
 import org.pentaho.di.core.xml.XMLHandler;
 import org.pentaho.di.i18n.BaseMessages;
@@ -43,7 +42,6 @@ import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.metastore.api.IMetaStore;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -56,6 +54,7 @@ import java.util.List;
 public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInterface {
   
 	private static Class<?> PKG = ApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+	private double matchThreshold;
 	
 	public ApproxDupDetectionMeta() {
 		super(); // allocate BaseStepMeta
@@ -65,13 +64,26 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		readData( stepnode );
 	}
 	
+	public String getXML() {		
+		StringBuilder retval = new StringBuilder(300);
+		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
+		return retval.toString();
+	}		
+	
 	public Object clone() {
 		Object retval = super.clone();
 		return retval;
 	}
 	  
 	private void readData( Node stepnode ) {
-		// Parse the XML (starting with the given stepnode) to extract the step metadata (into member variables, for example)
+		String tempThreshold = XMLHandler.getTagValue(stepnode, "matchThreshold");
+		try {
+			if(tempThreshold != null) {
+			matchThreshold = Double.parseDouble(tempThreshold);
+			}
+		} catch(Exception ex) {
+			matchThreshold = 0;
+		} 
 	}
 	
 	public void setDefault() {
@@ -125,5 +137,13 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public String getDialogClassName() {
 		return "org.pentaho.dataintegration.ApproxDupDetectionDialog";
+	}
+	
+	public double getMatchThreshold() {
+		return matchThreshold;
+	}
+	
+	public void setMatchThreshold(double threshold) {
+		matchThreshold = threshold;
 	}
 }
