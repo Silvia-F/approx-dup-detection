@@ -18,8 +18,12 @@
  */
 package org.pentaho.dataintegration;
 
+import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.trans.step.BaseStepData;
 import org.pentaho.di.trans.step.StepDataInterface;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -29,7 +33,10 @@ import java.util.Vector;
  */
 public class ApproxDupDetectionData extends BaseStepData implements StepDataInterface {
 
+	private RowMetaInterface outputRowMeta;
 	protected Vector<Node> graph;
+	protected List<Object[]> buffer;
+	private int rowIndex;
 
 	/**
 	* Create a new ApproxDupDetectionData instance
@@ -37,16 +44,34 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	public ApproxDupDetectionData() {
 		super();
 		graph = new Vector<Node>();
+		buffer = new ArrayList<Object[]>( 5000 );
+		rowIndex = 0;
+	}
+	
+	public void setOutputRowMeta(RowMetaInterface outputRowMeta) {
+		this.outputRowMeta = outputRowMeta;
+	}
+	
+	public RowMetaInterface getOutputRowMeta() {
+		return this.outputRowMeta;
 	}
 	
 	/**
 	 * Add node to the graph
 	 */
-	public void addNode(String data) {
-		graph.add(new Node(data));
+	public void addNode(String data, int index) {
+		graph.add(new Node(data, index));
 	}
 	
 	public Vector<Node> getGraph() {
 		return graph;
+	}
+	
+	public void incrementIndex() {
+		rowIndex++;
+	}
+	
+	public int getIndex() {
+		return rowIndex;
 	}
 }

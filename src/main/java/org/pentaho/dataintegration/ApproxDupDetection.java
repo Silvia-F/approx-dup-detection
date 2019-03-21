@@ -18,7 +18,14 @@
  */
 package org.pentaho.dataintegration;
 
+import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.exception.KettleException;
+import org.pentaho.di.core.exception.KettlePluginException;
+import org.pentaho.di.core.exception.KettleStepException;
+import org.pentaho.di.core.row.RowDataUtil;
+import org.pentaho.di.core.row.RowMeta;
+import org.pentaho.di.core.row.ValueMetaInterface;
+import org.pentaho.di.core.row.value.ValueMetaFactory;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
@@ -28,6 +35,9 @@ import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
 import org.pentaho.di.core.util.Utils;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -42,8 +52,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	
 	private ApproxDupDetectionData data;
 	private ApproxDupDetectionMeta meta;
-	
-	protected int threshold;
+
   
 	public ApproxDupDetection( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
 			Trans trans ) {
@@ -69,31 +78,30 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		Object[] r = getRow(); // get row, set busy!
 		if ( r == null ) {
 			// no more input to be expected...
-			detectApproxDups(data.getGraph());
-			System.out.println("QUEUE");
-			for (int i = 0; i < data.getGraph().size(); i++) {
-				System.out.println(data.getGraph().get(i).findSet());
-			}
+			detectApproxDups();		
+			
+			writeOutput();
 			
 			setOutputDone();
 			return false;
 		}
-		
-		putRow( getInputRowMeta(), r ); // copy row to possible alternate rowset(s).
-		
+			
 		if (first) {
+			data.setOutputRowMeta(getInputRowMeta().clone());
+			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( "Group", ValueMetaInterface.TYPE_INTEGER ));
 			first = false;
 		}
 		
-		if (!first) {
-			String data_str = new String();
-			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
+		data.buffer.add(r);
+		data.incrementIndex();
+		String data_str = new String();			
+		for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {				
+			if (getInputRowMeta().getString(r, i) != null)
 				data_str = data_str.concat(getInputRowMeta().getString(r, i));
-				data_str = data_str.concat(" ");
-			}
-			data.addNode(data_str);
+			data_str = data_str.concat(" ");
 		}
-
+		data.addNode(data_str, data.getIndex());
+		
 		if ( checkFeedback( getLinesRead() ) ) {
 			if ( log.isBasic() )
 				logBasic( BaseMessages.getString( PKG, "ApproxDupDetection.Log.LineNumber" ) + getLinesRead() );
@@ -102,25 +110,22 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		return true;
 	}
 	
-	private void detectApproxDups(Vector<Node> graph) {
-		double matchThreshold = 0.4;
+	private void detectApproxDups() {
+		double matchThreshold = meta.getMatchThreshold();
 		LinkedList<Node> queue = new LinkedList<Node>();
-		graph.sort(null);		
-		queue.addFirst(graph.get(0));;
+		//Vector<Node> orderedGraph = new Vector<Node> ();	
+		//orderedGraph.addAll(data.getGraph());
+		Vector<Node> graph = data.getGraph();
+		graph.sort(null);
+		queue.addFirst(graph.get(0));
+		// First pass
 		for (int i = 1; i < graph.size(); i++) {
 			boolean changed = false;
 			Node node = graph.get(i);
+			
 			for (int j = 0; j < queue.size(); j++) {
 				Node queueNode = queue.get(j);
-				if (node.findSet().equals(queueNode.findSet())) {
-					queue.remove(j);
-					queue.addFirst(node);
-					changed = true;
-					break;
-				}
-			}
-			for (int j = 0; j < queue.size(); j++) {
-				Node queueNode = queue.get(j);
+				
 				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getData(), queueNode.getData()) /
 						Math.max(node.getData().length(), queueNode.getData().length())) > matchThreshold) {
 					node.union(queueNode);
@@ -133,12 +138,81 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					break;
 				}				
 			}
-			if (!changed) {
+			if (!changed) {				
+				queue.addFirst(node);
+				if (queue.size() > 4) {
+					queue.removeLast();
+				}
+			}			
+		}	
+		for (int i = 0; i < graph.size(); i++) {
+			System.out.println("+++++++++++++++");
+			System.out.println(graph.get(i).getData());
+			System.out.println(graph.get(i).findSet().getData());
+		}
+		
+		for (int i = 0; i < graph.size(); i++) {
+			StringBuilder reversed = new StringBuilder();
+			reversed.append(graph.get(i).getData());
+			graph.get(i).setReversedData(reversed.reverse().toString());
+		}
+		Collections.sort(graph, new Comparator<Node>() {
+			public int compare(Node e1, Node e2) {
+				return e1.getReversedData().compareTo(e2.getReversedData());
+			}});
+		queue.clear();
+		queue.addFirst(graph.get(0));
+		// Second pass
+		for (int i = 1; i < graph.size(); i++) {
+			boolean changed = false;
+			Node node = graph.get(i);
+			for (int j = 0; j < queue.size(); j++) { // The set match verification is needed in the second pass
+				Node queueNode = queue.get(j);
+				if (node.findSet().equals(queueNode.findSet())) {
+					queue.remove(j);
+					queue.addFirst(node);
+					changed = true;
+					break;
+				}
+			}
+			for (int j = 0; j < queue.size(); j++) {
+				Node queueNode = queue.get(j);
+				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getReversedData(), queueNode.getReversedData()) /
+						Math.max(node.getReversedData().length(), queueNode.getReversedData().length())) > matchThreshold) {
+					node.union(queueNode);
+					queue.remove(j);
+					queue.addFirst(node);
+					if (queue.size() > 4) {
+						queue.removeLast();
+					}
+					changed = true;
+					break;
+				}				
+			}
+			if (!changed) {				
 				queue.addFirst(node);
 				if (queue.size() > 4) {
 					queue.removeLast();
 				}
 			}
-		}			
+		}	
+		for (int i = 0; i < graph.size(); i++) {
+			System.out.println("-------------------");
+			System.out.println(graph.get(i).getData());
+			System.out.println(graph.get(i).findSet().getData());
+		}
+	}
+	
+	private void writeOutput() throws KettleStepException, KettlePluginException {
+		for (int i = 0; i < data.buffer.size(); i++) {
+			Object[] newRow = new Object[data.buffer.get(i).length + 1];
+			for (int j = 0; j < data.buffer.get(i).length; j++) 
+				newRow[j] = data.buffer.get(i)[j];
+			RowMeta rowMeta = new RowMeta();
+			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Group", ValueMetaInterface.TYPE_INTEGER ));
+			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex())});
+			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
+			putRow( data.getOutputRowMeta(), newRow);
+		}
 	}
 }

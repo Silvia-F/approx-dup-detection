@@ -3,13 +3,23 @@ package org.pentaho.dataintegration;
 public class Node implements Comparable<Node> {
 	
 	private String data;
+	private String reversedData;
 	private int rank;
+	private int index;
 	private Node parent;
 	
-	public Node(String data) { // The constructor corresponds to the makeSet operation
+	public Node(String data, int index) {
 		this.data = data;
+		this.reversedData = "";
 		this.parent = this;
 		this.rank = 0;
+		this.index = index;
+	}
+	
+	public Node makeSet() {
+		this.parent = this;
+		this.rank = 0;
+		return this;
 	}
 	
 	public Node findSet() {
@@ -45,9 +55,24 @@ public class Node implements Comparable<Node> {
 		return this.getData().compareTo(n2.getData());
 	}
 	
+	public void setReversedData(String data) {
+		this.reversedData = data;
+	}
+	
+	public String getReversedData() {
+		return this.reversedData;
+	}
+	
 	//DEBUG
 	public String toString() {
 		return this.getData();
 	}
 	
+	public int getIndex() {
+		return this.index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
+	}	
 }
