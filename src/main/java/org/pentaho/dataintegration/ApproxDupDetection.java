@@ -113,15 +113,14 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	private void detectApproxDups() {
 		double matchThreshold = meta.getMatchThreshold();
 		LinkedList<Node> queue = new LinkedList<Node>();
-		//Vector<Node> orderedGraph = new Vector<Node> ();	
-		//orderedGraph.addAll(data.getGraph());
-		Vector<Node> graph = data.getGraph();
-		graph.sort(null);
-		queue.addFirst(graph.get(0));
+		Vector<Node> orderedGraph = new Vector<Node> ();	
+		orderedGraph.addAll(data.getGraph());
+		orderedGraph.sort(null);
+		queue.addFirst(orderedGraph.get(0));
 		// First pass
-		for (int i = 1; i < graph.size(); i++) {
+		for (int i = 1; i < orderedGraph.size(); i++) {
 			boolean changed = false;
-			Node node = graph.get(i);
+			Node node = orderedGraph.get(i);
 			
 			for (int j = 0; j < queue.size(); j++) {
 				Node queueNode = queue.get(j);
@@ -145,27 +144,22 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				}
 			}			
 		}	
-		for (int i = 0; i < graph.size(); i++) {
-			System.out.println("+++++++++++++++");
-			System.out.println(graph.get(i).getData());
-			System.out.println(graph.get(i).findSet().getData());
-		}
 		
-		for (int i = 0; i < graph.size(); i++) {
+		for (int i = 0; i < orderedGraph.size(); i++) {
 			StringBuilder reversed = new StringBuilder();
-			reversed.append(graph.get(i).getData());
-			graph.get(i).setReversedData(reversed.reverse().toString());
+			reversed.append(orderedGraph.get(i).getData());
+			orderedGraph.get(i).setReversedData(reversed.reverse().toString());
 		}
-		Collections.sort(graph, new Comparator<Node>() {
+		Collections.sort(orderedGraph, new Comparator<Node>() {
 			public int compare(Node e1, Node e2) {
 				return e1.getReversedData().compareTo(e2.getReversedData());
 			}});
 		queue.clear();
-		queue.addFirst(graph.get(0));
+		queue.addFirst(orderedGraph.get(0));
 		// Second pass
-		for (int i = 1; i < graph.size(); i++) {
+		for (int i = 1; i < orderedGraph.size(); i++) {
 			boolean changed = false;
-			Node node = graph.get(i);
+			Node node = orderedGraph.get(i);
 			for (int j = 0; j < queue.size(); j++) { // The set match verification is needed in the second pass
 				Node queueNode = queue.get(j);
 				if (node.findSet().equals(queueNode.findSet())) {
@@ -196,11 +190,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				}
 			}
 		}	
-		for (int i = 0; i < graph.size(); i++) {
-			System.out.println("-------------------");
-			System.out.println(graph.get(i).getData());
-			System.out.println(graph.get(i).findSet().getData());
-		}
 	}
 	
 	private void writeOutput() throws KettleStepException, KettlePluginException {
