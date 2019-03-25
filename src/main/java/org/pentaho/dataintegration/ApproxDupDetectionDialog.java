@@ -163,7 +163,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		wlThreshold.setLayoutData( fdlThreshold );
 		
 		wThreshold = new Text( wTab2Contents, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
-		wThreshold.setText( "0.5" );
+		wThreshold.setText( "0.6" );
 		props.setLook( wThreshold );
 		wThreshold.addModifyListener( lsMod );
 

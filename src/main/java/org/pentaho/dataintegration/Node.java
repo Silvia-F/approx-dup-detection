@@ -4,7 +4,6 @@ public class Node implements Comparable<Node> {
 	
 	private String data;
 	private String reversedData;
-	private int rank;
 	private int index;
 	private Node parent;
 	
@@ -12,13 +11,11 @@ public class Node implements Comparable<Node> {
 		this.data = data;
 		this.reversedData = "";
 		this.parent = this;
-		this.rank = 0;
 		this.index = index;
 	}
 	
 	public Node makeSet() {
 		this.parent = this;
-		this.rank = 0;
 		return this;
 	}
 	
@@ -32,14 +29,11 @@ public class Node implements Comparable<Node> {
 	public void link(Node node) {
 		Node x = this.findSet();
 		Node y = node.findSet();
-		if (x.rank > y.rank) {
-			y.parent = x;
+		if (x.index > y.index) {
+			x.parent = y;
 		}
 		else {
-			x.parent = y;
-			if (x.rank == y.rank) {
-				y.rank++;
-			}
+			y.parent = x;
 		}
 	}
 	

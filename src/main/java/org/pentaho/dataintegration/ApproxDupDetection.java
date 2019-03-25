@@ -128,11 +128,8 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getData(), queueNode.getData()) /
 						Math.max(node.getData().length(), queueNode.getData().length())) > matchThreshold) {
 					node.union(queueNode);
-					queue.remove(j);
-					queue.addFirst(node);
-					if (queue.size() > 4) {
-						queue.removeLast();
-					}
+					queue.addFirst(queueNode);
+					queue.remove(j + 1);
 					changed = true;
 					break;
 				}				
@@ -174,11 +171,8 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getReversedData(), queueNode.getReversedData()) /
 						Math.max(node.getReversedData().length(), queueNode.getReversedData().length())) > matchThreshold) {
 					node.union(queueNode);
-					queue.remove(j);
-					queue.addFirst(node);
-					if (queue.size() > 4) {
-						queue.removeLast();
-					}
+					queue.addFirst(queueNode);
+					queue.remove(j + 1);
 					changed = true;
 					break;
 				}				
