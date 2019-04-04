@@ -1,0 +1,30 @@
+new rel park_animals(url:s common_name:d sci_name:d)
+new rel endangered_species(common_name:d sci_name:d range:d)
+
+consult "animal.stir"
+
+index endangered_species
+index park_animals
+
+new view testjoin
+from endangered_species as r
+and park_animals as s
+where r.common_name sim s.common_name
+select r.common_name as rkey1
+and s.common_name as skey1
+and r.sci_name as rkey2
+and s.sci_name as skey2
+end
+
+new view oracle
+from endangered_species as r
+and park_animals as s
+select r.common_name as rkey1
+and s.common_name as skey1
+and r.sci_name as rkey2
+and s.sci_name as skey2
+where r.sci_name subsupset s.sci_name
+end
+
+set topkprune 1
+

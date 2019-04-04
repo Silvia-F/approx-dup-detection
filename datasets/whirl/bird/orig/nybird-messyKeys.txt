@@ -1,0 +1,1119 @@
+call2	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#redwing"	Agelaius phoeniceus
+call2	"http://www2.math.sunysb.edu/~tony/birds/geese.html#canada"	Branta canadensis*
+call2	"http://www2.math.sunysb.edu/~tony/birds/hawks.html#broadwinged"	Buteo platypterus
+call2	"http://www2.math.sunysb.edu/~tony/birds/finches.html#cardinal"	Cardinalis cardinalis
+call2	"http://www2.math.sunysb.edu/~tony/birds/finches.html#goldfinch"	Carduelis tristis
+call2	"http://www2.math.sunysb.edu/~tony/birds/finches.html#purple"	Carpodacus purpureus
+call2	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#veery"	Catharus fuscescens
+call2	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#swainsons"	Catharus ustulatus
+call2	"http://www2.math.sunysb.edu/~tony/birds/shorebirds.html#piping"	Charadrius melodus
+call2	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#marsh"	Cistothorus palustris
+call2	"http://www2.math.sunysb.edu/~tony/birds/cuckoos.html#yellowbilled"	Coccyzus americanus
+call2	"http://www2.math.sunysb.edu/~tony/birds/woodpeckers.html#flicker"	Colaptes auratus
+call2	"http://www2.math.sunysb.edu/~tony/birds/grouse.html#bobwhite"	Colinus virginianus
+call2	"http://www2.math.sunysb.edu/~tony/birds/tyrants.html#woodpeewee"	Conoptus virens
+call2	"http://www2.math.sunysb.edu/~tony/birds/corvids.html#crow"	Corvus brachyrhynchos*
+call2	"http://www2.math.sunysb.edu/~tony/birds/corvids.html#fishcrow"	Corvus ossifragus
+call2	"http://www2.math.sunysb.edu/~tony/birds/corvids.html#bluejay"	Cyanocitta cristata
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackthroatedblue"	Dendroica caerulescens
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#yellowrumped"	Dendroica coronata
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackburnian"	Dendroica fusca
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackpoll"	Dendroica striata
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#magnolia"	Dendroica magnolia
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#chestnutsided"	Dendroica pensylvanica
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#yellow"	Dendroica petechia
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackthroatedgreen"	Dendroica virens
+call2	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#bobolink"	Dolichonyx oryzivorus
+call2	"http://www2.math.sunysb.edu/~tony/birds/mimics.html#catbird"	Dumetella carolinensis
+call2	"http://www2.math.sunysb.edu/~tony/birds/loons.html#common"	Gavia immer
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#yellowthroat"	Geothlypis trichas*
+call2	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#wood"	Hylocichla mustelina*
+call2	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#northern"	Icterus galbula
+call2	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#orchard"	Icterus spurius
+call2	"http://www2.math.sunysb.edu/~tony/birds/kingfishers.html#belted"	ceryle alcyon*
+call2	"http://www2.math.sunysb.edu/~tony/birds/woodpeckers.html#redbellied"	Melanerpes carolinus
+call2	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#song"	Melospiza melodia
+call2	"http://www2.math.sunysb.edu/~tony/birds/mimics.html#mockingbird"	Mimus polyglottos
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackandwhite"	Mniotilta varia
+call2	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#cowbird"	Molothrus ater
+call2	"http://www2.math.sunysb.edu/~tony/birds/tyrants.html#greatcrested"	Myiarchus crinitus*
+call2	"http://www2.math.sunysb.edu/~tony/birds/owls.html#screech"	Otus asio
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#parula"	Parula americana
+call2	"http://www2.math.sunysb.edu/~tony/birds/titmice.html#chickadee"	Poecile atricapillus*
+call2	"http://www2.math.sunysb.edu/~tony/birds/titmice.html#titmouse"	Baeolophus bicolor*
+call2	"http://www2.math.sunysb.edu/~tony/birds/finches.html#indigo"	Passerina cyanea
+call2	"http://www2.math.sunysb.edu/~tony/birds/woodpeckers.html#downy"	Picoides pubescens
+call2	"http://www2.math.sunysb.edu/~tony/birds/finches.html#towhee"	Pipilo erythrophthalmus
+call2	"http://www2.math.sunysb.edu/~tony/birds/tanagers.html#scarlet"	Piranga olivacea
+call2	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#vesper"	Pooecetes gramineus
+call2	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#grackle"	Quiscalus quiscula
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#ovenbird"	Seiurus aurocapillus
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#redstart"	Setophaga ruticilla
+call2	"http://www2.math.sunysb.edu/~tony/birds/titmice.html#nuthatch"	Sitta carolinensis
+call2	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#field"	Spizella pusilla
+call2	"http://www2.math.sunysb.edu/~tony/birds/shorebirds.html#littletern"	Sterna albifrons
+call2	"http://www2.math.sunysb.edu/~tony/birds/shorebirds.html#commontern"	Sterna hirundo
+call2	"http://www2.math.sunysb.edu/~tony/birds/owls.html#barred"	Strix varia
+call2	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#meadowlark"	Sturnella magna
+call2	"http://www2.math.sunysb.edu/~tony/birds/mimics.html#thrasher"	Toxostoma rufum?
+call2	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#house"	Troglodytes aedon
+call2	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#winter"	Troglodytes troglodytes
+call2	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#robin"	Turdus migratorius
+call2	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#carolina"	Thryothorus ludovicianus*
+call2	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#bluewinged"	Vermivora pinus
+call2	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#warbling"	Vireo gilvus
+call2	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#whiteeyed"	Vireo griseus
+call2	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#redeyed"	Vireo olivaceus
+call2	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#solitary"	Vireo solitarius?
+call2	"http://www2.math.sunysb.edu/~tony/birds/doves.html#mourning"	Zenaida macroura
+call2	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#whitethroated"	Zonotrichia albicollis*
+nabird	Red-throated Loon	Gavia stellata
+nabird	Arctic Loon	Gavia arctica
+nabird	Pacific Loon	Gavia pacifica
+nabird	Common Loon	Gavia immer
+nabird	Yellow-billed Loon	Gavia adamsii
+nabird	Least Grebe	Tachybaptus dominicus
+nabird	Pied-billed Grebe	Podilymbus podiceps
+nabird	Horned Grebe	Podiceps auritus
+nabird	Red-necked Grebe	Podiceps grisegena
+nabird	Eared Grebe	Podiceps nigricollis
+nabird	Western Grebe	Aechmophorus occidentalis
+nabird	Clark's Grebe	Aechmophorus clarkii
+nabird	Wandering Albatross	Diomedea exulans
+nabird	Black-footed Albatross	Phoebastria nigripes
+nabird	Laysan Albatross	Phoebastria immutabilis
+nabird	Short-tailed Albatross	Phoebastria albatrus
+nabird	Yellow-nosed Albatross	Thalassarche chlororhynchos
+nabird	Shy Albatross	Thalassarche cauta
+nabird	Black-browed Albatross	Thalassarche melanophris
+nabird	Northern Fulmar	Fulmarus glacialis
+nabird	Black-capped Petrel	Pterodroma hasitata
+nabird	Mottled Petrel	Pterodroma inexpectata
+nabird	Murphy's Petrel	Pterodroma ultima
+nabird	Herald Petrel	Pterodroma arminjoniana
+nabird	Cook's Petrel	Pterodroma cookii
+nabird	Stejneger's Petrel	Pterodroma longirostris
+nabird	White-chinned Petrel	Procellaria aequinoctialis
+nabird	Streaked Shearwater	Calonectris leucomelas
+nabird	Cory's Shearwater	Calonectris diomedea
+nabird	Pink-footed Shearwater	Puffinus creatopus
+nabird	Flesh-footed Shearwater	Puffinus carneipes
+nabird	Greater Shearwater	Puffinus gravis
+nabird	Wedge-tailed Shearwater	Puffinus pacificus
+nabird	Buller's Shearwater	Puffinus bulleri
+nabird	Sooty Shearwater	Puffinus griseus
+nabird	Short-tailed Shearwater	Puffinus tenuirostris
+nabird	Manx Shearwater	Puffinus puffinus
+nabird	Black-vented Shearwater	Puffinus opisthomelas
+nabird	Little Shearwater	Puffinus assimilis
+nabird	Audubon's Shearwater	Puffinus lherminieri
+nabird	Wilson's Storm-Petrel	Oceanites oceanicus
+nabird	White-faced Storm-Petrel	Pelagodroma marina
+nabird	European Storm-Petrel	Hydrobates pelagicus
+nabird	Fork-tailed Storm-Petrel	Oceanodroma furcata
+nabird	Leach's Storm-Petrel	Oceanodroma leucorhoa
+nabird	Ashy Storm-Petrel	Oceanodroma homochroa
+nabird	Band-rumped Storm-Petrel	Oceanodroma castro
+nabird	Wedge-rumped Storm-Petrel	Oceanodroma tethys
+nabird	Black Storm-Petrel	Oceanodroma melania
+nabird	Least Storm-Petrel	Oceanodroma microsoma
+nabird	White-tailed Tropicbird	Phaethon lepturus
+nabird	Red-billed Tropicbird	Phaethon aethereus
+nabird	Red-tailed Tropicbird	Phaethon rubricauda
+nabird	Masked Booby	Sula dactylatra
+nabird	Blue-footed Booby	Sula nebouxii
+nabird	Brown Booby	Sula leucogaster
+nabird	Red-footed Booby	Sula sula
+nabird	Northern Gannet	Morus bassanus
+nabird	American White Pelican	Pelecanus erythrorhynchos
+nabird	Brown Pelican	Pelecanus occidentalis
+nabird	Great Cormorant	Phalacrocorax carbo
+nabird	Double-crested Cormorant	Phalacrocorax auritus
+nabird	Neotropic Cormorant	Phalacrocorax brasilianus
+nabird	Brandt's Cormorant	Phalacrocorax penicillatus
+nabird	Pelagic Cormorant	Phalacrocorax pelagicus
+nabird	Red-faced Cormorant	Phalacrocorax urile
+nabird	Anhinga	Anhinga anhinga
+nabird	Magnificent Frigatebird	Fregata magnificens
+nabird	Great Frigatebird	Fregata minor
+nabird	Lesser Frigatebird	Fregata ariel
+nabird	American Bittern	Botaurus lentiginosus
+nabird	Least Bittern	Ixobrychus exilis
+nabird	Yellow Bittern	Ixobrychus sinensis
+nabird	Great Blue Heron	Ardea herodias
+nabird	Great Egret	Ardea alba
+nabird	Chinese Egret	Egretta eulophotes
+nabird	Little Egret	Egretta garzetta
+nabird	Western Reef-Heron	Egretta gularis
+nabird	Snowy Egret	Egretta thula
+nabird	Little Blue Heron	Egretta caerulea
+nabird	Tricolored Heron	Egretta tricolor
+nabird	Reddish Egret	Egretta rufescens
+nabird	Cattle Egret	Bubulcus ibis
+nabird	Green Heron	Butorides virescens
+nabird	Black-crowned Night-Heron	Nycticorax nycticorax
+nabird	Yellow-crowned Night-Heron	Nyctanassa violacea
+nabird	White Ibis	Eudocimus albus
+nabird	Scarlet Ibis	Eudocimus ruber
+nabird	Glossy Ibis	Plegadis falcinellus
+nabird	White-faced Ibis	Plegadis chihi
+nabird	Roseate Spoonbill	Ajaia ajaja
+nabird	Jabiru	Jabiru mycteria
+nabird	Wood Stork	Mycteria americana
+nabird	Black Vulture	Coragyps atratus
+nabird	Turkey Vulture	Cathartes aura
+nabird	California Condor	Gymnogyps californianus
+nabird	Greater Flamingo	Phoenicopterus ruber
+nabird	Black-bellied Whistling-Duck	Dendrocygna autumnalis
+nabird	Fulvous Whistling-Duck	Dendrocygna bicolor
+nabird	Bean Goose	Anser fabalis
+nabird	Pink-footed Goose	Anser brachyrhynchus
+nabird	Greater White-fronted Goose	Anser albifrons
+nabird	Lesser White-fronted Goose	Anser erythropus
+nabird	Emperor Goose	Chen canagica
+nabird	Snow Goose	Chen caerulescens
+nabird	Ross's Goose	Chen rossii
+nabird	Canada Goose	Branta canadensis
+nabird	Brant	Branta bernicla
+nabird	Barnacle Goose	Branta leucopsis
+nabird	Mute Swan	Cygnus olor
+nabird	Trumpeter Swan	Cygnus buccinator
+nabird	Tundra Swan	Cygnus columbianus
+nabird	Whooper Swan	Cygnus cygnus
+nabird	Muscovy Duck	Cairina moschata
+nabird	Wood Duck	Aix sponsa
+nabird	Gadwall	Anas strepera
+nabird	Falcated Duck	Anas falcata
+nabird	Eurasian Wigeon	Anas penelope
+nabird	American Wigeon	Anas americana
+nabird	American Black Duck	Anas rubripes
+nabird	Mallard	Anas platyrhynchos
+nabird	Mottled Duck	Anas fulvigula
+nabird	Spot-billed Duck	Anas poecilorhyncha
+nabird	Blue-winged Teal	Anas discors
+nabird	Cinnamon Teal	Anas cyanoptera
+nabird	Northern Shoveler	Anas clypeata
+nabird	White-cheeked Pintail	Anas bahamensis
+nabird	Northern Pintail	Anas acuta
+nabird	Garganey	Anas querquedula
+nabird	Baikal Teal	Anas formosa
+nabird	Green-winged Teal	Anas crecca
+nabird	Canvasback	Aythya valisineria
+nabird	Redhead	Aythya americana
+nabird	Common Pochard	Aythya ferina
+nabird	Ring-necked Duck	Aythya collaris
+nabird	Tufted Duck	Aythya fuligula
+nabird	Greater Scaup	Aythya marila
+nabird	Lesser Scaup	Aythya affinis
+nabird	Steller's Eider	Polysticta stelleri
+nabird	Spectacled Eider	Somateria fischeri
+nabird	King Eider	Somateria spectabilis
+nabird	Common Eider	Somateria mollissima
+nabird	Harlequin Duck	Histrionicus histrionicus
+nabird	Labrador Duck	Camptorhynchus labradorius
+nabird	Surf Scoter	Melanitta perspicillata
+nabird	White-winged Scoter	Melanitta fusca
+nabird	Black Scoter	Melanitta nigra
+nabird	Oldsquaw	Clangula hyemalis
+nabird	Bufflehead	Bucephala albeola
+nabird	Common Goldeneye	Bucephala clangula
+nabird	Barrow's Goldeneye	Bucephala islandica
+nabird	Smew	Mergellus albellus
+nabird	Hooded Merganser	Lophodytes cucullatus
+nabird	Red-breasted Merganser	Mergus serrator
+nabird	Common Merganser	Mergus merganser
+nabird	Masked Duck	Nomonyx dominicus
+nabird	Ruddy Duck	Oxyura jamaicensis
+nabird	Osprey	Pandion haliaetus
+nabird	Hook-billed Kite	Chondrohierax uncinatus
+nabird	Swallow-tailed Kite	Elanoides forficatus
+nabird	White-tailed Kite	Elanus leucurus
+nabird	Snail Kite	Rostrhamus sociabilis
+nabird	Mississippi Kite	Ictinia mississippiensis
+nabird	Bald Eagle	Haliaeetus leucocephalus
+nabird	White-tailed Eagle	Haliaeetus albicilla
+nabird	Steller's Sea-Eagle	Haliaeetus pelagicus
+nabird	Northern Harrier	Circus cyaneus
+nabird	Sharp-shinned Hawk	Accipiter striatus
+nabird	Cooper's Hawk	Accipiter cooperii
+nabird	Northern Goshawk	Accipiter gentilis
+nabird	Crane Hawk	Geranospiza caerulescens
+nabird	Gray Hawk	Asturina nitida
+nabird	Common Black-Hawk	Buteogallus anthracinus
+nabird	Harris's Hawk	Parabuteo unicinctus
+nabird	Roadside Hawk	Buteo magnirostris
+nabird	Red-shouldered Hawk	Buteo lineatus
+nabird	Broad-winged Hawk	Buteo platypterus
+nabird	Short-tailed Hawk	Buteo brachyurus
+nabird	Swainson's Hawk	Buteo swainsoni
+nabird	White-tailed Hawk	Buteo albicaudatus
+nabird	Zone-tailed Hawk	Buteo albonotatus
+nabird	Red-tailed Hawk	Buteo jamaicensis
+nabird	Ferruginous Hawk	Buteo regalis
+nabird	Rough-legged Hawk	Buteo lagopus
+nabird	Golden Eagle	Aquila chrysaetos
+nabird	Crested Caracara	Caracara plancus
+nabird	Collared Forest-Falcon	Micrastur semitorquatus
+nabird	Eurasian Kestrel	Falco tinnunculus
+nabird	American Kestrel	Falco sparverius
+nabird	Merlin	Falco columbarius
+nabird	Aplomado Falcon	Falco femoralis
+nabird	Eurasian Hobby	Falco subbuteo
+nabird	Prairie Falcon	Falco mexicanus
+nabird	Peregrine Falcon	Falco peregrinus
+nabird	Gyrfalcon	Falco rusticolus
+nabird	Plain Chachalaca	Ortalis vetula
+nabird	Himalayan Snowcock	Tetraogallus himalayensis
+nabird	Gray Partridge	Perdix perdix
+nabird	Chukar	Alectoris chukar
+nabird	Ring-necked Pheasant	Phasianus colchicus
+nabird	Ruffed Grouse	Bonasa umbellus
+nabird	Sage Grouse	Centrocercus urophasianus
+nabird	Spruce Grouse	Falcipennis canadensis
+nabird	Blue Grouse	Dendragapus obscurus
+nabird	Willow Ptarmigan	Lagopus lagopus
+nabird	Rock Ptarmigan	Lagopus mutus
+nabird	White-tailed Ptarmigan	Lagopus leucurus
+nabird	Greater Prairie-Chicken	Tympanuchus cupido
+nabird	Lesser Prairie-Chicken	Tympanuchus pallidicinctus
+nabird	Sharp-tailed Grouse	Tympanuchus phasianellus
+nabird	Wild Turkey	Meleagris gallopavo
+nabird	Montezuma Quail	Cyrtonyx montezumae
+nabird	Northern Bobwhite	Colinus virginianus
+nabird	Scaled Quail	Callipepla squamata
+nabird	Gambel's Quail	Callipepla gambelii
+nabird	California Quail	Callipepla californica
+nabird	Mountain Quail	Oreortyx pictus
+nabird	Yellow Rail	Coturnicops noveboracensis
+nabird	Black Rail	Laterallus jamaicensis
+nabird	Corn Crake	Crex crex
+nabird	Clapper Rail	Rallus longirostris
+nabird	King Rail	Rallus elegans
+nabird	Virginia Rail	Rallus limicola
+nabird	Sora	Porzana carolina
+nabird	Paint-billed Crake	Neocrex erythrops
+nabird	Spotted Rail	Pardirallus maculatus
+nabird	Purple Gallinule	Porphyrula martinica
+nabird	Azure Gallinule	Porphyrula flavirostris
+nabird	Common Moorhen	Gallinula chloropus
+nabird	Eurasian Coot	Fulica atra
+nabird	American Coot	Fulica americana
+nabird	Limpkin	Aramus guarauna
+nabird	Sandhill Crane	Grus canadensis
+nabird	Common Crane	Grus grus
+nabird	Whooping Crane	Grus americana
+nabird	Double-striped Thick-knee	Burhinus bistriatus
+nabird	Northern Lapwing	Vanellus vanellus
+nabird	Black-bellied Plover	Pluvialis squatarola
+nabird	European Golden-Plover	Pluvialis apricaria
+nabird	Pacific Golden-Plover	Pluvialis fulva
+nabird	American Golden-Plover	Pluvialis dominica
+nabird	Mongolian Plover	Charadrius mongolus
+nabird	Collared Plover	Charadrius collaris
+nabird	Snowy Plover	Charadrius alexandrinus
+nabird	Wilson's Plover	Charadrius wilsonia
+nabird	Common Ringed Plover	Charadrius hiaticula
+nabird	Semipalmated Plover	Charadrius semipalmatus
+nabird	Piping Plover	Charadrius melodus
+nabird	Little Ringed Plover	Charadrius dubius
+nabird	Killdeer	Charadrius vociferus
+nabird	Mountain Plover	Charadrius montanus
+nabird	Eurasian Dotterel	Charadrius morinellus
+nabird	Eurasian Oystercatcher	Haematopus ostralegus
+nabird	American Oystercatcher	Haematopus palliatus
+nabird	Black Oystercatcher	Haematopus bachmani
+nabird	Black-winged Stilt	Himantopus himantopus
+nabird	Black-necked Stilt	Himantopus mexicanus
+nabird	American Avocet	Recurvirostra americana
+nabird	Oriental Pratincole	Glareola maldivarum
+nabird	Northern Jacana	Jacana spinosa
+nabird	Common Greenshank	Tringa nebularia
+nabird	Greater Yellowlegs	Tringa melanoleuca
+nabird	Lesser Yellowlegs	Tringa flavipes
+nabird	Marsh Sandpiper	Tringa stagnatilis
+nabird	Spotted Redshank	Tringa erythropus
+nabird	Wood Sandpiper	Tringa glareola
+nabird	Green Sandpiper	Tringa ochropus
+nabird	Solitary Sandpiper	Tringa solitaria
+nabird	Willet	Catoptrophorus semipalmatus
+nabird	Wandering Tattler	Heteroscelus incanus
+nabird	Gray-tailed Tattler	Heteroscelus brevipes
+nabird	Common Sandpiper	Actitis hypoleucos
+nabird	Spotted Sandpiper	Actitis macularia
+nabird	Terek Sandpiper	Xenus cinereus
+nabird	Upland Sandpiper	Bartramia longicauda
+nabird	Little Curlew	Numenius minutus
+nabird	Eskimo Curlew	Numenius borealis
+nabird	Whimbrel	Numenius phaeopus
+nabird	Bristle-thighed Curlew	Numenius tahitiensis
+nabird	Slender-billed Curlew	Numenius tenuirostris
+nabird	Far Eastern Curlew	Numenius madagascariensis
+nabird	Eurasian Curlew	Numenius arquata
+nabird	Long-billed Curlew	Numenius americanus
+nabird	Black-tailed Godwit	Limosa limosa
+nabird	Hudsonian Godwit	Limosa haemastica
+nabird	Bar-tailed Godwit	Limosa lapponica
+nabird	Marbled Godwit	Limosa fedoa
+nabird	Ruddy Turnstone	Arenaria interpres
+nabird	Black Turnstone	Arenaria melanocephala
+nabird	Surfbird	Aphriza virgata
+nabird	Great Knot	Calidris tenuirostris
+nabird	Red Knot	Calidris canutus
+nabird	Sanderling	Calidris alba
+nabird	Semipalmated Sandpiper	Calidris pusilla
+nabird	Western Sandpiper	Calidris mauri
+nabird	Red-necked Stint	Calidris ruficollis
+nabird	Little Stint	Calidris minuta
+nabird	Temminck's Stint	Calidris temminckii
+nabird	Long-toed Stint	Calidris subminuta
+nabird	Least Sandpiper	Calidris minutilla
+nabird	White-rumped Sandpiper	Calidris fuscicollis
+nabird	Baird's Sandpiper	Calidris bairdii
+nabird	Pectoral Sandpiper	Calidris melanotos
+nabird	Sharp-tailed Sandpiper	Calidris acuminata
+nabird	Purple Sandpiper	Calidris maritima
+nabird	Rock Sandpiper	Calidris ptilocnemis
+nabird	Dunlin	Calidris alpina
+nabird	Curlew Sandpiper	Calidris ferruginea
+nabird	Stilt Sandpiper	Calidris himantopus
+nabird	Spoonbill Sandpiper	Eurynorhynchus pygmeus
+nabird	Broad-billed Sandpiper	Limicola falcinellus
+nabird	Buff-breasted Sandpiper	Tryngites subruficollis
+nabird	Ruff	Philomachus pugnax
+nabird	Short-billed Dowitcher	Limnodromus griseus
+nabird	Long-billed Dowitcher	Limnodromus scolopaceus
+nabird	Jack Snipe	Lymnocryptes minimus
+nabird	Common Snipe	Gallinago gallinago
+nabird	Pin-tailed Snipe	Gallinago stenura
+nabird	Eurasian Woodcock	Scolopax rusticola
+nabird	American Woodcock	Scolopax minor
+nabird	Wilson's Phalarope	Phalaropus tricolor
+nabird	Red-necked Phalarope	Phalaropus lobatus
+nabird	Red Phalarope	Phalaropus fulicaria
+nabird	Great Skua	Catharacta skua
+nabird	South Polar Skua	Catharacta maccormicki
+nabird	Pomarine Jaeger	Stercorarius pomarinus
+nabird	Parasitic Jaeger	Stercorarius parasiticus
+nabird	Long-tailed Jaeger	Stercorarius longicaudus
+nabird	Laughing Gull	Larus atricilla
+nabird	Franklin's Gull	Larus pipixcan
+nabird	Little Gull	Larus minutus
+nabird	Black-headed Gull	Larus ridibundus
+nabird	Bonaparte's Gull	Larus philadelphia
+nabird	Heermann's Gull	Larus heermanni
+nabird	Band-tailed Gull	Larus belcheri
+nabird	Black-tailed Gull	Larus crassirostris
+nabird	Mew Gull	Larus canus
+nabird	Ring-billed Gull	Larus delawarensis
+nabird	California Gull	Larus californicus
+nabird	Herring Gull	Larus argentatus
+nabird	Yellow-legged Gull	Larus cachinnans
+nabird	Thayer's Gull	Larus thayeri
+nabird	Iceland Gull	Larus glaucoides
+nabird	Lesser Black-backed Gull	Larus fuscus
+nabird	Slaty-backed Gull	Larus schistisagus
+nabird	Yellow-footed Gull	Larus livens
+nabird	Western Gull	Larus occidentalis
+nabird	Glaucous-winged Gull	Larus glaucescens
+nabird	Glaucous Gull	Larus hyperboreus
+nabird	Great Black-backed Gull	Larus marinus
+nabird	Black-legged Kittiwake	Rissa tridactyla
+nabird	Red-legged Kittiwake	Rissa brevirostris
+nabird	Ross's Gull	Rhodostethia rosea
+nabird	Sabine's Gull	Xema sabini
+nabird	Ivory Gull	Pagophila eburnea
+nabird	Gull-billed Tern	Sterna nilotica
+nabird	Caspian Tern	Sterna caspia
+nabird	Royal Tern	Sterna maxima
+nabird	Elegant Tern	Sterna elegans
+nabird	Sandwich Tern	Sterna sandvicensis
+nabird	Roseate Tern	Sterna dougallii
+nabird	Common Tern	Sterna hirundo
+nabird	Arctic Tern	Sterna paradisaea
+nabird	Forster's Tern	Sterna forsteri
+nabird	Least Tern	Sterna antillarum
+nabird	Aleutian Tern	Sterna aleutica
+nabird	Bridled Tern	Sterna anaethetus
+nabird	Sooty Tern	Sterna fuscata
+nabird	Large-billed Tern	Phaetusa simplex
+nabird	Whiskered Tern	Chlidonias hybridus
+nabird	White-winged Tern	Chlidonias leucopterus
+nabird	Black Tern	Chlidonias niger
+nabird	Brown Noddy	Anous stolidus
+nabird	Black Noddy	Anous minutus
+nabird	Black Skimmer	Rynchops niger
+nabird	Dovekie	Alle alle
+nabird	Common Murre	Uria aalge
+nabird	Thick-billed Murre	Uria lomvia
+nabird	Razorbill	Alca torda
+nabird	Great Auk	Pinguinus impennis
+nabird	Black Guillemot	Cepphus grylle
+nabird	Pigeon Guillemot	Cepphus columba
+nabird	Marbled Murrelet	Brachyramphus marmoratus
+nabird	Long-billed Murrelet	Brachyramphus perdix
+nabird	Kittlitz's Murrelet	Brachyramphus brevirostris
+nabird	Xantus's Murrelet	Synthliboramphus hypoleucus
+nabird	Craveri's Murrelet	Synthliboramphus craveri
+nabird	Ancient Murrelet	Synthliboramphus antiquus
+nabird	Cassin's Auklet	Ptychoramphus aleuticus
+nabird	Parakeet Auklet	Aethia psittacula
+nabird	Least Auklet	Aethia pusilla
+nabird	Whiskered Auklet	Aethia pygmaea
+nabird	Crested Auklet	Aethia cristatella
+nabird	Rhinoceros Auklet	Cerorhinca monocerata
+nabird	Tufted Puffin	Fratercula cirrhata
+nabird	Atlantic Puffin	Fratercula arctica
+nabird	Horned Puffin	Fratercula corniculata
+nabird	Rock Dove	Columba livia
+nabird	Scaly-naped Pigeon	Columba squamosa
+nabird	White-crowned Pigeon	Columba leucocephala
+nabird	Red-billed Pigeon	Columba flavirostris
+nabird	Band-tailed Pigeon	Columba fasciata
+nabird	European Turtle-Dove	Streptopelia turtur
+nabird	Oriental Turtle-Dove	Streptopelia orientalis
+nabird	Eurasian Collared-Dove	Streptopelia decaocto
+nabird	Spotted Dove	Streptopelia chinensis
+nabird	White-winged Dove	Zenaida asiatica
+nabird	Zenaida Dove	Zenaida aurita
+nabird	Mourning Dove	Zenaida macroura
+nabird	Passenger Pigeon	Ectopistes migratorius
+nabird	Inca Dove	Columbina inca
+nabird	Common Ground-Dove	Columbina passerina
+nabird	Ruddy Ground-Dove	Columbina talpacoti
+nabird	White-tipped Dove	Leptotila verreauxi
+nabird	Key West Quail-Dove	Geotrygon chrysia
+nabird	Ruddy Quail-Dove	Geotrygon montana
+nabird	Budgerigar	Melopsittacus undulatus
+nabird	Monk Parakeet	Myiopsitta monachus
+nabird	Carolina Parakeet	Conuropsis carolinensis
+nabird	Thick-billed Parrot	Rhynchopsitta pachyrhyncha
+nabird	White-winged Parakeet	Brotogeris versicolurus
+nabird	Red-crowned Parrot	Amazona viridigenalis
+nabird	Common Cuckoo	Cuculus canorus
+nabird	Oriental Cuckoo	Cuculus saturatus
+nabird	Black-billed Cuckoo	Coccyzus erythropthalmus
+nabird	Yellow-billed Cuckoo	Coccyzus americanus
+nabird	Mangrove Cuckoo	Coccyzus minor
+nabird	Greater Roadrunner	Geococcyx californianus
+nabird	Smooth-billed Ani	Crotophaga ani
+nabird	Groove-billed Ani	Crotophaga sulcirostris
+nabird	Barn Owl	Tyto alba
+nabird	Oriental Scops-Owl	Otus sunia
+nabird	Flammulated Owl	Otus flammeolus
+nabird	Eastern Screech-Owl	Otus asio
+nabird	Western Screech-Owl	Otus kennicottii
+nabird	Whiskered Screech-Owl	Otus trichopsis
+nabird	Great Horned Owl	Bubo virginianus
+nabird	Snowy Owl	Nyctea scandiaca
+nabird	Northern Hawk Owl	Surnia ulula
+nabird	Northern Pygmy-Owl	Glaucidium gnoma
+nabird	Ferruginous Pygmy-Owl	Glaucidium brasilianum
+nabird	Elf Owl	Micrathene whitneyi
+nabird	Burrowing Owl	Athene cunicularia
+nabird	Mottled Owl	Ciccaba virgata
+nabird	Spotted Owl	Strix occidentalis
+nabird	Barred Owl	Strix varia
+nabird	Great Gray Owl	Strix nebulosa
+nabird	Long-eared Owl	Asio otus
+nabird	Short-eared Owl	Asio flammeus
+nabird	Boreal Owl	Aegolius funereus
+nabird	Northern Saw-whet Owl	Aegolius acadicus
+nabird	Lesser Nighthawk	Chordeiles acutipennis
+nabird	Common Nighthawk	Chordeiles minor
+nabird	Antillean Nighthawk	Chordeiles gundlachii
+nabird	Pauraque	Nyctidromus albicollis
+nabird	Common Poorwill	Phalaenoptilus nuttallii
+nabird	Chuck-will's-widow	Caprimulgus carolinensis
+nabird	Buff-collared Nightjar	Caprimulgus ridgwayi
+nabird	Whip-poor-will	Caprimulgus vociferus
+nabird	Jungle Nightjar	Caprimulgus indicus
+nabird	Black Swift	Cypseloides niger
+nabird	White-collared Swift	Streptoprocne zonaris
+nabird	Chimney Swift	Chaetura pelagica
+nabird	Vaux's Swift	Chaetura vauxi
+nabird	White-throated Needletail	Hirundapus caudacutus
+nabird	Common Swift	Apus apus
+nabird	Fork-tailed Swift	Apus pacificus
+nabird	White-throated Swift	Aeronautes saxatalis
+nabird	Antillean Palm Swift	Tachornis phoenicobia
+nabird	Green Violet-ear	Colibri thalassinus
+nabird	Green-breasted Mango	Anthracothorax prevostii
+nabird	Broad-billed Hummingbird	Cynanthus latirostris
+nabird	White-eared Hummingbird	Hylocharis leucotis
+nabird	Xantus's Hummingbird	Hylocharis xantusii
+nabird	Berylline Hummingbird	Amazilia beryllina
+nabird	Buff-bellied Hummingbird	Amazilia yucatanensis
+nabird	Cinnamon Hummingbird	Amazilia rutila
+nabird	Violet-crowned Hummingbird	Amazilia violiceps
+nabird	Blue-throated Hummingbird	Lampornis clemenciae
+nabird	Magnificent Hummingbird	Eugenes fulgens
+nabird	Plain-capped Starthroat	Heliomaster constantii
+nabird	Bahama Woodstar	Calliphlox evelynae
+nabird	Lucifer Hummingbird	Calothorax lucifer
+nabird	Ruby-throated Hummingbird	Archilochus colubris
+nabird	Black-chinned Hummingbird	Archilochus alexandri
+nabird	Anna's Hummingbird	Calypte anna
+nabird	Costa's Hummingbird	Calypte costae
+nabird	Calliope Hummingbird	Stellula calliope
+nabird	Bumblebee Hummingbird	Atthis heloisa
+nabird	Broad-tailed Hummingbird	Selasphorus platycercus
+nabird	Rufous Hummingbird	Selasphorus rufus
+nabird	Allen's Hummingbird	Selasphorus sasin
+nabird	Elegant Trogon	Trogon elegans
+nabird	Eared Trogon	Euptilotis neoxenus
+nabird	Hoopoe	Upupa epops
+nabird	Ringed Kingfisher	Ceryle torquata
+nabird	Belted Kingfisher	Ceryle alcyon
+nabird	Green Kingfisher	Chloroceryle americana
+nabird	Eurasian Wryneck	Jynx torquilla
+nabird	Lewis's Woodpecker	Melanerpes lewis
+nabird	Red-headed Woodpecker	Melanerpes erythrocephalus
+nabird	Acorn Woodpecker	Melanerpes formicivorus
+nabird	Gila Woodpecker	Melanerpes uropygialis
+nabird	Golden-fronted Woodpecker	Melanerpes aurifrons
+nabird	Red-bellied Woodpecker	Melanerpes carolinus
+nabird	Yellow-bellied Sapsucker	Sphyrapicus varius
+nabird	Red-naped Sapsucker	Sphyrapicus nuchalis
+nabird	Red-breasted Sapsucker	Sphyrapicus ruber
+nabird	Williamson's Sapsucker	Sphyrapicus thyroideus
+nabird	Great Spotted Woodpecker	Dendrocopos major
+nabird	Ladder-backed Woodpecker	Picoides scalaris
+nabird	Nuttall's Woodpecker	Picoides nuttallii
+nabird	Downy Woodpecker	Picoides pubescens
+nabird	Hairy Woodpecker	Picoides villosus
+nabird	Strickland's Woodpecker	Picoides stricklandi
+nabird	Red-cockaded Woodpecker	Picoides borealis
+nabird	White-headed Woodpecker	Picoides albolarvatus
+nabird	Three-toed Woodpecker	Picoides tridactylus
+nabird	Black-backed Woodpecker	Picoides arcticus
+nabird	Northern Flicker	Colaptes auratus
+nabird	Gilded Flicker	Colaptes chrysoides
+nabird	Pileated Woodpecker	Dryocopus pileatus
+nabird	Ivory-billed Woodpecker	Campephilus principalis
+nabird	Northern Beardless-Tyrannulet	Camptostoma imberbe
+nabird	Greenish Elaenia	Myiopagis viridicata
+nabird	Caribbean Elaenia	Elaenia martinica
+nabird	Tufted Flycatcher	Mitrephanes phaeocercus
+nabird	Olive-sided Flycatcher	Contopus cooperi
+nabird	Greater Pewee	Contopus pertinax
+nabird	Western Wood-Pewee	Contopus sordidulus
+nabird	Eastern Wood-Pewee	Contopus virens
+nabird	Yellow-bellied Flycatcher	Empidonax flaviventris
+nabird	Acadian Flycatcher	Empidonax virescens
+nabird	Alder Flycatcher	Empidonax alnorum
+nabird	Willow Flycatcher	Empidonax traillii
+nabird	Least Flycatcher	Empidonax minimus
+nabird	Hammond's Flycatcher	Empidonax hammondii
+nabird	Dusky Flycatcher	Empidonax oberholseri
+nabird	Gray Flycatcher	Empidonax wrightii
+nabird	Pacific-slope Flycatcher	Empidonax difficilis
+nabird	Cordilleran Flycatcher	Empidonax occidentalis
+nabird	Buff-breasted Flycatcher	Empidonax fulvifrons
+nabird	Black Phoebe	Sayornis nigricans
+nabird	Eastern Phoebe	Sayornis phoebe
+nabird	Say's Phoebe	Sayornis saya
+nabird	Vermilion Flycatcher	Pyrocephalus rubinus
+nabird	Dusky-capped Flycatcher	Myiarchus tuberculifer
+nabird	Ash-throated Flycatcher	Myiarchus cinerascens
+nabird	Nutting's Flycatcher	Myiarchus nuttingi
+nabird	Great Crested Flycatcher	Myiarchus crinitus
+nabird	Brown-crested Flycatcher	Myiarchus tyrannulus
+nabird	La Sagra's Flycatcher	Myiarchus sagrae
+nabird	Great Kiskadee	Pitangus sulphuratus
+nabird	Sulphur-bellied Flycatcher	Myiodynastes luteiventris
+nabird	Variegated Flycatcher	Empidonomus varius
+nabird	Tropical Kingbird	Tyrannus melancholicus
+nabird	Couch's Kingbird	Tyrannus couchii
+nabird	Cassin's Kingbird	Tyrannus vociferans
+nabird	Thick-billed Kingbird	Tyrannus crassirostris
+nabird	Western Kingbird	Tyrannus verticalis
+nabird	Eastern Kingbird	Tyrannus tyrannus
+nabird	Gray Kingbird	Tyrannus dominicensis
+nabird	Loggerhead Kingbird	Tyrannus caudifasciatus
+nabird	Scissor-tailed Flycatcher	Tyrannus forficatus
+nabird	Fork-tailed Flycatcher	Tyrannus savana
+nabird	Rose-throated Becard	Pachyramphus aglaiae
+nabird	Masked Tityra	Tityra semifasciata
+nabird	Brown Shrike	Lanius cristatus
+nabird	Northern Shrike	Lanius excubitor
+nabird	Loggerhead Shrike	Lanius ludovicianus
+nabird	White-eyed Vireo	Vireo griseus
+nabird	Thick-billed Vireo	Vireo crassirostris
+nabird	Bell's Vireo	Vireo bellii
+nabird	Black-capped Vireo	Vireo atricapillus
+nabird	Gray Vireo	Vireo vicinior
+nabird	Blue-headed Vireo	Vireo solitarius
+nabird	Cassin's Vireo	Vireo cassinii
+nabird	Plumbeous Vireo	Vireo plumbeus
+nabird	Yellow-throated Vireo	Vireo flavifrons
+nabird	Hutton's Vireo	Vireo huttoni
+nabird	Warbling Vireo	Vireo gilvus
+nabird	Philadelphia Vireo	Vireo philadelphicus
+nabird	Red-eyed Vireo	Vireo olivaceus
+nabird	Yellow-green Vireo	Vireo flavoviridis
+nabird	Black-whiskered Vireo	Vireo altiloquus
+nabird	Yucatan Vireo	Vireo magister
+nabird	Gray Jay	Perisoreus canadensis
+nabird	Steller's Jay	Cyanocitta stelleri
+nabird	Blue Jay	Cyanocitta cristata
+nabird	Green Jay	Cyanocorax yncas
+nabird	Brown Jay	Cyanocorax morio
+nabird	Florida Scrub-Jay	Aphelocoma coerulescens
+nabird	Island Scrub-Jay	Aphelocoma insularis
+nabird	Western Scrub-Jay	Aphelocoma californica
+nabird	Mexican Jay	Aphelocoma ultramarina
+nabird	Pinyon Jay	Gymnorhinus cyanocephalus
+nabird	Clark's Nutcracker	Nucifraga columbiana
+nabird	Black-billed Magpie	Pica pica
+nabird	Yellow-billed Magpie	Pica nuttalli
+nabird	Eurasian Jackdaw	Corvus monedula
+nabird	American Crow	Corvus brachyrhynchos
+nabird	Northwestern Crow	Corvus caurinus
+nabird	Tamaulipas Crow	Corvus imparatus
+nabird	Fish Crow	Corvus ossifragus
+nabird	Chihuahuan Raven	Corvus cryptoleucus
+nabird	Common Raven	Corvus corax
+nabird	Sky Lark	Alauda arvensis
+nabird	Horned Lark	Eremophila alpestris
+nabird	Purple Martin	Progne subis
+nabird	Cuban Martin	Progne cryptoleuca
+nabird	Gray-breasted Martin	Progne chalybea
+nabird	Southern Martin	Progne elegans
+nabird	Brown-chested Martin	Progne tapera
+nabird	Tree Swallow	Tachycineta bicolor
+nabird	Violet-green Swallow	Tachycineta thalassina
+nabird	Bahama Swallow	Tachycineta cyaneoviridis
+nabird	Northern Rough-winged Swallow	Stelgidopteryx serripennis
+nabird	Bank Swallow	Riparia riparia
+nabird	Barn Swallow	Hirundo rustica
+nabird	Cliff Swallow	Petrochelidon pyrrhonota
+nabird	Cave Swallow	Petrochelidon fulva
+nabird	Common House-Martin	Delichon urbica
+nabird	Carolina Chickadee	Poecile carolinensis
+nabird	Black-capped Chickadee	Poecile atricapillus
+nabird	Mountain Chickadee	Poecile gambeli
+nabird	Mexican Chickadee	Poecile sclateri
+nabird	Chestnut-backed Chickadee	Poecile rufescens
+nabird	Boreal Chickadee	Poecile hudsonicus
+nabird	Siberian Tit	Poecile cinctus
+nabird	Bridled Titmouse	Baeolophus wollweberi
+nabird	Oak Titmouse	Baeolophus inornatus
+nabird	Juniper Titmouse	Baeolophus ridgwayi
+nabird	Tufted Titmouse	Baeolophus bicolor
+nabird	Verdin	Auriparus flaviceps
+nabird	Bushtit	Psaltriparus minimus
+nabird	Red-breasted Nuthatch	Sitta canadensis
+nabird	White-breasted Nuthatch	Sitta carolinensis
+nabird	Pygmy Nuthatch	Sitta pygmaea
+nabird	Brown-headed Nuthatch	Sitta pusilla
+nabird	Brown Creeper	Certhia americana
+nabird	Red-whiskered Bulbul	Pycnonotus jocosus
+nabird	Cactus Wren	Campylorhynchus brunneicapillus
+nabird	Rock Wren	Salpinctes obsoletus
+nabird	Canyon Wren	Catherpes mexicanus
+nabird	Carolina Wren	Thryothorus ludovicianus
+nabird	Bewick's Wren	Thryomanes bewickii
+nabird	House Wren	Troglodytes aedon
+nabird	Winter Wren	Troglodytes troglodytes
+nabird	Sedge Wren	Cistothorus platensis
+nabird	Marsh Wren	Cistothorus palustris
+nabird	American Dipper	Cinclus mexicanus
+nabird	Golden-crowned Kinglet	Regulus satrapa
+nabird	Ruby-crowned Kinglet	Regulus calendula
+nabird	Middendorff's Grasshopper-Warbler	Locustella ochotensis
+nabird	Lanceolated Warbler	Locustella lanceolata
+nabird	Wood Warbler	Phylloscopus sibilatrix
+nabird	Dusky Warbler	Phylloscopus fuscatus
+nabird	Arctic Warbler	Phylloscopus borealis
+nabird	Blue-gray Gnatcatcher	Polioptila caerulea
+nabird	California Gnatcatcher	Polioptila californica
+nabird	Black-tailed Gnatcatcher	Polioptila melanura
+nabird	Black-capped Gnatcatcher	Polioptila nigriceps
+nabird	Narcissus Flycatcher	Ficedula narcissina
+nabird	Mugimaki Flycatcher	Ficedula mugimaki
+nabird	Red-breasted Flycatcher	Ficedula parva
+nabird	Siberian Flycatcher	Muscicapa sibirica
+nabird	Gray-spotted Flycatcher	Muscicapa griseisticta
+nabird	Asian Brown Flycatcher	Muscicapa dauurica
+nabird	Siberian Rubythroat	Luscinia calliope
+nabird	Bluethroat	Luscinia svecica
+nabird	Siberian Blue Robin	Luscinia cyane
+nabird	Red-flanked Bluetail	Tarsiger cyanurus
+nabird	Northern Wheatear	Oenanthe oenanthe
+nabird	Stonechat	Saxicola torquata
+nabird	Eastern Bluebird	Sialia sialis
+nabird	Western Bluebird	Sialia mexicana
+nabird	Mountain Bluebird	Sialia currucoides
+nabird	Townsend's Solitaire	Myadestes townsendi
+nabird	Veery	Catharus fuscescens
+nabird	Gray-cheeked Thrush	Catharus minimus
+nabird	Bicknell's Thrush	Catharus bicknelli
+nabird	Swainson's Thrush	Catharus ustulatus
+nabird	Hermit Thrush	Catharus guttatus
+nabird	Wood Thrush	Hylocichla mustelina
+nabird	Eurasian Blackbird	Turdus merula
+nabird	Eyebrowed Thrush	Turdus obscurus
+nabird	Dusky Thrush	Turdus naumanni
+nabird	Fieldfare	Turdus pilaris
+nabird	Redwing	Turdus iliacus
+nabird	Clay-colored Robin	Turdus grayi
+nabird	White-throated Robin	Turdus assimilis
+nabird	Rufous-backed Robin	Turdus rufopalliatus
+nabird	American Robin	Turdus migratorius
+nabird	Varied Thrush	Ixoreus naevius
+nabird	Aztec Thrush	Ridgwayia pinicola
+nabird	Wrentit	Chamaea fasciata
+nabird	Gray Catbird	Dumetella carolinensis
+nabird	Black Catbird	Melanoptila glabrirostris
+nabird	Northern Mockingbird	Mimus polyglottos
+nabird	Bahama Mockingbird	Mimus gundlachii
+nabird	Sage Thrasher	Oreoscoptes montanus
+nabird	Brown Thrasher	Toxostoma rufum
+nabird	Long-billed Thrasher	Toxostoma longirostre
+nabird	Bendire's Thrasher	Toxostoma bendirei
+nabird	Curve-billed Thrasher	Toxostoma curvirostre
+nabird	California Thrasher	Toxostoma redivivum
+nabird	Crissal Thrasher	Toxostoma crissale
+nabird	Le Conte's Thrasher	Toxostoma lecontei
+nabird	Blue Mockingbird	Melanotis caerulescens
+nabird	European Starling	Sturnus vulgaris
+nabird	Crested Myna	Acridotheres cristatellus
+nabird	Siberian Accentor	Prunella montanella
+nabird	Yellow Wagtail	Motacilla flava
+nabird	Citrine Wagtail	Motacilla citreola
+nabird	Gray Wagtail	Motacilla cinerea
+nabird	White Wagtail	Motacilla alba
+nabird	Black-backed Wagtail	Motacilla lugens
+nabird	Tree Pipit	Anthus trivialis
+nabird	Olive-backed Pipit	Anthus hodgsoni
+nabird	Pechora Pipit	Anthus gustavi
+nabird	Red-throated Pipit	Anthus cervinus
+nabird	American Pipit	Anthus rubescens
+nabird	Sprague's Pipit	Anthus spragueii
+nabird	Bohemian Waxwing	Bombycilla garrulus
+nabird	Cedar Waxwing	Bombycilla cedrorum
+nabird	Gray Silky-flycatcher	Ptilogonys cinereus
+nabird	Phainopepla	Phainopepla nitens
+nabird	Olive Warbler	Peucedramus taeniatus
+nabird	Bachman's Warbler	Vermivora bachmanii
+nabird	Blue-winged Warbler	Vermivora pinus
+nabird	Golden-winged Warbler	Vermivora chrysoptera
+nabird	Tennessee Warbler	Vermivora peregrina
+nabird	Orange-crowned Warbler	Vermivora celata
+nabird	Nashville Warbler	Vermivora ruficapilla
+nabird	Virginia's Warbler	Vermivora virginiae
+nabird	Colima Warbler	Vermivora crissalis
+nabird	Lucy's Warbler	Vermivora luciae
+nabird	Northern Parula	Parula americana
+nabird	Tropical Parula	Parula pitiayumi
+nabird	Crescent-chested Warbler	Parula superciliosa
+nabird	Yellow Warbler	Dendroica petechia
+nabird	Chestnut-sided Warbler	Dendroica pensylvanica
+nabird	Magnolia Warbler	Dendroica magnolia
+nabird	Cape May Warbler	Dendroica tigrina
+nabird	Black-throated Blue Warbler	Dendroica caerulescens
+nabird	Yellow-rumped Warbler	Dendroica coronata
+nabird	Black-throated Gray Warbler	Dendroica nigrescens
+nabird	Townsend's Warbler	Dendroica townsendi
+nabird	Hermit Warbler	Dendroica occidentalis
+nabird	Black-throated Green Warbler	Dendroica virens
+nabird	Golden-cheeked Warbler	Dendroica chrysoparia
+nabird	Blackburnian Warbler	Dendroica fusca
+nabird	Yellow-throated Warbler	Dendroica dominica
+nabird	Grace's Warbler	Dendroica graciae
+nabird	Pine Warbler	Dendroica pinus
+nabird	Kirtland's Warbler	Dendroica kirtlandii
+nabird	Prairie Warbler	Dendroica discolor
+nabird	Palm Warbler	Dendroica palmarum
+nabird	Bay-breasted Warbler	Dendroica castanea
+nabird	Blackpoll Warbler	Dendroica striata
+nabird	Cerulean Warbler	Dendroica cerulea
+nabird	Black-and-white Warbler	Mniotilta varia
+nabird	American Redstart	Setophaga ruticilla
+nabird	Prothonotary Warbler	Protonotaria citrea
+nabird	Worm-eating Warbler	Helmitheros vermivorus
+nabird	Swainson's Warbler	Limnothlypis swainsonii
+nabird	Ovenbird	Seiurus aurocapillus
+nabird	Northern Waterthrush	Seiurus noveboracensis
+nabird	Louisiana Waterthrush	Seiurus motacilla
+nabird	Kentucky Warbler	Oporornis formosus
+nabird	Connecticut Warbler	Oporornis agilis
+nabird	Mourning Warbler	Oporornis philadelphia
+nabird	MacGillivray's Warbler	Oporornis tolmiei
+nabird	Common Yellowthroat	Geothlypis trichas
+nabird	Gray-crowned Yellowthroat	Geothlypis poliocephala
+nabird	Hooded Warbler	Wilsonia citrina
+nabird	Wilson's Warbler	Wilsonia pusilla
+nabird	Canada Warbler	Wilsonia canadensis
+nabird	Red-faced Warbler	Cardellina rubrifrons
+nabird	Painted Redstart	Myioborus pictus
+nabird	Slate-throated Redstart	Myioborus miniatus
+nabird	Fan-tailed Warbler	Euthlypis lachrymosa
+nabird	Golden-crowned Warbler	Basileuterus culicivorus
+nabird	Rufous-capped Warbler	Basileuterus rufifrons
+nabird	Yellow-breasted Chat	Icteria virens
+nabird	Bananaquit	Coereba flaveola
+nabird	Hepatic Tanager	Piranga flava
+nabird	Summer Tanager	Piranga rubra
+nabird	Scarlet Tanager	Piranga olivacea
+nabird	Western Tanager	Piranga ludoviciana
+nabird	Flame-colored Tanager	Piranga bidentata
+nabird	Stripe-headed Tanager	Spindalis zena
+nabird	White-collared Seedeater	Sporophila torqueola
+nabird	Yellow-faced Grassquit	Tiaris olivacea
+nabird	Black-faced Grassquit	Tiaris bicolor
+nabird	Olive Sparrow	Arremonops rufivirgatus
+nabird	Green-tailed Towhee	Pipilo chlorurus
+nabird	Eastern Towhee	Pipilo erythrophthalmus
+nabird	Spotted Towhee	Pipilo maculatus
+nabird	California Towhee	Pipilo crissalis
+nabird	Canyon Towhee	Pipilo fuscus
+nabird	Abert's Towhee	Pipilo aberti
+nabird	Bachman's Sparrow	Aimophila aestivalis
+nabird	Botteri's Sparrow	Aimophila botterii
+nabird	Cassin's Sparrow	Aimophila cassinii
+nabird	Rufous-winged Sparrow	Aimophila carpalis
+nabird	Rufous-crowned Sparrow	Aimophila ruficeps
+nabird	Five-striped Sparrow	Aimophila quinquestriata
+nabird	American Tree Sparrow	Spizella arborea
+nabird	Chipping Sparrow	Spizella passerina
+nabird	Clay-colored Sparrow	Spizella pallida
+nabird	Brewer's Sparrow	Spizella breweri
+nabird	Field Sparrow	Spizella pusilla
+nabird	Worthen's Sparrow	Spizella wortheni
+nabird	Black-chinned Sparrow	Spizella atrogularis
+nabird	Vesper Sparrow	Pooecetes gramineus
+nabird	Lark Sparrow	Chondestes grammacus
+nabird	Black-throated Sparrow	Amphispiza bilineata
+nabird	Sage Sparrow	Amphispiza belli
+nabird	Lark Bunting	Calamospiza melanocorys
+nabird	Savannah Sparrow	Passerculus sandwichensis
+nabird	Baird's Sparrow	Ammodramus bairdii
+nabird	Grasshopper Sparrow	Ammodramus savannarum
+nabird	Henslow's Sparrow	Ammodramus henslowii
+nabird	Le Conte's Sparrow	Ammodramus leconteii
+nabird	Saltmarsh Sharp-tailed Sparrow	Ammodramus caudacutus
+nabird	Nelson's Sharp-tailed Sparrow	Ammodramus nelsoni
+nabird	Seaside Sparrow	Ammodramus maritimus
+nabird	Fox Sparrow	Passerella iliaca
+nabird	Song Sparrow	Melospiza melodia
+nabird	Lincoln's Sparrow	Melospiza lincolnii
+nabird	Swamp Sparrow	Melospiza georgiana
+nabird	White-throated Sparrow	Zonotrichia albicollis
+nabird	Harris's Sparrow	Zonotrichia querula
+nabird	White-crowned Sparrow	Zonotrichia leucophrys
+nabird	Golden-crowned Sparrow	Zonotrichia atricapilla
+nabird	Dark-eyed Junco	Junco hyemalis
+nabird	Yellow-eyed Junco	Junco phaeonotus
+nabird	McCown's Longspur	Calcarius mccownii
+nabird	Lapland Longspur	Calcarius lapponicus
+nabird	Smith's Longspur	Calcarius pictus
+nabird	Chestnut-collared Longspur	Calcarius ornatus
+nabird	Pine Bunting	Emberiza leucocephalos
+nabird	Little Bunting	Emberiza pusilla
+nabird	Rustic Bunting	Emberiza rustica
+nabird	Yellow-breasted Bunting	Emberiza aureola
+nabird	Gray Bunting	Emberiza variabilis
+nabird	Pallas's Bunting	Emberiza pallasi
+nabird	Reed Bunting	Emberiza schoeniclus
+nabird	Snow Bunting	Plectrophenax nivalis
+nabird	McKay's Bunting	Plectrophenax hyperboreus
+nabird	Crimson-collared Grosbeak	Rhodothraupis celaeno
+nabird	Northern Cardinal	Cardinalis cardinalis
+nabird	Pyrrhuloxia	Cardinalis sinuatus
+nabird	Yellow Grosbeak	Pheucticus chrysopeplus
+nabird	Rose-breasted Grosbeak	Pheucticus ludovicianus
+nabird	Black-headed Grosbeak	Pheucticus melanocephalus
+nabird	Blue Bunting	Cyanocompsa parellina
+nabird	Blue Grosbeak	Guiraca caerulea
+nabird	Lazuli Bunting	Passerina amoena
+nabird	Indigo Bunting	Passerina cyanea
+nabird	Varied Bunting	Passerina versicolor
+nabird	Painted Bunting	Passerina ciris
+nabird	Dickcissel	Spiza americana
+nabird	Bobolink	Dolichonyx oryzivorus
+nabird	Red-winged Blackbird	Agelaius phoeniceus
+nabird	Tricolored Blackbird	Agelaius tricolor
+nabird	Tawny-shouldered Blackbird	Agelaius humeralis
+nabird	Eastern Meadowlark	Sturnella magna
+nabird	Western Meadowlark	Sturnella neglecta
+nabird	Yellow-headed Blackbird	Xanthocephalus xanthocephalus
+nabird	Rusty Blackbird	Euphagus carolinus
+nabird	Brewer's Blackbird	Euphagus cyanocephalus
+nabird	Common Grackle	Quiscalus quiscula
+nabird	Boat-tailed Grackle	Quiscalus major
+nabird	Great-tailed Grackle	Quiscalus mexicanus
+nabird	Shiny Cowbird	Molothrus bonariensis
+nabird	Bronzed Cowbird	Molothrus aeneus
+nabird	Brown-headed Cowbird	Molothrus ater
+nabird	Black-vented Oriole	Icterus wagleri
+nabird	Orchard Oriole	Icterus spurius
+nabird	Hooded Oriole	Icterus cucullatus
+nabird	Streak-backed Oriole	Icterus pustulatus
+nabird	Spot-breasted Oriole	Icterus pectoralis
+nabird	Altamira Oriole	Icterus gularis
+nabird	Audubon's Oriole	Icterus graduacauda
+nabird	Baltimore Oriole	Icterus galbula
+nabird	Bullock's Oriole	Icterus bullockii
+nabird	Scott's Oriole	Icterus parisorum
+nabird	Common Chaffinch	Fringilla coelebs
+nabird	Brambling	Fringilla montifringilla
+nabird	Gray-crowned Rosy-Finch	Leucosticte tephrocotis
+nabird	Black Rosy-Finch	Leucosticte atrata
+nabird	Brown-capped Rosy-Finch	Leucosticte australis
+nabird	Pine Grosbeak	Pinicola enucleator
+nabird	Common Rosefinch	Carpodacus erythrinus
+nabird	Purple Finch	Carpodacus purpureus
+nabird	Cassin's Finch	Carpodacus cassinii
+nabird	House Finch	Carpodacus mexicanus
+nabird	Red Crossbill	Loxia curvirostra
+nabird	White-winged Crossbill	Loxia leucoptera
+nabird	Common Redpoll	Carduelis flammea
+nabird	Hoary Redpoll	Carduelis hornemanni
+nabird	Eurasian Siskin	Carduelis spinus
+nabird	Pine Siskin	Carduelis pinus
+nabird	Lesser Goldfinch	Carduelis psaltria
+nabird	Lawrence's Goldfinch	Carduelis lawrencei
+nabird	American Goldfinch	Carduelis tristis
+nabird	Oriental Greenfinch	Carduelis sinica
+nabird	Eurasian Bullfinch	Pyrrhula pyrrhula
+nabird	Evening Grosbeak	Coccothraustes vespertinus
+nabird	Hawfinch	Coccothraustes coccothraustes
+nabird	House Sparrow	Passer domesticus
+nabird	Eurasian Tree Sparrow	Passer montanus
+call1	"http://www2.math.sunysb.edu/~tony/birds/shorebirds.html#common"	Common Tern   Sterna hirundo   ``A vibrant, purring  tearrr ''  ( Chapman ) 17kB   Tearrr  13kB   Long Island, August 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/shorebirds.html#piping"	Piping Plover  40kB   Charadrius melodus   Peep-lo  19kB ( Peterson )    'A plaintive whistle'  33kB ( Peterson )     Two Piping Plovers facing off  99kB   Long Island, July 1997.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/geese.html#canada"	Canada Goose  21kB   Branta canadiensis  ``A sonorous  honk .'' (Chapman)   Long Island, July 1997.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/loons.html#common"	Common Loon   Gavia immer   Several loons congregating to fish  118kB   Several loons congregating to fish*   43kB  ``A loud, maniacal laugh.'' ( Chapman )   Limekiln Lake, August 1996.     Short hoot  17kB   Sound of a loon diving  56kB   Limekiln Lake, August 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/doves.html#mourning"	Mourning Dove   Zenaida macroura     ``Coo-o-o-ah, coo-o-o-coo-o-o-coo-o-o.''  ( Chapman ) 112kB    Two Mourning Doves  156kB     Sound of wings  55kB   Long Island, May 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/hawks.html#broadwinged"	Broad-winged Hawk  38kB.   Broad-winged Hawk  32kB.   Buteo platypterus  A high, sharp, keen, penetrating whistle. (  Chapman )   Limekiln Lake, August 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/owls.html#barred"	Barred Owl   Strix varia   Three hoots  65kB    ``whoo-ah''  ( Chapman ) 39kB   I came across this fellow around 9 AM in the Mohonk preserve. We stared at each other for about ten minutes. Every so often he would hoot. Each hoot was accompanied by a white flash from his collar as his throat pouch swelled (and presumably showed the lighter, lower parts of the feathers).   New Paltz, June 1997.    
+call1	"http://www2.math.sunysb.edu/~tony/birds/owls.html#screech"	Common Screech Owl 109kB   Otus asio   Common Screech Owl* 40kB  ``A mournful whinny ... Sometimes a series on a single pitch.'' ( Peterson )  ``... a mellow, tremulous quaver, hauntingly lovely.'' ( Puleston )   Long Island, August 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/kingfishers.html#belted"	Belted Kingfisher  48 kB   Megaceryle alcyon   Belted Kingfisher*  17 kB  'A loud, dry rattle' (Peterson)   Long Island, August, 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/grouse.html#bobwhite"	Common Bobwhite  27kB   Colinus virginianus   Long Island, June, 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/cuckoos.html#yellowbilled"	Yellow-billed Cuckoo  116kB   Coccyzus americanus  `` ... cow, cow, cow, cow, cow, cow. '' ( Chapman )   ``... a series of clucks that become slower and run down the scale at the end'' ( Puleston )   Long Island, June, 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/woodpeckers.html#flicker"	Common Flicker:   Colaptes auratus   ``Song''  100kB   Note  16kB   Flick-a, flick-a, ...  97kB   Long Island, May 1996.    
+call1	"http://www2.math.sunysb.edu/~tony/birds/woodpeckers.html#redbellied"	Red-bellied Woodpecker   Melanerpes carolinus   Calls  37kB  ``A hoarse  chûh, chûh ''( Chapman )   Long Island, May 1996.   No record of ``Song'' yet!    
+call1	"http://www2.math.sunysb.edu/~tony/birds/woodpeckers.html#downy"	Downy Woodpecker  39kB   Picoides pubescens    (in flight)  33kB   Long Island, June 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/tyrants.html#greatcrested"	Great Crested Flycatcher  71kB   Myiarchus crinitus  ``Loud, chuckling, grating whistles.' ( Chapman )   Blue Mountain Lake, May 1996.    
+call1	"http://www2.math.sunysb.edu/~tony/birds/tyrants.html#woodpeewee"	Eastern (``Wood'') Peewee  152kB   Conoptus virens  (This long record contains  Question  29kB and  Answer  25kB separated by 5s. of silence.)  `` Pee-a-wee, peer  and  pee ; all plaintive and musical'' ( Chapman )   Long Island, June 1996.    
+call1	"http://www2.math.sunysb.edu/~tony/birds/titmice.html#nuthatch"	White-breasted Nuthatch   54kB   Sitta carolinensis    Long Island, May 1997.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/titmice.html#chickadee"	Black-capped Chickadee  (whistled song)   31kB   Parus atricapillus    Long Island, June 1996.   Black-capped Chickadee  Countersinging   86kB    Long Island, April 1997.   Black-capped Chickadee  Chicka-dee-dee-dee-dee-dee    36kB    Limekiln Lake, May 1997.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/titmice.html#titmouse"	Tufted Titmouse  Peter, Peter    30kB   Parus bicolor  Tufted Titmouse  (hoarse)   34kB  Tufted Titmouse  Pete, Pete    25kB    Long Island, June 1996.  Two titmice, ``chickadee-like'' song  68kB    Long Island, July 1996.
+call1	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#carolina"	Carolina Wren  50kB   Thyrothorus ludovicianus   Long Island, May 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#house"	House Wren  105kB   Troglodytes aedon   Long Island, May 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#winter"	Winter Wren  273kB   Troglodytes troglodytes    Blue Mountain Lake, May 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#marsh"	Marsh Wren  68kB   Cistothorus palustris   Montezuma National Wildlife Reguge, May 1997  
+call1	"http://www2.math.sunysb.edu/~tony/birds/mimics.html#catbird"	Gray Catbird  126kB (4:55 AM on June 18, 1997 outside my bedroom window).   Dumetella carolinensis
+call1	"http://www2.math.sunysb.edu/~tony/birds/mimics.html#mockingbird"	Northern Mockingbird   Mimus polyglottos  
+call1	"http://www2.math.sunysb.edu/~tony/birds/mimics.html#thrasher"	Brown Thrasher?  111kB   Toxostoma rufum?  
+call1	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#wood"	Wood Thrush  225kB   Hylochicla mustelina     Wood Thrush (shorter record)  42kB   *Wood Thrush (shorter record)  15kB   Long Island, June 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#swainsons"	Swainson's Thrush  57kB   Catharus ustulatus  (Olive-backed Thrush)   Long Island, May 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#veery"	Veery  32kB   Catharus fuscescens   Long Island, May 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#robin"	The  American Robin  164kB in my backyard   Turdus migratorius   *American Robin  60kB;   same Robin  scolding  60kB   Long Island, May 1996  
+call1	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#redeyed"	Red-eyed Vireo  129kB   Vireo olivaceus  `` Here I am, can't you see me, Yes I'm here, I see you,  and so on.'' ( Puleston )    Blue Mountain Lake, May 1996.    
+call1	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#whiteeyed"	White-eyed Vireo  36kB   Vireo griseus    Long Island, June 1996.    White-eyed Vireo  35kB    Long Island, May 1997.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#warbling"	Warbling Vireo   Vireo gilvus   Typical Phrase 1  68kB   Typical Phrase 2  82kB    Montezuma National Wildlife Refuge, May 1997.     Warbling Vireo  47kB    Long Island, July 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#solitary"	Solitary Vireo?   Vireo solitarius?   Typical phrase 1  33kB    Typical phrase 2  39kB    Long Island, May 1997.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackandwhite"	Black and White Warbler  55kB   Mniotilta varia   Limekiln Lake, August 1997.     
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#bluewinged"	Blue-winged Warbler  32kB   Vermivora pinus   Long Island, June 1996.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#parula"	Northern Parula Warbler  41kB   Long Island, May 1996.     Northern Parula Warbler  33kB   Parula americana   Long Island, May 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#yellow"	This Yellow Warbler had 2 songs:  one  35kB   Dendroica petechia  and  the other  37kB   Long Island, May 1996.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#magnolia"	Magnolia Warbler  38kB   Dendroica magnolia   Long Island, May 1996.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#chestnutsided"	Chestnut-sided Warbler  43kB   Dendroica pensylvanica    Montezuma National Wildlife Refuge, May 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackpoll"	Blackpoll Warbler  37kB   Dendroica striata   Long Island, May 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackthroatedgreen"	Black-throated Green Warbler  49kB   Dendroica virens   Long Island, May 1996.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackthroatedblue"	Black-throated Blue Warbler  39kB   Dendroica caerulescens    Blue Mountain Lake, May 1996.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackburnian"	Blackburnian Warbler  41kB   Dendroica fusca    Blue Mountain Lake, May 1996.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#yellowrumped"	Yellow-rumped (``Myrtle'') Warbler  41kB   Dendroica coronata    Blue Mountain Lake, May 1996.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#ovenbird"	Ovenbird  61kB   Seiurus aurocapillus    Blue Mountain Lake, May 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#yellowthroat"	Common Yellowthroat  51kB   Geothlypsis trichas   Long Island, May 1996.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#redstart"	American Redstart  27kB   Setophaga ruticilla   Long Island, May 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#bobolink"	Bobolink  82kB   Dolichonyx oryzivorus   New Paltz, June 1996  
+call1	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#cowbird"	Brown-headed Cowbird   Molothrus ater   Cowbird  31kB   Two cowbirds  41kB  The finch-like trill is not mentioned in Peterson!   Long Island, June 1997  
+call1	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#redwing"	Red-winged Blackbird  40kB   Agelaius phoeniceus   Long Island, May 1997.    Intimate discourse between  Red-wings  190kB   Long Island, May 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#meadowlark"	Eastern Meadowlark  35kB   Sturnella magna   New Paltz, June 1996  
+call1	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#northern"	Northern Oriole  (``Baltimore'' Oriole) 87kB   Icterus galbula   Long Island, May 1996  and, more melodious:   Northern Oriole  55kB  *Northern Oriole  19kB   Long Island, June 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#orchard"	Orchard Oriole  57kB   Icterus spurius   Long Island, June 1996  
+call1	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#grackle"	Common Grackle   Quiscalus quiscula   A tree full of grackles.  106kB   Long Island, April 1997   
+call1	"http://www2.math.sunysb.edu/~tony/birds/tanagers.html#scarlet"	Scarlet Tanager  58kB   Piranga olivacea   New Paltz, June 1997.  '..Robin-like but hoarse (suggesting a Robin with a sore throat).' ( Peterson )  '..a double-tone which can only be imitated by  strongly humming  and whistling at the same time.' ( Mathews )  
+call1	"http://www2.math.sunysb.edu/~tony/birds/corvids.html#crow"	American Crow   Corvus brachyrynchos   One Crow  36kB   Two Crows  70kB    Enrico Crow-so  57kB   Long Island, June 1996.    Rattling sound  28kB   Long Island, May 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/corvids.html#fishcrow"	Fish Crow   Corvus ossifragus   One Fish Crow  10kB   Two Fish Crows  21kB   Long Island, June 1996.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/corvids.html#bluejay"	Blue Jay   Cyanocitta cristata   Call  19kB   Long Island, June 1996.    ``Rusty hinge' song  21kB   Long Island, May 1997.   
+call1	"http://www2.math.sunysb.edu/~tony/birds/finches.html#purple"	Purple Finch  82kB   Carpodacus purpureus   Long Island, June 1996     
+call1	"http://www2.math.sunysb.edu/~tony/birds/finches.html#goldfinch"	American Goldfinch   Carduelis tristis   Song in flight  47kB  'as he goes he sings with a thin, wiry voice  Per-CHIC-o-ree , and he does so rhythmically with his undulating flight, always breaking out with the song just at the  crest  of the wavelike curve.'  (Mathews)   Limekiln Lake, August 1996    Song in flight  62kB    Perching song  59kB and  another  48kB from the same bird.    Long Island, July 1997       
+call1	"http://www2.math.sunysb.edu/~tony/birds/finches.html#cardinal"	*Northern Cardinal  34kB   Cardinalis cardinalis   Long Island, May 1996   Northern Cardinal  (trill) 90kB   Long Island, June 1996    Northern Cardinal  Peew, peew! 67kB    Long Island, April 1997    Northern Cardinal  Whirr-a-chee! 57kB    Long Island, May1997     
+call1	"http://www2.math.sunysb.edu/~tony/birds/finches.html#towhee"	Rufous-sided Towhee  40kB   Pipilo erythrophthalmus   *Rufous-sided Towhee  22kB   Long Island, May 1996.   Rufous-sided Towhee  (nonstandard) 42kB     Che-wink!  15kB    Long Island, June 1996.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/finches.html#indigo"	Indigo Bunting  98kB   Passerina cyanea   New Paltz, July 1996    
+call1	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#vesper"	Vesper Sparrow  58kB   Pooecetes gramineus   Long Island, May 1996.    
+call1	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#whitethroated"	White Throated Sparrow  73kB   Zonotrychia albicollis    Long Island, November 1996.    Artnote: Compare the  theme  of the opening chorus in  Judas Maccabeus . 110kB    White Throated Sparrow  99kB   Long Island, April 1997.     (Inverted song)  102kB   Long Island, April 1997.  
+call1	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#field"	Field Sparrow  63kB   Spizella pusilla   New Paltz, July 1996.    
+call1	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#song"	Song Sparrow   Melospiza melodia  These two sing from neighboring trees:   Sparrow A  71kB    Sparrow B  79kB    Long Island, June 1996.     
+call9	"http://www2.math.sunysb.edu/~tony/birds/shorebirds.html#common"	Common Tern 
+call9	"http://www2.math.sunysb.edu/~tony/birds/shorebirds.html#piping"	Piping Plover
+call9	"http://www2.math.sunysb.edu/~tony/birds/geese.html#canada"	Canada Goose 
+call9	"http://www2.math.sunysb.edu/~tony/birds/loons.html#common"	Common Loon
+call9	"http://www2.math.sunysb.edu/~tony/birds/doves.html#mourning"	Mourning Dove
+call9	"http://www2.math.sunysb.edu/~tony/birds/hawks.html#broadwinged"	Broad-winged Hawk
+call9	"http://www2.math.sunysb.edu/~tony/birds/owls.html#barred"	Barred Owl
+call9	"http://www2.math.sunysb.edu/~tony/birds/owls.html#screech"	Common Screech Owl
+call9	"http://www2.math.sunysb.edu/~tony/birds/kingfishers.html#belted"	Belted Kingfisher
+call9	"http://www2.math.sunysb.edu/~tony/birds/grouse.html#bobwhite"	Common Bobwhite
+call9	"http://www2.math.sunysb.edu/~tony/birds/cuckoos.html#yellowbilled"	Yellow-billed Cuckoo
+call9	"http://www2.math.sunysb.edu/~tony/birds/woodpeckers.html#flicker"	Common Flicker
+call9	"http://www2.math.sunysb.edu/~tony/birds/woodpeckers.html#redbellied"	Red-bellied Woodpecker
+call9	"http://www2.math.sunysb.edu/~tony/birds/woodpeckers.html#downy"	Downy Woodpecker
+call9	"http://www2.math.sunysb.edu/~tony/birds/tyrants.html#greatcrested"	Great Crested Flycatcher
+call9	"http://www2.math.sunysb.edu/~tony/birds/tyrants.html#woodpeewee"	Eastern (``Wood'') Peewee
+call9	"http://www2.math.sunysb.edu/~tony/birds/titmice.html#nuthatch"	White-breasted Nuthatch
+call9	"http://www2.math.sunysb.edu/~tony/birds/titmice.html#chickadee"	Black-capped Chickadee
+call9	"http://www2.math.sunysb.edu/~tony/birds/titmice.html#titmouse"	Tufted Titmouse  
+call9	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#carolina"	Carolina Wren
+call9	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#house"	House Wren
+call9	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#winter"	Winter Wren
+call9	"http://www2.math.sunysb.edu/~tony/birds/wrens.html#marsh"	Marsh Wren
+call9	"http://www2.math.sunysb.edu/~tony/birds/mimics.html#catbird"	Gray Catbird
+call9	"http://www2.math.sunysb.edu/~tony/birds/mimics.html#mockingbird"	Northern Mockingbird
+call9	"http://www2.math.sunysb.edu/~tony/birds/mimics.html#thrasher"	Brown Thrasher?
+call9	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#wood"	Wood Thrush
+call9	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#swainsons"	Swainson's Thrush
+call9	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#veery"	Veery  
+call9	"http://www2.math.sunysb.edu/~tony/birds/thrushes.html#robin"	The  American Robin
+call9	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#redeyed"	Red-eyed Vireo
+call9	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#whiteeyed"	White-eyed Vireo
+call9	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#warbling"	Warbling Vireo
+call9	"http://www2.math.sunysb.edu/~tony/birds/vireos.html#solitary"	Solitary Vireo
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackandwhite"	Black and White Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#bluewinged"	Blue-winged Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#parula"	Northern Parula Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#yellow"	Yellow Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#magnolia"	Magnolia Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#chestnutsided"	Chestnut-sided Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackpoll"	Blackpoll Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackthroatedgreen"	Black-throated Green Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackthroatedblue"	Black-throated Blue Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#blackburnian"	Blackburnian Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#yellowrumped"	Yellow-rumped (``Myrtle'') Warbler
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#ovenbird"	Ovenbird  
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#yellowthroat"	Common Yellowthroat
+call9	"http://www2.math.sunysb.edu/~tony/birds/warblers.html#redstart"	American Redstart
+call9	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#bobolink"	Bobolink  
+call9	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#cowbird"	Brown-headed Cowbird
+call9	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#redwing"	Red-winged Blackbird
+call9	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#meadowlark"	Eastern Meadowlark
+call9	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#northern"	Northern Oriole
+call9	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#orchard"	Orchard Oriole
+call9	"http://www2.math.sunysb.edu/~tony/birds/icterids.html#grackle"	Common Grackle
+call9	"http://www2.math.sunysb.edu/~tony/birds/tanagers.html#scarlet"	Scarlet Tanager
+call9	"http://www2.math.sunysb.edu/~tony/birds/corvids.html#crow"	American Crow
+call9	"http://www2.math.sunysb.edu/~tony/birds/corvids.html#fishcrow"	Fish Crow
+call9	"http://www2.math.sunysb.edu/~tony/birds/corvids.html#bluejay"	Blue Jay
+call9	"http://www2.math.sunysb.edu/~tony/birds/finches.html#purple"	Purple Finch
+call9	"http://www2.math.sunysb.edu/~tony/birds/finches.html#goldfinch"	American Goldfinch
+call9	"http://www2.math.sunysb.edu/~tony/birds/finches.html#cardinal"	*Northern Cardinal
+call9	"http://www2.math.sunysb.edu/~tony/birds/finches.html#towhee"	Rufous-sided Towhee
+call9	"http://www2.math.sunysb.edu/~tony/birds/finches.html#indigo"	Indigo Bunting
+call9	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#vesper"	Vesper Sparrow
+call9	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#whitethroated"	White Throated Sparrow
+call9	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#field"	Field Sparrow
+call9	"http://www2.math.sunysb.edu/~tony/birds/sparrows.html#song"	Song Sparrow

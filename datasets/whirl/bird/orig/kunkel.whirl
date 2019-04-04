@@ -1,0 +1,26 @@
+#greg kunkel's bird calls	
+new rel map1(href:doc name:doc)
+new rel map2(href:doc name:doc)
+
+consult "kunkel.stir"
+
+new view testjoin
+from map1 as p
+and map2 as q
+where p.name sim q.name
+select p.name as pkey1
+and q.name as qkey1
+and p.href as pkey2
+and q.href as qkey2
+end
+
+new view oracle
+from map1 as p
+and map2 as q
+where p.href sim q.href
+select p.name as pkey1
+and q.name as qkey1
+and p.href as pkey2
+and q.href as qkey2
+end
+

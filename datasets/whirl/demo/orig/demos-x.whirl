@@ -1,0 +1,27 @@
+new rel	demo(ids:d, name:d)
+new rel	demox(id:d, name:d)
+new rel	newsweek(id:d, name:d)
+
+consult "demos.stir"
+
+#using extracted keys
+
+new view testjoin
+from demox
+and newsweek
+where demox.name sim newsweek.name
+select demox.name as demox_name
+and newsweek.name as newsweek_name
+and demox.id as demo_id
+and newsweek.id as newsweek_id
+end
+
+new view oracle
+from demox
+and newsweek
+where demox.id equal newsweek.id
+select demox.name as demox_name
+and newsweek.name as newsweek_name
+and demox.id as demo_id
+and newsweek.id as newsweek_id
+end
