@@ -14,11 +14,6 @@ public class Node implements Comparable<Node> {
 		this.index = index;
 	}
 	
-	public Node makeSet() {
-		this.parent = this;
-		return this;
-	}
-	
 	public Node findSet() {
 		if (!this.equals(this.parent)) {
 			this.parent = this.parent.findSet();

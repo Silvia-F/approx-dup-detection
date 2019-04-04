@@ -24,9 +24,12 @@ import org.pentaho.di.core.CheckResultInterface;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;
+import org.pentaho.di.core.exception.KettlePluginException;
 import org.pentaho.di.core.exception.KettleStepException;
 import org.pentaho.di.core.exception.KettleXMLException;
 import org.pentaho.di.core.row.RowMetaInterface;
+import org.pentaho.di.core.row.ValueMetaInterface;
+import org.pentaho.di.core.row.value.ValueMetaFactory;
 import org.pentaho.di.core.variables.VariableSpace;
 import org.pentaho.di.core.xml.XMLHandler;
 import org.pentaho.di.i18n.BaseMessages;
@@ -79,11 +82,11 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		String tempThreshold = XMLHandler.getTagValue(stepnode, "matchThreshold");
 		try {
 			if(tempThreshold != null) {
-			matchThreshold = Double.parseDouble(tempThreshold);
+				matchThreshold = Double.parseDouble(tempThreshold);
 			}
 		} catch(Exception ex) {
 			matchThreshold = 0;
-		} 
+		}
 	}
 	
 	public void setDefault() {
@@ -99,7 +102,14 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	  
 	public void getFields( RowMetaInterface rowMeta, String origin, RowMetaInterface[] info, StepMeta nextStep, 
 			VariableSpace space, Repository repository, IMetaStore metaStore ) throws KettleStepException {
-		// Default: nothing changes to rowMeta
+		try {
+			ValueMetaInterface v = ValueMetaFactory.createValueMeta( "Group",  ValueMetaInterface.TYPE_INTEGER );
+			rowMeta.addValueMeta( v );
+		} catch (KettlePluginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
 	}
 	  
 	public void check( List<CheckResultInterface> remarks, TransMeta transMeta, 

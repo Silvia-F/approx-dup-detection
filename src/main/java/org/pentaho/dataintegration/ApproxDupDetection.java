@@ -95,7 +95,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		data.buffer.add(r);
 		data.incrementIndex();
 		String data_str = new String();			
-		for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {				
+		for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
 			if (getInputRowMeta().getString(r, i) != null)
 				data_str = data_str.concat(getInputRowMeta().getString(r, i));
 			data_str = data_str.concat(" ");
@@ -160,8 +160,8 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			for (int j = 0; j < queue.size(); j++) { // The set match verification is needed in the second pass
 				Node queueNode = queue.get(j);
 				if (node.findSet().equals(queueNode.findSet())) {
-					queue.remove(j);
-					queue.addFirst(node);
+					queue.addFirst(queueNode);
+					queue.remove(j + 1);
 					changed = true;
 					break;
 				}
@@ -177,7 +177,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					break;
 				}				
 			}
-			if (!changed) {				
+			if (!changed) {		
 				queue.addFirst(node);
 				if (queue.size() > 4) {
 					queue.removeLast();
