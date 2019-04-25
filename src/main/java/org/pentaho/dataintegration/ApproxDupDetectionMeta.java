@@ -92,6 +92,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public void setDefault() {
 		matchThreshold = 0.6;
+		matchMethod = "Domain-Independent";
 	}
 	
 	public void readRep( Repository rep, IMetaStore metaStore, ObjectId id_step, List<DatabaseMeta> databases ) 
