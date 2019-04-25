@@ -19,6 +19,11 @@
 
 package org.pentaho.dataintegration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Set;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -29,11 +34,19 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.*;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.Props;
+import org.pentaho.di.core.exception.KettleException;
+import org.pentaho.di.core.exception.KettleStepException;
+import org.pentaho.di.core.row.RowMetaInterface;
+import org.pentaho.di.core.row.ValueMetaInterface;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.step.BaseStepMeta;
 import org.pentaho.di.trans.step.StepDialogInterface;
+import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.ui.core.FormDataBuilder;
+import org.pentaho.di.ui.core.widget.ColumnInfo;
+import org.pentaho.di.ui.core.widget.ComboValuesSelectionListener;
+import org.pentaho.di.ui.core.widget.TableView;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
 public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDialogInterface {
@@ -45,7 +58,11 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private static final int TAB_WIDTH = 450;
 	
 	private Text wThreshold;
-	private Button wRadioButton1;
+	private Text wRuleThreshold;
+	private Button wDomainCheck;
+	private Button wRuleCheck;
+	private ColumnInfo[] colinf;
+	private TableView wFields;
 	private Button wCancel;
 	private Button wOK;
 	private ModifyListener lsMod;
@@ -53,6 +70,10 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private Listener lsOK;
 	private SelectionAdapter lsDef;
 	private boolean changed;
+	
+	private HashMap<String, String[]> fieldMeasures;
+	private HashMap<String, String> map;
+	private ArrayList<String> added;
 
 	public ApproxDupDetectionDialog( Shell parent, Object in, TransMeta tr, String sname ) {
 		super( parent, (BaseStepMeta) in, tr, sname );
@@ -112,7 +133,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		fdTabFolder.top = new FormAttachment(wStepname, Const.MARGIN * 5);
 		fdTabFolder.width = TAB_WIDTH;
 		wTabFolder.setLayoutData( fdTabFolder );
-
+		
 		CTabItem wTab1 = new CTabItem( wTabFolder, SWT.NONE );
 		wTab1.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Tab1" ) );
 		Composite wTab1Contents = new Composite( wTabFolder, SWT.SHADOW_NONE );
@@ -128,7 +149,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 
 		CTabItem wTab2 = new CTabItem( wTabFolder, SWT.NONE );
 		wTab2.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Tab2" ) );
-		Composite wTab2Contents = new Composite( wTabFolder, SWT.NONE );
+		Composite wTab2Contents = new Composite( wTabFolder, SWT.SHADOW_NONE );
 		props.setLook( wTab2Contents );
 		FormLayout tab2Layout = new FormLayout();
 		tab2Layout.marginWidth = Const.MARGIN;
@@ -139,17 +160,37 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		wTab2Contents.setLayoutData( fdTab2 );
 		wTab2.setControl( wTab2Contents );
 
-		wTabFolder.setSelection( 0 );
+		CTabItem wTab3 = new CTabItem( wTabFolder, SWT.NONE );
+		wTab3.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Tab3" ) );
+		Composite wTab3Contents = new Composite( wTabFolder, SWT.NONE );
+		props.setLook( wTab3Contents );
+		FormLayout tab3Layout = new FormLayout();
+		tab3Layout.marginWidth = Const.MARGIN;
+		tab3Layout.marginHeight = Const.MARGIN;
+		wTab3Contents.setLayout( tab3Layout );
+		FormData fdTab3 = new FormDataBuilder().fullSize()
+				.result();
+		wTab3Contents.setLayoutData( fdTab3 );
+		wTab3.setControl( wTab3Contents );
 
-		//Content for the first tab
-		wRadioButton1 = new Button(wTab1Contents, SWT.RADIO);
-		wRadioButton1.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RadioButton1"));
-		wRadioButton1.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
-		FormData fdRadioButton1 = new FormDataBuilder().left()
-		.top()
-		.result();
-		wRadioButton1.setLayoutData(fdRadioButton1);
+		wTabFolder.setSelection( 0 );
 		
+		//Contents for the first tab
+		wDomainCheck = new Button(wTab1Contents, SWT.RADIO);
+		wDomainCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.DomainCheck"));
+		wDomainCheck.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
+		FormData fdDomainCheck = new FormDataBuilder().left()
+				.top(wTab1Contents, 15)
+				.result();
+		wDomainCheck.setLayoutData(fdDomainCheck);
+		
+		wRuleCheck = new Button(wTab1Contents, SWT.RADIO);
+		wRuleCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RuleCheck"));
+		wRuleCheck.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
+		FormData fdRuleCheck = new FormDataBuilder().left()
+				.top(wDomainCheck, 5)
+				.result();
+		wRuleCheck.setLayoutData(fdRuleCheck);
 		
 		//Contents for the second tab
 		Label wlThreshold = new Label( wTab2Contents, SWT.RIGHT );
@@ -171,6 +212,114 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		fdThreshold.left = new FormAttachment( props.getMiddlePct(), 0 );
 		fdThreshold.right = new FormAttachment( 100, -Const.MARGIN );
 		wThreshold.setLayoutData( fdThreshold );
+		
+		//Content for the third tab
+		Label wlRuleThreshold = new Label( wTab3Contents, SWT.RIGHT );
+		wlRuleThreshold.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Threshold.Label" ) );
+		props.setLook( wlRuleThreshold );
+
+		FormData fdlRuleThreshold = new FormData();
+		fdlRuleThreshold.top = new FormAttachment(wTabFolder, 2 * Const.MARGIN);
+		fdlRuleThreshold.left = new FormAttachment( 0, 0 );
+		fdlRuleThreshold.right = new FormAttachment( props.getMiddlePct(), -Const.MARGIN );
+		wlRuleThreshold.setLayoutData( fdlRuleThreshold );
+		
+		wRuleThreshold = new Text( wTab3Contents, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+		wRuleThreshold.setText( "0.6" );
+		props.setLook( wRuleThreshold );
+		wRuleThreshold.addModifyListener( lsMod );
+
+		FormData fdRuleThreshold = new FormData();
+		fdRuleThreshold.left = new FormAttachment( props.getMiddlePct(), 0 );
+		fdRuleThreshold.right = new FormAttachment( 100, -Const.MARGIN );
+		wRuleThreshold.setLayoutData( fdRuleThreshold );
+		
+		Label wlFields = new Label( wTab3Contents, SWT.NONE );
+		wlFields.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Fields.Label" ) );
+		props.setLook( wlFields );
+		FormData fdlFields = new FormData();
+		fdlFields.left = new FormAttachment( 0, 0 );
+		fdlFields.top = new FormAttachment( wRuleThreshold, Const.MARGIN );
+		wlFields.setLayoutData( fdlFields );
+
+		int fieldsRows = 0;
+		try {
+			fieldsRows = transMeta.getPrevStepFields( transMeta.findStep( stepname ) ).size();
+		} catch (KettleStepException e1) {
+			e1.printStackTrace();
+		}
+
+		colinf = new ColumnInfo[] {
+				new ColumnInfo(
+						BaseMessages.getString( PKG, "ApproxDupDetectionDialog.FieldName.Column" ),
+						ColumnInfo.COLUMN_TYPE_CCOMBO, false, true, 100 ),
+				new ColumnInfo(
+						BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Type.Column" ),
+						ColumnInfo.COLUMN_TYPE_NONE, false, true, 100 ),
+				new ColumnInfo(
+						BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Measure.Column" ),
+						ColumnInfo.COLUMN_TYPE_TEXT, false, false, 250 ),
+				new ColumnInfo(
+						BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Weight.Column" ),
+						ColumnInfo.COLUMN_TYPE_TEXT, false, false, 250 )
+		};
+
+		wFields = new TableView(transMeta, wTab3Contents, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI, 
+				colinf, fieldsRows, lsMod, props );
+
+		FormData fdFields = new FormData();
+		fdFields.left = new FormAttachment( 0, 0 );
+		fdFields.top = new FormAttachment( wlFields, Const.MARGIN );
+		fdFields.right = new FormAttachment( 100, 0 );
+		fdFields.bottom = new FormAttachment( 100, -50 );
+		wFields.setLayoutData( fdFields );
+
+		colinf[0].setComboValuesSelectionListener( new ComboValuesSelectionListener() {
+			@Override
+			public String[] getComboValues(TableItem arg0, int arg1, int arg2) {
+				arg0.setText(3, "");
+				fieldMeasures.remove(arg0.getText(1));
+				Set<String> keySet = map.keySet();
+				ArrayList<String> entries = new ArrayList<String>( keySet );
+				String[] fieldNames = entries.toArray( new String[entries.size()] );
+				Const.sortStrings( fieldNames );
+				return fieldNames;
+			}			
+		});
+
+		// Search the fields in the background
+		final Runnable runnable = new Runnable() {
+			public void run() {
+				StepMeta stepMeta = transMeta.findStep( stepname );
+				if ( stepMeta != null ) {
+					try {
+						RowMetaInterface row = transMeta.getPrevStepFields( stepMeta );
+						// Remember these fields...
+						for ( int i = 0; i < row.size(); i++ ) {
+							ValueMetaInterface field = row.getValueMeta( i );
+							map.put( field.getName(), field.getTypeDesc() ); 
+						}
+					} catch ( KettleException e ) {
+						logError( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Log.UnableToFindInput" ) );
+					}
+				}
+			}
+		};
+		new Thread( runnable ).start();
+		
+		wFields.addModifyListener( new ModifyListener() {
+			public void modifyText( ModifyEvent arg0 ) {
+				if (arg0.getSource().toString().equals("TableView {}")) { //Is this a valid way to detect fields being deleted?
+					ArrayList<String> items =  new ArrayList<String>(Arrays.asList(wFields.getItems(0)));
+					for (int i = 0; i < added.size(); i++) {
+						if (!items.contains(added.get(i)))
+							added.remove(i);
+					}							
+				}
+				meta.setChanged();
+				writeType();
+			}
+		} );
 		
 		//Cancel and OK buttons for the bottom of the window.
 		wCancel = new Button( shell, SWT.PUSH );
@@ -224,9 +373,23 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		return stepname;
 	}
 	
+	private void writeType() { 		
+		TableItem item = wFields.getActiveTableItem();
+		String type = map.get(item.getText(1));
+		if (type != null)
+			item.setText(2, type);
+	}
+	
 	private void getFields() {
 		if (meta.getMatchThreshold() != 0)
 			wThreshold.setText(String.valueOf(meta.getMatchThreshold()));
+		
+		if (meta.getMatchMethod().equals("Rule-Based")) {
+			wRuleCheck.setSelection(true);
+		}
+		else {
+			wDomainCheck.setSelection(true);
+		}
 	}
 
 	private void cancel() {
@@ -235,7 +398,13 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	
 	private void ok() {
 		stepname = wStepname.getText();
-		meta.setMatchThreshold(Double.parseDouble(wThreshold.getText()));
+		if (wDomainCheck.getSelection()) {
+			meta.setMatchMethod("Domain-Independent");
+			meta.setMatchThreshold(Double.parseDouble(wThreshold.getText()));
+		}
+		else {
+			meta.setMatchMethod("Rule-Based");
+		}
 		dispose();
 	}
 }

@@ -57,6 +57,7 @@ import java.util.List;
 public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInterface {
   
 	private static Class<?> PKG = ApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+	private String matchMethod;
 	private double matchThreshold;
 	
 	public ApproxDupDetectionMeta() {
@@ -148,6 +149,14 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public String getDialogClassName() {
 		return "org.pentaho.dataintegration.ApproxDupDetectionDialog";
+	}
+	
+	public String getMatchMethod() {
+		return matchMethod;
+	}
+	
+	public void setMatchMethod(String method) {
+		this.matchMethod = method;
 	}
 	
 	public double getMatchThreshold() {
