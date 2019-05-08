@@ -36,9 +36,13 @@ import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
 import org.pentaho.di.core.util.Utils;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Vector;
 
 
@@ -94,6 +98,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		if (first) {
 			data.setOutputRowMeta(getInputRowMeta().clone());
 			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( "Group", ValueMetaInterface.TYPE_INTEGER ));
+			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));
 			first = false;
 		}
 		if (meta.getMatchMethod().equals("Domain-Independent")) {
@@ -196,12 +201,28 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	
 	private void writeOutput() throws KettleStepException, KettlePluginException {
 		for (int i = 0; i < data.buffer.size(); i++) {
-			Object[] newRow = new Object[data.buffer.get(i).length + 1];
+			Object[] newRow = new Object[data.buffer.get(i).length + 2];
 			for (int j = 0; j < data.buffer.get(i).length; j++) 
 				newRow[j] = data.buffer.get(i)[j];
 			RowMeta rowMeta = new RowMeta();
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Group", ValueMetaInterface.TYPE_INTEGER ));
-			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex())});
+			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));			
+			
+			 double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
+						Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length())));
+			 System.out.println("STARTING");
+			 System.out.println(similarity);
+			 DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+			 symbols.setDecimalSeparator('.');
+			 DecimalFormat df = new DecimalFormat("#.#", symbols);
+			 
+			 df.setRoundingMode(RoundingMode.DOWN);
+			 System.out.println(df.format(similarity));
+			 similarity = Double.parseDouble(df.format(similarity));
+			 System.out.println(similarity);
+
+					
+			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), similarity});
 			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
 			putRow( data.getOutputRowMeta(), newRow);
 		}

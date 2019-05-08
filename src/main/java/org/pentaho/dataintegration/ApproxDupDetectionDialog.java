@@ -336,7 +336,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		wOK = new Button( shell, SWT.PUSH );
 		wOK.setText( BaseMessages.getString( PKG, "System.Button.OK" ) );
 	
-		setButtonPositions( new Button[] { wOK, wCancel }, Const.MARGIN, null );
+		setButtonPositions( new Button[] { wOK, wCancel }, Const.MARGIN, wTabFolder );
 	
 		//Listeners
 		lsCancel = new Listener() {

@@ -72,6 +72,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		StringBuilder retval = new StringBuilder(300);
 		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchMethod", matchMethod)).append(Const.CR);
+		System.out.println(retval);
 		return retval.toString();
 	}		
 	
@@ -113,8 +114,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		} catch (KettlePluginException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		 
+		}	 
 	}
 	  
 	public void check( List<CheckResultInterface> remarks, TransMeta transMeta, 
