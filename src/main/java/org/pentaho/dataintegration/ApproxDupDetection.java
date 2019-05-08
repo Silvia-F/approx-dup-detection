@@ -78,7 +78,12 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		Object[] r = getRow(); // get row, set busy!
 		if ( r == null ) {
 			// no more input to be expected...
-			detectApproxDups();		
+			if (meta.getMatchMethod().equals("Domain-Independent")) {
+				detectDIApproxDups();
+			}
+			else {
+				System.out.println("RULES");
+			}
 			
 			writeOutput();
 			
@@ -91,26 +96,29 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( "Group", ValueMetaInterface.TYPE_INTEGER ));
 			first = false;
 		}
-		
-		data.buffer.add(r);
-		data.incrementIndex();
-		String data_str = new String();			
-		for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
-			if (getInputRowMeta().getString(r, i) != null)
-				data_str = data_str.concat(getInputRowMeta().getString(r, i));
-			data_str = data_str.concat(" ");
+		if (meta.getMatchMethod().equals("Domain-Independent")) {
+			data.buffer.add(r);
+			data.incrementIndex();
+			String data_str = new String();			
+			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
+				if (getInputRowMeta().getString(r, i) != null)
+					data_str = data_str.concat(getInputRowMeta().getString(r, i));
+				data_str = data_str.concat(" ");
+			}
+			data.addNode(data_str, data.getIndex());
+			
+			if ( checkFeedback( getLinesRead() ) ) {
+				if ( log.isBasic() )
+					logBasic( BaseMessages.getString( PKG, "ApproxDupDetection.Log.LineNumber" ) + getLinesRead() );
+			}
 		}
-		data.addNode(data_str, data.getIndex());
-		
-		if ( checkFeedback( getLinesRead() ) ) {
-			if ( log.isBasic() )
-				logBasic( BaseMessages.getString( PKG, "ApproxDupDetection.Log.LineNumber" ) + getLinesRead() );
+		else {
+			System.out.println("RULE PREPROCESSING");
 		}
-      
 		return true;
 	}
 	
-	private void detectApproxDups() {
+	private void detectDIApproxDups() {
 		double matchThreshold = meta.getMatchThreshold();
 		LinkedList<Node> queue = new LinkedList<Node>();
 		Vector<Node> orderedGraph = new Vector<Node> ();	
