@@ -114,7 +114,14 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		} catch (KettlePluginException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	 
+		}
+		try {
+			ValueMetaInterface v = ValueMetaFactory.createValueMeta( "Similarity",  ValueMetaInterface.TYPE_NUMBER );
+			rowMeta.addValueMeta( v );
+		} catch (KettlePluginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	  
 	public void check( List<CheckResultInterface> remarks, TransMeta transMeta, 
