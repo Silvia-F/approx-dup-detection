@@ -57,6 +57,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private static final int TAB_WIDTH = 450;
 	
 	private Text wThreshold;
+	private Text wColumnName;
 	private Text wRuleThreshold;
 	private Button wDomainCheck;
 	private Button wRuleCheck;
@@ -201,6 +202,29 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wRuleCheck.setLayoutData(fdRuleCheck);
 		
+		Label wlColumnName = new Label(wTab1Contents, SWT.RIGHT);
+		wlColumnName.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.ColumnName.Label" ) );
+		props.setLook(wlColumnName);
+		
+		FormData fdlColumnName = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( wRuleCheck, 4 * Const.MARGIN )
+				.result();
+		wlColumnName.setLayoutData( fdlColumnName );
+		
+		wColumnName = new Text( wTab1Contents, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+		props.setLook(wColumnName);
+		wColumnName.addModifyListener(lsMod);
+		
+		FormData fdColumnName = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( wRuleCheck, 4 * Const.MARGIN )
+				.result();
+		wColumnName.setLayoutData( fdColumnName );		
+		
+		
 		//Contents for the second tab
 		Label wlThreshold = new Label( wTab2Contents, SWT.RIGHT );
 		wlThreshold.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Threshold.Label" ) );
@@ -214,7 +238,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		wlThreshold.setLayoutData( fdlThreshold );
 		
 		wThreshold = new Text( wTab2Contents, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
-		wThreshold.setText( "0.6" );
 		props.setLook( wThreshold );
 		wThreshold.addModifyListener( lsMod );
 
@@ -385,6 +408,8 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		if (meta.getMatchThreshold() != 0)
 			wThreshold.setText(String.valueOf(meta.getMatchThreshold()));
 		
+		wColumnName.setText(meta.getColumnName());
+		
 		if (meta.getMatchMethod().equals("Rule-Based")) 
 			wRuleCheck.setSelection(true);
 		else 
@@ -404,6 +429,8 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		else {
 			meta.setMatchMethod("Rule-Based");
 		}
+		if (wColumnName.getText().length() > 0)
+			meta.setColumnName(wColumnName.getText());
 		dispose();
 	}
 }

@@ -58,6 +58,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
   
 	private static Class<?> PKG = ApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 	private String matchMethod;
+	private String columnName;
 	private double matchThreshold;
 	
 	public ApproxDupDetectionMeta() {
@@ -71,6 +72,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	public String getXML() {		
 		StringBuilder retval = new StringBuilder(300);
 		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("columnName", columnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchMethod", matchMethod)).append(Const.CR);
 		System.out.println(retval);
 		return retval.toString();
@@ -82,6 +84,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	}
 	  
 	private void readData( Node stepnode ) {
+		matchMethod = XMLHandler.getTagValue(stepnode, "matchMethod");
+		columnName = XMLHandler.getTagValue(stepnode, "columnName");
 		String tempThreshold = XMLHandler.getTagValue(stepnode, "matchThreshold");
 		try {
 			if(tempThreshold != null) {
@@ -89,13 +93,14 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			}
 		} catch(Exception ex) {
 			matchThreshold = 0;
-		}
-		matchMethod = XMLHandler.getTagValue(stepnode, "matchMethod");
+		}		
 	}
 	
 	public void setDefault() {
-		matchThreshold = 0.6;
 		matchMethod = "Domain-Independent";
+		columnName = "Group";
+		matchThreshold = 0.6;
+		
 	}
 	
 	public void readRep( Repository rep, IMetaStore metaStore, ObjectId id_step, List<DatabaseMeta> databases ) 
@@ -109,7 +114,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	public void getFields( RowMetaInterface rowMeta, String origin, RowMetaInterface[] info, StepMeta nextStep, 
 			VariableSpace space, Repository repository, IMetaStore metaStore ) throws KettleStepException {
 		try {
-			ValueMetaInterface v = ValueMetaFactory.createValueMeta( "Group",  ValueMetaInterface.TYPE_INTEGER );
+			ValueMetaInterface v = ValueMetaFactory.createValueMeta( getColumnName(),  ValueMetaInterface.TYPE_INTEGER );
 			rowMeta.addValueMeta( v );
 		} catch (KettlePluginException e) {
 			// TODO Auto-generated catch block
@@ -169,6 +174,13 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		this.matchMethod = method;
 	}
 	
+	public String getColumnName() {
+		return columnName;
+	}
+	
+	public void setColumnName(String name) {
+		this.columnName = name;
+	}
 	public double getMatchThreshold() {
 		return matchThreshold;
 	}

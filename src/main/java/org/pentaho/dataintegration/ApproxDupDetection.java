@@ -97,8 +97,9 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			
 		if (first) {
 			data.setOutputRowMeta(getInputRowMeta().clone());
-			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( "Group", ValueMetaInterface.TYPE_INTEGER ));
+			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( meta.getColumnName(), ValueMetaInterface.TYPE_INTEGER ));
 			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));
+			System.out.println(data.getOutputRowMeta());
 			first = false;
 		}
 		if (meta.getMatchMethod().equals("Domain-Independent")) {
@@ -205,21 +206,17 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			for (int j = 0; j < data.buffer.get(i).length; j++) 
 				newRow[j] = data.buffer.get(i)[j];
 			RowMeta rowMeta = new RowMeta();
-			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Group", ValueMetaInterface.TYPE_INTEGER ));
-			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));			
+			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getColumnName(), ValueMetaInterface.TYPE_INTEGER ));
+			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));		
 			
 			 double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
 						Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length())));
-			 System.out.println("STARTING");
-			 System.out.println(similarity);
 			 DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
 			 symbols.setDecimalSeparator('.');
 			 DecimalFormat df = new DecimalFormat("#.#", symbols);
 			 
 			 df.setRoundingMode(RoundingMode.DOWN);
-			 System.out.println(df.format(similarity));
 			 similarity = Double.parseDouble(df.format(similarity));
-			 System.out.println(similarity);
 
 					
 			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), similarity});
