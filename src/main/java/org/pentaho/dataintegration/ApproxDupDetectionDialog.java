@@ -410,10 +410,18 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		wColumnName.setText(meta.getColumnName());
 		
-		if (meta.getMatchMethod().equals("Rule-Based")) 
-			wRuleCheck.setSelection(true);
-		else 
+		if (meta.getMatchMethod().equals("Domain-Independent")) 
 			wDomainCheck.setSelection(true);
+		else {
+			wRuleCheck.setSelection(true);
+			
+			String[][] tempMatching = meta.getMatching();
+			int rowCount = 0;
+			for (int i = 0; i < tempMatching.length; i++) {
+				wFields.table.getItem(rowCount).setText(new String[] {String.valueOf(rowCount + 1), tempMatching[i][0], tempMatching[i][1], tempMatching[i][2]});
+				rowCount++;
+			}
+		}
 	}
 
 	private void cancel() {
@@ -422,13 +430,26 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	
 	private void ok() {
 		stepname = wStepname.getText();
+		
 		if (wDomainCheck.getSelection()) {
 			meta.setMatchMethod("Domain-Independent");
 			meta.setMatchThreshold(Double.parseDouble(wThreshold.getText()));
 		}
 		else {
 			meta.setMatchMethod("Rule-Based");
+			
+			int nrFields = wFields.nrNonEmpty(); 
+			meta.allocate(nrFields);
+			String[][] tempMatching = new String[nrFields][100];
+			for (int i = 0; i < nrFields; i++) {
+				String name = wFields.table.getItem(i).getText(1);
+				String measure = wFields.table.getItem(i).getText(2);
+				String weight = wFields.table.getItem(i).getText(3);				
+				tempMatching[i] = new String[] {name, measure, weight};
+			}
+			meta.setMatching(tempMatching);			
 		}
+		
 		if (wColumnName.getText().length() > 0)
 			meta.setColumnName(wColumnName.getText());
 		dispose();

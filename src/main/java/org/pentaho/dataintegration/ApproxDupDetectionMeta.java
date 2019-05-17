@@ -59,10 +59,15 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private static Class<?> PKG = ApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 	private String matchMethod;
 	private String columnName;
+	private String[][] matching;
 	private double matchThreshold;
 	
 	public ApproxDupDetectionMeta() {
 		super(); // allocate BaseStepMeta
+	}
+	
+	public void allocate(int nrFields) {
+		this.matching = new String[nrFields][];
 	}
 	
 	public void loadXML( Node stepnode, List<DatabaseMeta> databases, IMetaStore metaStore ) throws KettleXMLException {
@@ -100,6 +105,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		matchMethod = "Domain-Independent";
 		columnName = "Group";
 		matchThreshold = 0.6;
+		allocate(0);
 		
 	}
 	
@@ -187,5 +193,13 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public void setMatchThreshold(double threshold) {
 		matchThreshold = threshold;
+	}
+	
+	public String[][] getMatching() {
+		return matching;
+	}
+	
+	public void setMatching(String[][] matching) {
+		this.matching = matching;
 	}
 }
