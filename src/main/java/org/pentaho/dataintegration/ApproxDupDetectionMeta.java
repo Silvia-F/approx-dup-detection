@@ -79,7 +79,13 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("columnName", columnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchMethod", matchMethod)).append(Const.CR);
-		System.out.println(retval);
+		for (int i = 0; i < matching.length; i++) {
+			retval.append("<matching>").append(Const.CR);
+			retval.append("    " + XMLHandler.addTagValue("fieldName", matching[i][0]));
+			retval.append("    " + XMLHandler.addTagValue("measure", matching[i][1]));
+			retval.append("    " + XMLHandler.addTagValue("weight", matching[i][2]));
+			retval.append("</matching>").append(Const.CR);
+		}
 		return retval.toString();
 	}		
 	
@@ -98,15 +104,24 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			}
 		} catch(Exception ex) {
 			matchThreshold = 0;
-		}		
+		}
+		int nrFields = XMLHandler.countNodes(stepnode, "matching");
+		allocate(nrFields);
+		for (int i = 0; i < nrFields; i++) {
+			Node node = XMLHandler.getSubNodeByNr(stepnode, "matching", i);
+			matching[i] = new String[] {
+					XMLHandler.getTagValue(node, "fieldName"),
+					XMLHandler.getTagValue(node, "measure"),
+					XMLHandler.getTagValue(node, "weight")
+			};
+		}
 	}
 	
 	public void setDefault() {
 		matchMethod = "Domain-Independent";
 		columnName = "Group";
 		matchThreshold = 0.6;
-		allocate(0);
-		
+		allocate(0);		
 	}
 	
 	public void readRep( Repository rep, IMetaStore metaStore, ObjectId id_step, List<DatabaseMeta> databases ) 

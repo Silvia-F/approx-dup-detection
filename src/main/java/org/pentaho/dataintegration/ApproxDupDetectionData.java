@@ -23,7 +23,9 @@ import org.pentaho.di.trans.step.BaseStepData;
 import org.pentaho.di.trans.step.StepDataInterface;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -36,6 +38,7 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	private RowMetaInterface outputRowMeta;
 	protected Vector<Node> graph;
 	protected List<Object[]> buffer;
+	protected Map<String, List<Object>> blocks;
 	private int rowIndex;
 
 	/**
@@ -45,6 +48,8 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 		super();
 		graph = new Vector<Node>();
 		buffer = new ArrayList<Object[]>( 5000 );
+		
+		blocks = new HashMap<String, List<Object>> ( 5000 );
 		rowIndex = 0;
 	}
 	
@@ -73,5 +78,9 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	
 	public int getIndex() {
 		return rowIndex;
+	}
+	
+	public Map<String, List<Object>> getBlocks() {
+		return blocks;
 	}
 }

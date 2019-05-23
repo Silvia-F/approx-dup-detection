@@ -39,9 +39,12 @@ import org.pentaho.di.core.util.Utils;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -86,7 +89,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				detectDIApproxDups();
 			}
 			else {
-				System.out.println("RULES");
+				detectRuleApproxDups();
 			}
 			
 			writeOutput();
@@ -99,7 +102,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			data.setOutputRowMeta(getInputRowMeta().clone());
 			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( meta.getColumnName(), ValueMetaInterface.TYPE_INTEGER ));
 			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));
-			System.out.println(data.getOutputRowMeta());
 			first = false;
 		}
 		if (meta.getMatchMethod().equals("Domain-Independent")) {
@@ -119,7 +121,71 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			}
 		}
 		else {
-			System.out.println("RULE PREPROCESSING");
+			data.incrementIndex();
+			System.out.println("ON RULES");
+			String[][] matching = meta.getMatching();
+			float maxWeight = 0;
+			String maxField = "";
+			for (int i = 0; i < matching.length; i++) {			
+				if (Float.parseFloat(matching[i][2]) > maxWeight) {
+					maxWeight = Float.parseFloat(matching[i][2]);
+					maxField = matching[i][0];
+				}
+			}
+			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
+				if (getInputRowMeta().getFieldNames()[i].equals(maxField)) {
+					System.out.println("Going for field " + maxField);
+					double threshold= 0.4;
+					boolean found = false;
+					if (data.getBlocks().size() > 0) {
+						String maxBlock = null;
+						double maxSim = 0;
+						for (int j = 0; j < data.getBlocks().size(); j++) {
+							double similarity = 1 - ((double)Utils.getDamerauLevenshteinDistance(data.getBlocks().keySet().toArray()[j].toString(),
+									getInputRowMeta().getString(r, i)) /
+									Math.max(data.getBlocks().keySet().toArray()[j].toString().length(), getInputRowMeta().getString(r, i).length()));
+							if (similarity > maxSim) {
+								maxSim = similarity;
+								maxBlock = data.getBlocks().keySet().toArray()[j].toString();
+							}
+						}
+						if (maxSim > threshold) {
+							found = true;
+							data.getBlocks().get(maxBlock).add(data.getIndex());
+							ArrayList<String> fields = new ArrayList<String> ();
+							for (int k = 0; k < meta.getMatching().length; k++) {
+								for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
+									if (meta.getMatching()[k][0].equals(getInputRowMeta().getFieldNames()[l])) {
+										fields.add(getInputRowMeta().getString(r, l));
+										break;
+									}
+								}
+							}
+							System.out.println("FIELDS");
+							System.out.println(fields);
+							data.getBlocks().get(maxBlock).add(fields);
+						}
+					}
+					if (!found) {
+						data.getBlocks().put(getInputRowMeta().getString(r, i), new ArrayList<Object> ());
+						data.getBlocks().get(getInputRowMeta().getString(r, i)).add(data.getIndex());
+						ArrayList<String> fields = new ArrayList<String> ();
+						for (int k = 0; k < meta.getMatching().length; k++) {
+							for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
+								if (meta.getMatching()[k][0].equals(getInputRowMeta().getFieldNames()[l])) {
+									fields.add(getInputRowMeta().getString(r, l));
+									break;
+								}
+							}
+						}
+						data.getBlocks().get(getInputRowMeta().getString(r, i)).add(fields);
+					}
+					break;
+				}
+			}
+			System.out.println("PRINTING");
+			System.out.println(data.getBlocks().size());
+			System.out.println(data.getBlocks());
 		}
 		return true;
 	}
@@ -198,6 +264,16 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				}
 			}
 		}	
+	}
+	@SuppressWarnings("unchecked")
+	private void detectRuleApproxDups() {
+		String[][] matching = meta.getMatching();
+		String[] keys = (String[]) data.getBlocks().keySet().toArray();
+		for (int i = 0; i < keys.length; i++) {			
+			List<String> field_data = (List<String>) data.getBlocks().get(keys[i]).get(1);
+			System.out.println(field_data);
+			
+		}
 	}
 	
 	private void writeOutput() throws KettleStepException, KettlePluginException {

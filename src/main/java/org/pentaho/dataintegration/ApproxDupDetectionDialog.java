@@ -291,10 +291,10 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 						ColumnInfo.COLUMN_TYPE_CCOMBO, false, true, 100 ),
 				new ColumnInfo(
 						BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Measure.Column" ),
-						ColumnInfo.COLUMN_TYPE_TEXT, false, false, 250 ),
+						ColumnInfo.COLUMN_TYPE_CCOMBO, false, false, 100 ),
 				new ColumnInfo(
 						BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Weight.Column" ),
-						ColumnInfo.COLUMN_TYPE_TEXT, false, false, 250 )
+						ColumnInfo.COLUMN_TYPE_TEXT, false, false, 100 )
 		};
 
 		wFields = new TableView(transMeta, wTab3Contents, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI, 
@@ -317,6 +317,15 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				Const.sortStrings( fieldNames );
 				return fieldNames;
 			}			
+		});
+		
+		colinf[1].setComboValuesSelectionListener( new ComboValuesSelectionListener() {
+			@Override
+			public String[] getComboValues(TableItem arg0, int arg1, int arg2) {
+				return new String[] {"Levenshtein", "Damerau Levenshtein", "Needleman Wunsch", "Jaro", 
+						"Jaro Winkler", "Pair letters Similarity", "Metaphone", "Double Metaphone", 
+						"SoundEx", "Refined SoundEx"};
+			}
 		});
 
 		// Search the fields in the background
@@ -433,23 +442,22 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		if (wDomainCheck.getSelection()) {
 			meta.setMatchMethod("Domain-Independent");
-			meta.setMatchThreshold(Double.parseDouble(wThreshold.getText()));
 		}
 		else {
 			meta.setMatchMethod("Rule-Based");
-			
-			int nrFields = wFields.nrNonEmpty(); 
-			meta.allocate(nrFields);
-			String[][] tempMatching = new String[nrFields][100];
-			for (int i = 0; i < nrFields; i++) {
-				String name = wFields.table.getItem(i).getText(1);
-				String measure = wFields.table.getItem(i).getText(2);
-				String weight = wFields.table.getItem(i).getText(3);				
-				tempMatching[i] = new String[] {name, measure, weight};
-			}
-			meta.setMatching(tempMatching);			
 		}
-		
+		meta.setMatchThreshold(Double.parseDouble(wThreshold.getText()));
+		int nrFields = wFields.nrNonEmpty(); 
+		meta.allocate(nrFields);
+		String[][] tempMatching = new String[nrFields][100];
+		for (int i = 0; i < nrFields; i++) {
+			String name = wFields.table.getItem(i).getText(1);
+			String measure = wFields.table.getItem(i).getText(2);
+			String weight = wFields.table.getItem(i).getText(3);				
+			tempMatching[i] = new String[] {name, measure, weight};
+		}
+		meta.setMatching(tempMatching);			
+	
 		if (wColumnName.getText().length() > 0)
 			meta.setColumnName(wColumnName.getText());
 		dispose();
