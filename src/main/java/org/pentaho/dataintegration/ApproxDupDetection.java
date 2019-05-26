@@ -46,11 +46,12 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.Vector;
 
 
 /**
- * Describe your step plugin.
+ * This step allows to detect approximate duplicate record groups.
  * 
  */
 public class ApproxDupDetection extends BaseStep implements StepInterface {
@@ -268,10 +269,19 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	@SuppressWarnings("unchecked")
 	private void detectRuleApproxDups() {
 		String[][] matching = meta.getMatching();
-		String[] keys = (String[]) data.getBlocks().keySet().toArray();
-		for (int i = 0; i < keys.length; i++) {			
-			List<String> field_data = (List<String>) data.getBlocks().get(keys[i]).get(1);
-			System.out.println(field_data);
+		Set<String> keys = data.getBlocks().keySet();
+		for (String s: keys) {			
+			List<String> field_data = (List<String>) data.getBlocks().get(s).get(1); // Data of the block representative
+			for (int i = 1; i < data.getBlocks().get(s).size(); i = i + 2) {
+				for (int j = i; j < data.getBlocks().get(s).size(); j = j + 2) {
+					System.out.println("I: " + i + "; J: " + j);
+					Object test = data.getBlocks().get(s).get(j);
+					ArrayList<String> a = (ArrayList<String>)test;
+					System.out.println("TRYING");
+					System.out.println(a.get(0));
+					System.out.println(a.get(1));
+				}
+			}
 			
 		}
 	}
