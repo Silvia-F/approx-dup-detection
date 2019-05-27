@@ -189,7 +189,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		wDomainCheck.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
 		FormData fdDomainCheck = new FormDataBuilder()
 				.left()
-				.top(wTab1Contents, 15)
+				.top(wTab1Contents, 2 * Const.MARGIN)
 				.result();
 		wDomainCheck.setLayoutData(fdDomainCheck);
 		
@@ -233,7 +233,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		FormData fdlThreshold = new FormDataBuilder()
 				.left( 0, 0 )
 				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wTabFolder, 2 * Const.MARGIN )
+				.top( wTab2Contents, 2 * Const.MARGIN )
 				.result();
 		wlThreshold.setLayoutData( fdlThreshold );
 		
@@ -244,6 +244,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		FormData fdThreshold = new FormDataBuilder()
 				.left( props.getMiddlePct(), 0 )
 				.right( 100, -Const.MARGIN )
+				.top( wTab2Contents, 2 * Const.MARGIN )
 				.result();
 		wThreshold.setLayoutData( fdThreshold );
 		
@@ -255,7 +256,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		FormData fdlRuleThreshold = new FormDataBuilder()
 				.left( 0, 0 )
 				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wTabFolder, 2 * Const.MARGIN )
+				.top( wTab3Contents, 2 * Const.MARGIN )
 				.result();
 		wlRuleThreshold.setLayoutData( fdlRuleThreshold );
 		
@@ -266,6 +267,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		FormData fdRuleThreshold = new FormDataBuilder()
 				.left( props.getMiddlePct(), 0 )
 				.right( 100, -Const.MARGIN )
+				.top( wTab3Contents, 2 * Const.MARGIN )
 				.result();
 		wRuleThreshold.setLayoutData( fdRuleThreshold );
 		
@@ -311,7 +313,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		colinf[0].setComboValuesSelectionListener( new ComboValuesSelectionListener() {
 			@Override
 			public String[] getComboValues(TableItem arg0, int arg1, int arg2) {
-				arg0.setText(3, "");
 				fieldMeasures.remove(arg0.getText(1));
 				String[] fieldNames = fields.toArray( new String[fields.size()] );
 				Const.sortStrings( fieldNames );
@@ -414,22 +415,39 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	}
 	
 	private void getFields() {
+		if (meta.getMatchMethod().equals("Domain-Independent")) 
+			wDomainCheck.setSelection(true);
+		else {
+			wRuleCheck.setSelection(true);
+		}
 		if (meta.getMatchThreshold() != 0)
 			wThreshold.setText(String.valueOf(meta.getMatchThreshold()));
 		
 		wColumnName.setText(meta.getColumnName());
 		
-		if (meta.getMatchMethod().equals("Domain-Independent")) 
-			wDomainCheck.setSelection(true);
-		else {
-			wRuleCheck.setSelection(true);
-			
-			String[][] tempMatching = meta.getMatching();
-			int rowCount = 0;
-			for (int i = 0; i < tempMatching.length; i++) {
-				wFields.table.getItem(rowCount).setText(new String[] {String.valueOf(rowCount + 1), tempMatching[i][0], tempMatching[i][1], tempMatching[i][2]});
-				rowCount++;
+		ArrayList<String> measureNames = new ArrayList<String>();
+		measureNames.add("Levenshtein");
+		measureNames.add("Damerau Levenshtein");
+		measureNames.add("Needleman Wunsch");
+		measureNames.add("Jaro");
+		measureNames.add("Jaro Winkler");
+		measureNames.add("Pair letters Similarity");
+		measureNames.add("Metaphone");
+		measureNames.add("Double Metaphone");
+		measureNames.add("SoundEx");
+		measureNames.add("Refined SoundEx");
+		int rowCount = 0;
+		for (int i = 0; i < meta.getMatchFields().length; i++) {
+			if (meta.getMatchFields()[i] != null) {
+				System.out.println(meta.getMatchFields()[i]);
+				System.out.println(meta.getMeasures()[i][0]);
+				System.out.println(meta.getMeasures()[i][1]);
+				System.out.println(measureNames.get((int)meta.getMeasures()[i][0]));
+				wFields.table.getItem(rowCount).setText(new String[] {String.valueOf(rowCount + 1), meta.getMatchFields()[i], 
+						measureNames.get((int)meta.getMeasures()[i][0]), String.valueOf(meta.getMeasures()[i][1])});
 			}
+			
+			rowCount++;
 		}
 	}
 
@@ -449,14 +467,31 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		meta.setMatchThreshold(Double.parseDouble(wThreshold.getText()));
 		int nrFields = wFields.nrNonEmpty(); 
 		meta.allocate(nrFields);
-		String[][] tempMatching = new String[nrFields][100];
+		String[] tempFields = new String[200];
+		double[][] tempMeasures = new double[nrFields][];
+		ArrayList<String> measureNames = new ArrayList<String>();
+		measureNames.add("Levenshtein");
+		measureNames.add("Damerau Levenshtein");
+		measureNames.add("Needleman Wunsch");
+		measureNames.add("Jaro");
+		measureNames.add("Jaro Winkler");
+		measureNames.add("Pair letters Similarity");
+		measureNames.add("Metaphone");
+		measureNames.add("Double Metaphone");
+		measureNames.add("SoundEx");
+		measureNames.add("Refined SoundEx");
+		
 		for (int i = 0; i < nrFields; i++) {
-			String name = wFields.table.getItem(i).getText(1);
-			String measure = wFields.table.getItem(i).getText(2);
-			String weight = wFields.table.getItem(i).getText(3);				
-			tempMatching[i] = new String[] {name, measure, weight};
+			if (wFields.table.getItem(i).getText(1).length() > 0) {
+				tempFields[i] = wFields.table.getItem(i).getText(1);	
+				double measure = measureNames.indexOf(wFields.table.getItem(i).getText(2));			
+				double weight = Double.parseDouble(wFields.table.getItem(i).getText(3));	
+				tempMeasures[i] = new double[] {measure, weight};				
+			}
+			
 		}
-		meta.setMatching(tempMatching);			
+		meta.setMatchFields(tempFields);
+		meta.setMeasures(tempMeasures);
 	
 		if (wColumnName.getText().length() > 0)
 			meta.setColumnName(wColumnName.getText());

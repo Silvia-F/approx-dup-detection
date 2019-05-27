@@ -124,13 +124,12 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		else {
 			data.incrementIndex();
 			System.out.println("ON RULES");
-			String[][] matching = meta.getMatching();
-			float maxWeight = 0;
+			double maxWeight = 0;
 			String maxField = "";
-			for (int i = 0; i < matching.length; i++) {			
-				if (Float.parseFloat(matching[i][2]) > maxWeight) {
-					maxWeight = Float.parseFloat(matching[i][2]);
-					maxField = matching[i][0];
+			for (int i = 0; i < meta.getMatchFields().length; i++) {			
+				if (meta.getMeasures()[i][1] > maxWeight) {
+					maxWeight = meta.getMeasures()[i][1];
+					maxField = meta.getMatchFields()[i];
 				}
 			}
 			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
@@ -154,9 +153,9 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 							found = true;
 							data.getBlocks().get(maxBlock).add(data.getIndex());
 							ArrayList<String> fields = new ArrayList<String> ();
-							for (int k = 0; k < meta.getMatching().length; k++) {
+							for (int k = 0; k < meta.getMatchFields().length; k++) {
 								for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
-									if (meta.getMatching()[k][0].equals(getInputRowMeta().getFieldNames()[l])) {
+									if (meta.getMatchFields()[k].equals(getInputRowMeta().getFieldNames()[l])) {
 										fields.add(getInputRowMeta().getString(r, l));
 										break;
 									}
@@ -171,9 +170,9 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 						data.getBlocks().put(getInputRowMeta().getString(r, i), new ArrayList<Object> ());
 						data.getBlocks().get(getInputRowMeta().getString(r, i)).add(data.getIndex());
 						ArrayList<String> fields = new ArrayList<String> ();
-						for (int k = 0; k < meta.getMatching().length; k++) {
+						for (int k = 0; k < meta.getMatchFields().length; k++) {
 							for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
-								if (meta.getMatching()[k][0].equals(getInputRowMeta().getFieldNames()[l])) {
+								if (meta.getMatchFields()[k].equals(getInputRowMeta().getFieldNames()[l])) {
 									fields.add(getInputRowMeta().getString(r, l));
 									break;
 								}
@@ -268,7 +267,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	}
 	@SuppressWarnings("unchecked")
 	private void detectRuleApproxDups() {
-		String[][] matching = meta.getMatching();
 		Set<String> keys = data.getBlocks().keySet();
 		for (String s: keys) {			
 			List<String> field_data = (List<String>) data.getBlocks().get(s).get(1); // Data of the block representative
@@ -277,9 +275,8 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					System.out.println("I: " + i + "; J: " + j);
 					Object test = data.getBlocks().get(s).get(j);
 					ArrayList<String> a = (ArrayList<String>)test;
-					System.out.println("TRYING");
-					System.out.println(a.get(0));
-					System.out.println(a.get(1));
+					System.out.println(a);
+					double similarity = 0;
 				}
 			}
 			

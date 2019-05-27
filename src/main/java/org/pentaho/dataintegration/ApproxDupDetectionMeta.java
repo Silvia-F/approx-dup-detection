@@ -59,7 +59,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private static Class<?> PKG = ApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 	private String matchMethod;
 	private String columnName;
-	private String[][] matching;
+	private String[] matchFields;
+	private double[][] measures;
 	private double matchThreshold;
 	
 	public ApproxDupDetectionMeta() {
@@ -67,7 +68,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	}
 	
 	public void allocate(int nrFields) {
-		this.matching = new String[nrFields][];
+		this.matchFields = new String[nrFields];
+		this.measures = new double[nrFields][];
 	}
 	
 	public void loadXML( Node stepnode, List<DatabaseMeta> databases, IMetaStore metaStore ) throws KettleXMLException {
@@ -79,12 +81,16 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("columnName", columnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchMethod", matchMethod)).append(Const.CR);
-		for (int i = 0; i < matching.length; i++) {
-			retval.append("<matching>").append(Const.CR);
-			retval.append("    " + XMLHandler.addTagValue("fieldName", matching[i][0]));
-			retval.append("    " + XMLHandler.addTagValue("measure", matching[i][1]));
-			retval.append("    " + XMLHandler.addTagValue("weight", matching[i][2]));
-			retval.append("</matching>").append(Const.CR);
+		for (int i = 0; i < matchFields.length; i++) {
+			retval.append("<matchField>").append(Const.CR);
+			retval.append("    " + XMLHandler.addTagValue("fieldName", matchFields[i]));
+			retval.append("</matchField>").append(Const.CR);
+		}
+		for (int i = 0; i < measures.length; i++) {
+			retval.append("<measure>").append(Const.CR);
+			retval.append("    " + XMLHandler.addTagValue("name", measures[i][0]));
+			retval.append("    " + XMLHandler.addTagValue("weight", measures[i][1]));
+			retval.append("</measure>").append(Const.CR);
 		}
 		return retval.toString();
 	}		
@@ -105,15 +111,21 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		} catch(Exception ex) {
 			matchThreshold = 0;
 		}
-		int nrFields = XMLHandler.countNodes(stepnode, "matching");
+		int nrFields = XMLHandler.countNodes(stepnode, "matchField");
 		allocate(nrFields);
 		for (int i = 0; i < nrFields; i++) {
-			Node node = XMLHandler.getSubNodeByNr(stepnode, "matching", i);
-			matching[i] = new String[] {
-					XMLHandler.getTagValue(node, "fieldName"),
-					XMLHandler.getTagValue(node, "measure"),
-					XMLHandler.getTagValue(node, "weight")
-			};
+			Node node1 = XMLHandler.getSubNodeByNr(stepnode, "matchField", i);
+			matchFields[i] = XMLHandler.getTagValue(node1, "fieldName");
+
+			Node node2 = XMLHandler.getSubNodeByNr(stepnode, "measure", i);
+			try {
+				measures[i] = new double[] {
+					Double.parseDouble(XMLHandler.getTagValue(node2, "name")),
+					Double.parseDouble(XMLHandler.getTagValue(node2, "weight"))
+				};
+			} catch(Exception ex) {
+				measures[i] = new double[] { 0, 0};
+			}			
 		}
 	}
 	
@@ -210,11 +222,19 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		matchThreshold = threshold;
 	}
 	
-	public String[][] getMatching() {
-		return matching;
+	public String[] getMatchFields() {
+		return matchFields;
 	}
 	
-	public void setMatching(String[][] matching) {
-		this.matching = matching;
+	public void setMatchFields(String[] matchFields) {
+		this.matchFields = matchFields;
+	}
+	
+	public double[][] getMeasures() {
+		return measures;
+	}
+	
+	public void setMeasures(double[][] measures) {
+		this.measures = measures;
 	}
 }
