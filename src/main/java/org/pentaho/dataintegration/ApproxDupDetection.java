@@ -17,7 +17,8 @@
  * under the License.
  */
 package org.pentaho.dataintegration;
-
+import com.wcohen.ss.NeedlemanWunsch;
+import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettlePluginException;
@@ -123,18 +124,16 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		}
 		else {
 			data.incrementIndex();
-			System.out.println("ON RULES");
 			double maxWeight = 0;
 			String maxField = "";
-			for (int i = 0; i < meta.getMatchFields().length; i++) {			
-				if (meta.getMeasures()[i][1] > maxWeight) {
+			for (int i = 0; i < meta.getMatchFields().size(); i++) {			
+				if (meta.getMatchFields().get(i) != null && meta.getMeasures()[i][1] > maxWeight) {
 					maxWeight = meta.getMeasures()[i][1];
-					maxField = meta.getMatchFields()[i];
+					maxField = meta.getMatchFields().get(i);
 				}
 			}
 			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
 				if (getInputRowMeta().getFieldNames()[i].equals(maxField)) {
-					System.out.println("Going for field " + maxField);
 					double threshold= 0.4;
 					boolean found = false;
 					if (data.getBlocks().size() > 0) {
@@ -153,16 +152,14 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 							found = true;
 							data.getBlocks().get(maxBlock).add(data.getIndex());
 							ArrayList<String> fields = new ArrayList<String> ();
-							for (int k = 0; k < meta.getMatchFields().length; k++) {
+							for (int k = 0; k < meta.getMatchFields().size(); k++) {
 								for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
-									if (meta.getMatchFields()[k].equals(getInputRowMeta().getFieldNames()[l])) {
+									if (meta.getMatchFields().get(k) != null && meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
 										fields.add(getInputRowMeta().getString(r, l));
 										break;
 									}
 								}
 							}
-							System.out.println("FIELDS");
-							System.out.println(fields);
 							data.getBlocks().get(maxBlock).add(fields);
 						}
 					}
@@ -170,9 +167,11 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 						data.getBlocks().put(getInputRowMeta().getString(r, i), new ArrayList<Object> ());
 						data.getBlocks().get(getInputRowMeta().getString(r, i)).add(data.getIndex());
 						ArrayList<String> fields = new ArrayList<String> ();
-						for (int k = 0; k < meta.getMatchFields().length; k++) {
+						for (int k = 0; k < meta.getMatchFields().size(); k++) {
+							if (meta.getMatchFields().get(k) == null)
+								break;
 							for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
-								if (meta.getMatchFields()[k].equals(getInputRowMeta().getFieldNames()[l])) {
+								if (meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
 									fields.add(getInputRowMeta().getString(r, l));
 									break;
 								}
@@ -183,9 +182,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					break;
 				}
 			}
-			System.out.println("PRINTING");
-			System.out.println(data.getBlocks().size());
-			System.out.println(data.getBlocks());
 		}
 		return true;
 	}
@@ -269,14 +265,46 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	private void detectRuleApproxDups() {
 		Set<String> keys = data.getBlocks().keySet();
 		for (String s: keys) {			
-			List<String> field_data = (List<String>) data.getBlocks().get(s).get(1); // Data of the block representative
-			for (int i = 1; i < data.getBlocks().get(s).size(); i = i + 2) {
-				for (int j = i; j < data.getBlocks().get(s).size(); j = j + 2) {
-					System.out.println("I: " + i + "; J: " + j);
-					Object test = data.getBlocks().get(s).get(j);
-					ArrayList<String> a = (ArrayList<String>)test;
-					System.out.println(a);
+			for (int i = 1; i < data.getBlocks().get(s).size(); i +=  2) {
+				ArrayList<String> a = (ArrayList<String>)data.getBlocks().get(s).get(i);
+				for (int j = i; j < data.getBlocks().get(s).size(); j += 2) {
+					ArrayList<String> b = (ArrayList<String>)data.getBlocks().get(s).get(j);
+					System.out.println("BEFORE INDEX: " + a + " | " + b);
 					double similarity = 0;
+					for (int k = 0; k < meta.getMeasures().length; k++) {
+						switch ((int)meta.getMeasures()[k][0]) {
+							case(0):								
+								similarity += meta.getMeasures()[k][1] * (1 - StringUtils.getLevenshteinDistance( a.get(k), b.get(k)) / 
+										(double)Math.max(a.get(k).length(), b.get(k).length()));
+								break;
+							case(1):
+								similarity += meta.getMeasures()[k][1] * (1 - Utils.getDamerauLevenshteinDistance(a.get(k), b.get(k)) /
+										((double)Math.max(a.get(k).length(), b.get(k).length())));
+								break;
+							case(2):								
+								similarity += meta.getMeasures()[k][1] * (1 - Math.abs(new NeedlemanWunsch().score(a.get(k), b.get(k)))) /
+										((double)Math.max(a.get(k).length(), b.get(k).length()));
+								break;
+							case(3):
+								System.out.println("a: " + a.get(k));
+								System.out.println("b: " + b.get(k));
+								similarity += new Jaro.score
+								break;
+							case(4):
+								break;
+							case(5):
+								break;
+							case(6):
+								break;
+							case(7):
+								break;
+							case(8):
+								break;
+							case(9):
+								break;
+						}
+					}
+					System.out.println("SIMILARITY: " + similarity);
 				}
 			}
 			

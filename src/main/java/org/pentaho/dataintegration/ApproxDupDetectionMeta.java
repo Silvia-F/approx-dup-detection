@@ -45,6 +45,7 @@ import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.metastore.api.IMetaStore;
 import org.w3c.dom.Node;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -59,7 +60,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private static Class<?> PKG = ApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 	private String matchMethod;
 	private String columnName;
-	private String[] matchFields;
+	private ArrayList<String> matchFields;
 	private double[][] measures;
 	private double matchThreshold;
 	
@@ -68,8 +69,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	}
 	
 	public void allocate(int nrFields) {
-		this.matchFields = new String[nrFields];
-		this.measures = new double[nrFields][];
+		this.matchFields = new ArrayList<String>();
+		this.measures = new double[nrFields][2];
 	}
 	
 	public void loadXML( Node stepnode, List<DatabaseMeta> databases, IMetaStore metaStore ) throws KettleXMLException {
@@ -81,11 +82,13 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("columnName", columnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchMethod", matchMethod)).append(Const.CR);
-		for (int i = 0; i < matchFields.length; i++) {
+		System.out.println("CONTROL1 GETXML: " + matchFields.size());
+		for (int i = 0; i < matchFields.size(); i++) {
 			retval.append("<matchField>").append(Const.CR);
-			retval.append("    " + XMLHandler.addTagValue("fieldName", matchFields[i]));
+			retval.append("    " + XMLHandler.addTagValue("fieldName", matchFields.get(i)));
 			retval.append("</matchField>").append(Const.CR);
 		}
+		System.out.println("CONTROL2 GETXML: " + measures.length);
 		for (int i = 0; i < measures.length; i++) {
 			retval.append("<measure>").append(Const.CR);
 			retval.append("    " + XMLHandler.addTagValue("name", measures[i][0]));
@@ -112,10 +115,11 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			matchThreshold = 0;
 		}
 		int nrFields = XMLHandler.countNodes(stepnode, "matchField");
+		System.out.println("CONTROL1 READ: " + nrFields);
 		allocate(nrFields);
 		for (int i = 0; i < nrFields; i++) {
 			Node node1 = XMLHandler.getSubNodeByNr(stepnode, "matchField", i);
-			matchFields[i] = XMLHandler.getTagValue(node1, "fieldName");
+			matchFields.add(XMLHandler.getTagValue(node1, "fieldName"));
 
 			Node node2 = XMLHandler.getSubNodeByNr(stepnode, "measure", i);
 			try {
@@ -222,11 +226,11 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		matchThreshold = threshold;
 	}
 	
-	public String[] getMatchFields() {
+	public ArrayList<String> getMatchFields() {
 		return matchFields;
 	}
 	
-	public void setMatchFields(String[] matchFields) {
+	public void setMatchFields(ArrayList<String> matchFields) {
 		this.matchFields = matchFields;
 	}
 	

@@ -437,13 +437,9 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		measureNames.add("SoundEx");
 		measureNames.add("Refined SoundEx");
 		int rowCount = 0;
-		for (int i = 0; i < meta.getMatchFields().length; i++) {
-			if (meta.getMatchFields()[i] != null) {
-				System.out.println(meta.getMatchFields()[i]);
-				System.out.println(meta.getMeasures()[i][0]);
-				System.out.println(meta.getMeasures()[i][1]);
-				System.out.println(measureNames.get((int)meta.getMeasures()[i][0]));
-				wFields.table.getItem(rowCount).setText(new String[] {String.valueOf(rowCount + 1), meta.getMatchFields()[i], 
+		for (int i = 0; i < meta.getMatchFields().size(); i++) {
+			if (meta.getMatchFields().get(i) != null) {
+				wFields.table.getItem(rowCount).setText(new String[] {String.valueOf(rowCount + 1), meta.getMatchFields().get(i), 
 						measureNames.get((int)meta.getMeasures()[i][0]), String.valueOf(meta.getMeasures()[i][1])});
 			}
 			
@@ -467,7 +463,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		meta.setMatchThreshold(Double.parseDouble(wThreshold.getText()));
 		int nrFields = wFields.nrNonEmpty(); 
 		meta.allocate(nrFields);
-		String[] tempFields = new String[200];
+		ArrayList<String> tempFields = new ArrayList<String>();
 		double[][] tempMeasures = new double[nrFields][];
 		ArrayList<String> measureNames = new ArrayList<String>();
 		measureNames.add("Levenshtein");
@@ -483,7 +479,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		for (int i = 0; i < nrFields; i++) {
 			if (wFields.table.getItem(i).getText(1).length() > 0) {
-				tempFields[i] = wFields.table.getItem(i).getText(1);	
+				tempFields.add(wFields.table.getItem(i).getText(1));	
 				double measure = measureNames.indexOf(wFields.table.getItem(i).getText(2));			
 				double weight = Double.parseDouble(wFields.table.getItem(i).getText(3));	
 				tempMeasures[i] = new double[] {measure, weight};				
