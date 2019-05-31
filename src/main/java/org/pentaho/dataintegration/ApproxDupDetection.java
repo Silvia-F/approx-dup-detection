@@ -17,6 +17,8 @@
  * under the License.
  */
 package org.pentaho.dataintegration;
+import com.wcohen.ss.Jaro;
+import com.wcohen.ss.JaroWinkler;
 import com.wcohen.ss.NeedlemanWunsch;
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.core.RowMetaAndData;
@@ -35,6 +37,7 @@ import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
+import org.pentaho.di.trans.steps.fuzzymatch.LetterPairSimilarity;
 import org.pentaho.di.core.util.Utils;
 
 import java.math.RoundingMode;
@@ -264,12 +267,12 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	@SuppressWarnings("unchecked")
 	private void detectRuleApproxDups() {
 		Set<String> keys = data.getBlocks().keySet();
-		for (String s: keys) {			
+		for (String s: keys) {
+			ArrayList<ArrayList<Double>> blockSims = new ArrayList<ArrayList<Double>>();
 			for (int i = 1; i < data.getBlocks().get(s).size(); i +=  2) {
 				ArrayList<String> a = (ArrayList<String>)data.getBlocks().get(s).get(i);
-				for (int j = i; j < data.getBlocks().get(s).size(); j += 2) {
+				for (int j = i + 2; j < data.getBlocks().get(s).size(); j += 2) {
 					ArrayList<String> b = (ArrayList<String>)data.getBlocks().get(s).get(j);
-					System.out.println("BEFORE INDEX: " + a + " | " + b);
 					double similarity = 0;
 					for (int k = 0; k < meta.getMeasures().length; k++) {
 						switch ((int)meta.getMeasures()[k][0]) {
@@ -286,29 +289,53 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 										((double)Math.max(a.get(k).length(), b.get(k).length()));
 								break;
 							case(3):
-								System.out.println("a: " + a.get(k));
-								System.out.println("b: " + b.get(k));
-								similarity += new Jaro.score
+								similarity += meta.getMeasures()[k][1] * new Jaro().score(a.get(k), b.get(k));
 								break;
 							case(4):
+								similarity += meta.getMeasures()[k][1] * new JaroWinkler().score(a.get(k), b.get(k));
 								break;
 							case(5):
+								similarity += meta.getMeasures()[k][1] * LetterPairSimilarity.getSimiliarity(a.get(k), b.get(k));
+								//pair letter
 								break;
 							case(6):
+								//metaphone [get dophonetic() from fuzzy match]
 								break;
 							case(7):
+								//double matephone [get dophonetic() from fuzzy match]
 								break;
 							case(8):
+								//soundex [get dophonetic() from fuzzy match]
 								break;
 							case(9):
+								// refined soundex [get dophonetic() from fuzzy match]
 								break;
 						}
 					}
-					System.out.println("SIMILARITY: " + similarity);
+					ArrayList<Double> temp = new ArrayList<Double>();
+					temp.add((double)i);
+					temp.add((double)j);
+					temp.add(similarity);
+					blockSims.add(temp);
 				}
+			}	
+			//data.getRulesSim().put((int)data.getBlocks().get(s).get(0), String.valueOf((int)data.getBlocks().get(s).get(0)));
+			for (int i = 1; i < data.getBlocks().get(s).size(); i += 2) {
+				ArrayList<String> a = (ArrayList<String>)data.getBlocks().get(s).get(i);
+				Double recordIndex = Double.parseDouble(a.get(1));
+				double maxSim = 0;
+				double maxIndex = 0;
+				for (int j = 0; j < blockSims.size(); j++) {
+					if(blockSims.get(i).contains(recordIndex) && blockSims.get(i).get(2) > maxIndex) {
+						maxIndex = blockSims.get(i).get(1) == recordIndex ? blockSims.get(i).get(2): blockSims.get(i).get(1);
+					}
+				}
+				//data.getRulesSim().put(recordIndex.intValue(), maxIndex);
 			}
-			
+				
 		}
+		System.out.println("SIMS");
+		System.out.println(data.getRulesSim());
 	}
 	
 	private void writeOutput() throws KettleStepException, KettlePluginException {

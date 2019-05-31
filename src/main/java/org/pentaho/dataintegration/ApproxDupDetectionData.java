@@ -39,6 +39,7 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	protected Vector<Node> graph;
 	protected List<Object[]> buffer;
 	protected Map<String, List<Object>> blocks;
+	protected Map<Double, Double> rulesSim;
 	private int rowIndex;
 
 	/**
@@ -50,6 +51,7 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 		buffer = new ArrayList<Object[]>( 5000 );
 		
 		blocks = new HashMap<String, List<Object>> ( 5000 );
+		rulesSim = new HashMap<Double, Double> ( 5000 );
 		rowIndex = 0;
 	}
 	
@@ -82,5 +84,9 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	
 	public Map<String, List<Object>> getBlocks() {
 		return blocks;
+	}
+	
+	public Map<Double, Double> getRulesSim() {
+		return rulesSim;
 	}
 }
