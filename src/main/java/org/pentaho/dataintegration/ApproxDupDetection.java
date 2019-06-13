@@ -25,6 +25,7 @@ import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettlePluginException;
 import org.pentaho.di.core.exception.KettleStepException;
+import org.pentaho.di.core.exception.KettleValueException;
 import org.pentaho.di.core.row.RowDataUtil;
 import org.pentaho.di.core.row.RowMeta;
 import org.pentaho.di.core.row.ValueMetaInterface;
@@ -90,16 +91,11 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		Object[] r = getRow(); // get row, set busy!
 		if ( r == null ) {
 			// no more input to be expected...
-			if (meta.getMatchMethod().equals("Domain-Independent")) {
+			if (meta.getMatchMethod().equals("Domain-Independent"))
 				detectDIApproxDups();
-				writeDIOutput();
-			}
-			else {
+			else
 				detectRuleApproxDups();
-				writeRuleOutput();
-			}
-			
-			
+			writeOutput();	
 			
 			setOutputDone();
 			return false;
@@ -107,13 +103,23 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			
 		if (first) {
 			data.setOutputRowMeta(getInputRowMeta().clone());
-			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( meta.getColumnName(), ValueMetaInterface.TYPE_INTEGER ));
-			data.getOutputRowMeta().addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));
+			meta.getFields(data.getOutputRowMeta(), getStepname(), null, null, this, repository, metaStore);
+
+			// Convert weight scale to [0, 1]
+			double total = 0;
+			for (double[] measure: meta.getMeasures()) {
+				total += measure[1];
+			}
+			for (int i = 0; i < meta.getMeasures().length; i++) {
+				meta.getConvertedMeasures()[i][0] = meta.getMeasures()[i][0];
+				meta.getConvertedMeasures()[i][1] = meta.getMeasures()[i][1] / total;
+			}
+
 			first = false;
 		}
-		if (meta.getMatchMethod().equals("Domain-Independent")) {
-			data.buffer.add(r);
-			data.incrementIndex();
+		data.buffer.add(r);
+		data.incrementIndex();
+		if (meta.getMatchMethod().equals("Domain-Independent")) {			
 			String data_str = new String();			
 			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
 				if (getInputRowMeta().getString(r, i) != null)
@@ -128,19 +134,17 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			}
 		}
 		else {
-			data.incrementIndex();
 			double maxWeight = 0;
 			String maxField = "";
 			for (int i = 0; i < meta.getMatchFields().size(); i++) {			
-				if (meta.getMatchFields().get(i) != null && meta.getMeasures()[i][1] > maxWeight) {
-					maxWeight = meta.getMeasures()[i][1];
+				if (meta.getMatchFields().get(i) != null && meta.getConvertedMeasures()[i][1] > maxWeight) {
+					maxWeight = meta.getConvertedMeasures()[i][1];
 					maxField = meta.getMatchFields().get(i);
 				}
 			}
-			ArrayList<Object> temp = new ArrayList<Object>();
+			System.out.println("MAX: " + maxField + " | " + maxWeight );
 			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
 				if (getInputRowMeta().getFieldNames()[i].equals(maxField)) {
-					temp.add(getInputRowMeta().getString(r, i));
 					double threshold= 0.4;
 					boolean found = false;
 					if (data.getBlocks().size() > 0) {
@@ -186,9 +190,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 						}
 						data.getBlocks().get(getInputRowMeta().getString(r, i)).add(fields);
 					}
-					break;
-				}
-				data.getRuleData().put(data.getIndex(), temp);
+				}				
 			}
 		}
 		return true;
@@ -269,6 +271,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			}
 		}	
 	}
+	
 	@SuppressWarnings("unchecked")
 	private void detectRuleApproxDups() {
 		Set<String> keys = data.getBlocks().keySet();
@@ -279,28 +282,28 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				for (int j = i + 2; j < data.getBlocks().get(s).size(); j += 2) {
 					ArrayList<String> b = (ArrayList<String>)data.getBlocks().get(s).get(j);
 					double similarity = 0;
-					for (int k = 0; k < meta.getMeasures().length; k++) {
-						switch ((int)meta.getMeasures()[k][0]) {
+					for (int k = 0; k < meta.getConvertedMeasures().length; k++) {
+						switch ((int)meta.getConvertedMeasures()[k][0]) {
 							case(0):								
-								similarity += meta.getMeasures()[k][1] * (1 - StringUtils.getLevenshteinDistance( a.get(k), b.get(k)) / 
+								similarity += meta.getConvertedMeasures()[k][1] * (1 - StringUtils.getLevenshteinDistance( a.get(k), b.get(k)) / 
 										(double)Math.max(a.get(k).length(), b.get(k).length()));
 								break;
 							case(1):
-								similarity += meta.getMeasures()[k][1] * (1 - Utils.getDamerauLevenshteinDistance(a.get(k), b.get(k)) /
+								similarity += meta.getConvertedMeasures()[k][1] * (1 - Utils.getDamerauLevenshteinDistance(a.get(k), b.get(k)) /
 										((double)Math.max(a.get(k).length(), b.get(k).length())));
 								break;
 							case(2):								
-								similarity += meta.getMeasures()[k][1] * (1 - Math.abs(new NeedlemanWunsch().score(a.get(k), b.get(k)))) /
+								similarity += meta.getConvertedMeasures()[k][1] * (1 - Math.abs(new NeedlemanWunsch().score(a.get(k), b.get(k)))) /
 										((double)Math.max(a.get(k).length(), b.get(k).length()));
 								break;
 							case(3):
-								similarity += meta.getMeasures()[k][1] * new Jaro().score(a.get(k), b.get(k));
+								similarity += meta.getConvertedMeasures()[k][1] * new Jaro().score(a.get(k), b.get(k));
 								break;
 							case(4):
-								similarity += meta.getMeasures()[k][1] * new JaroWinkler().score(a.get(k), b.get(k));
+								similarity += meta.getConvertedMeasures()[k][1] * new JaroWinkler().score(a.get(k), b.get(k));
 								break;
 							case(5):
-								similarity += meta.getMeasures()[k][1] * LetterPairSimilarity.getSimiliarity(a.get(k), b.get(k));
+								similarity += meta.getConvertedMeasures()[k][1] * LetterPairSimilarity.getSimiliarity(a.get(k), b.get(k));
 								//pair letter
 								break;
 							case(6):
@@ -326,6 +329,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			}	
 			Double first = ((Integer)data.getBlocks().get(s).get(0)).doubleValue();
 			data.getRulesSim().put(first, first);
+			//System.out.println("BLOCKS: " + data.getBlocks());
 			for (int i = 0; i < data.getBlocks().get(s).size(); i += 2) {
 				Double recordIndex = ((Integer)data.getBlocks().get(s).get(i)).doubleValue();
 				double maxSim = 0;
@@ -341,7 +345,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		}
 	}
 	
-	private void writeDIOutput() throws KettleStepException, KettlePluginException {
+	private void writeOutput() throws KettleStepException, KettlePluginException {
 		for (int i = 0; i < data.buffer.size(); i++) {
 			Object[] newRow = new Object[data.buffer.get(i).length + 2];
 			for (int j = 0; j < data.buffer.get(i).length; j++) 
@@ -350,43 +354,27 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getColumnName(), ValueMetaInterface.TYPE_INTEGER ));
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));		
 			
-			 double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
-						Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length())));
-			 DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-			 symbols.setDecimalSeparator('.');
-			 DecimalFormat df = new DecimalFormat("#.#", symbols);
-			 
-			 df.setRoundingMode(RoundingMode.DOWN);
-			 similarity = Double.parseDouble(df.format(similarity));
-
-					
-			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), similarity});
-			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
+			if (meta.getMatchMethod().equals("Domain-Independent")) {
+				double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
+							Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length())));
+				DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+				symbols.setDecimalSeparator('.');
+				DecimalFormat df = new DecimalFormat("#.#", symbols);
+				 
+				df.setRoundingMode(RoundingMode.DOWN);
+				similarity = Double.parseDouble(df.format(similarity));
+				
+				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), similarity});
+				newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
+			}
+			
+			else {
+				Double d = (Double)((double)(i + 1));
+				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { data.getRulesSim().get(d).longValue(), 0.5});
+				newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
+			}
+			
 			putRow( data.getOutputRowMeta(), newRow);
-		}
-	}
-	
-	private void writeRuleOutput() throws KettlePluginException, KettleStepException {
-		for (int i = 1; i < data.getRuleData().size() + 1; i++) {
-			Object[] newRow = new Object[data.getRuleData().get(i).size()];
-			for (int j = 0; j < data.getRuleData().get(i).size(); j++) 
-				newRow[j] = data.getRuleData().get(i).get(j);
-			RowMeta rowMeta = new RowMeta();
-			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getColumnName(), ValueMetaInterface.TYPE_INTEGER ));
-			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));
-			
-			double similarity = 0; //TODO
-			DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-			 symbols.setDecimalSeparator('.');
-			DecimalFormat df = new DecimalFormat("#.#", symbols);
-			df.setRoundingMode(RoundingMode.DOWN);
-			similarity = Double.parseDouble(df.format(similarity));
-			
-			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { data.getRulesSim().get(i) , similarity});
-			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
-			putRow( data.getOutputRowMeta(), newRow);
-			
-			
 		}
 	}
 }

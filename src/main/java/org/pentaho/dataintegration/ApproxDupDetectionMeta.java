@@ -26,6 +26,7 @@ import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettlePluginException;
 import org.pentaho.di.core.exception.KettleStepException;
+import org.pentaho.di.core.exception.KettleValueException;
 import org.pentaho.di.core.exception.KettleXMLException;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.core.row.ValueMetaInterface;
@@ -62,6 +63,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private String columnName;
 	private ArrayList<String> matchFields;
 	private double[][] measures;
+	private double[][] convertedMeasures;
 	private double matchThreshold;
 	
 	public ApproxDupDetectionMeta() {
@@ -71,6 +73,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	public void allocate(int nrFields) {
 		this.matchFields = new ArrayList<String>();
 		this.measures = new double[nrFields][2];
+		this.convertedMeasures = new double[nrFields][2];
 	}
 	
 	public void loadXML( Node stepnode, List<DatabaseMeta> databases, IMetaStore metaStore ) throws KettleXMLException {
@@ -82,13 +85,11 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("columnName", columnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchMethod", matchMethod)).append(Const.CR);
-		System.out.println("CONTROL1 GETXML: " + matchFields.size());
 		for (int i = 0; i < matchFields.size(); i++) {
 			retval.append("<matchField>").append(Const.CR);
 			retval.append("    " + XMLHandler.addTagValue("fieldName", matchFields.get(i)));
 			retval.append("</matchField>").append(Const.CR);
 		}
-		System.out.println("CONTROL2 GETXML: " + measures.length);
 		for (int i = 0; i < measures.length; i++) {
 			retval.append("<measure>").append(Const.CR);
 			retval.append("    " + XMLHandler.addTagValue("name", measures[i][0]));
@@ -115,7 +116,6 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			matchThreshold = 0;
 		}
 		int nrFields = XMLHandler.countNodes(stepnode, "matchField");
-		System.out.println("CONTROL1 READ: " + nrFields);
 		allocate(nrFields);
 		for (int i = 0; i < nrFields; i++) {
 			Node node1 = XMLHandler.getSubNodeByNr(stepnode, "matchField", i);
@@ -150,19 +150,18 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	  
 	public void getFields( RowMetaInterface rowMeta, String origin, RowMetaInterface[] info, StepMeta nextStep, 
 			VariableSpace space, Repository repository, IMetaStore metaStore ) throws KettleStepException {
+		
 		try {
 			ValueMetaInterface v = ValueMetaFactory.createValueMeta( getColumnName(),  ValueMetaInterface.TYPE_INTEGER );
 			rowMeta.addValueMeta( v );
 		} catch (KettlePluginException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Problem while adding new row meta!");
 		}
 		try {
 			ValueMetaInterface v = ValueMetaFactory.createValueMeta( "Similarity",  ValueMetaInterface.TYPE_NUMBER );
 			rowMeta.addValueMeta( v );
 		} catch (KettlePluginException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Problem while adding new row meta!");
 		}
 	}
 	  
@@ -240,5 +239,9 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public void setMeasures(double[][] measures) {
 		this.measures = measures;
+	}
+
+	public double[][] getConvertedMeasures() {
+		return convertedMeasures;
 	}
 }
