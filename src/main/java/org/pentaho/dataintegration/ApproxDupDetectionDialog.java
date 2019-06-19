@@ -441,8 +441,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 			if (meta.getMatchFields().get(i) != null) {
 				wFields.table.getItem(rowCount).setText(new String[] {String.valueOf(rowCount + 1), meta.getMatchFields().get(i), 
 						measureNames.get((int)meta.getMeasures()[i][0]), String.valueOf(meta.getMeasures()[i][1])});
-			}
-			
+			}			
 			rowCount++;
 		}
 	}
@@ -484,7 +483,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				double weight = Double.parseDouble(wFields.table.getItem(i).getText(3));	
 				tempMeasures[i] = new double[] {measure, weight};				
 			}
-			
 		}
 		meta.setMatchFields(tempFields);
 		meta.setMeasures(tempMeasures);

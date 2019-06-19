@@ -95,8 +95,8 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				detectDIApproxDups();
 			else
 				detectRuleApproxDups();
-			writeOutput();	
 			
+			writeOutput();	
 			setOutputDone();
 			return false;
 		}
@@ -105,7 +105,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			data.setOutputRowMeta(getInputRowMeta().clone());
 			meta.getFields(data.getOutputRowMeta(), getStepname(), null, null, this, repository, metaStore);
 
-			// Convert weight scale to [0, 1]
+			// Normalize weights
 			double total = 0;
 			for (double[] measure: meta.getMeasures()) {
 				total += measure[1];
@@ -114,7 +114,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				meta.getConvertedMeasures()[i][0] = meta.getMeasures()[i][0];
 				meta.getConvertedMeasures()[i][1] = meta.getMeasures()[i][1] / total;
 			}
-
+			
 			first = false;
 		}
 		data.buffer.add(r);
@@ -126,12 +126,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					data_str = data_str.concat(getInputRowMeta().getString(r, i));
 				data_str = data_str.concat(" ");
 			}
-			data.addNode(data_str, data.getIndex());
-			
-			if ( checkFeedback( getLinesRead() ) ) {
-				if ( log.isBasic() )
-					logBasic( BaseMessages.getString( PKG, "ApproxDupDetection.Log.LineNumber" ) + getLinesRead() );
-			}
+			data.addNode(data_str, data.getIndex());			
 		}
 		else {
 			double maxWeight = 0;
@@ -142,7 +137,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					maxField = meta.getMatchFields().get(i);
 				}
 			}
-			System.out.println("MAX: " + maxField + " | " + maxWeight );
 			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
 				if (getInputRowMeta().getFieldNames()[i].equals(maxField)) {
 					double threshold= 0.4;
@@ -193,6 +187,10 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				}				
 			}
 		}
+		if ( checkFeedback( getLinesRead() ) ) {
+			if ( log.isBasic() )
+				logBasic( BaseMessages.getString( PKG, "ApproxDupDetection.Log.LineNumber" ) + getLinesRead() );
+		}
 		return true;
 	}
 	
@@ -212,7 +210,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				Node queueNode = queue.get(j);
 				
 				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getData(), queueNode.getData()) /
-						Math.max(node.getData().length(), queueNode.getData().length())) > matchThreshold) {
+						Math.max(node.getData().length(), queueNode.getData().length())) >= matchThreshold) {
 					node.union(queueNode);
 					queue.addFirst(queueNode);
 					queue.remove(j + 1);
@@ -274,6 +272,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	
 	@SuppressWarnings("unchecked")
 	private void detectRuleApproxDups() {
+		double threshold = meta.getMatchThreshold();
 		Set<String> keys = data.getBlocks().keySet();
 		for (String s: keys) {
 			ArrayList<ArrayList<Double>> blockSims = new ArrayList<ArrayList<Double>>();
@@ -328,18 +327,20 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				}
 			}	
 			Double first = ((Integer)data.getBlocks().get(s).get(0)).doubleValue();
-			data.getRulesSim().put(first, first);
-			//System.out.println("BLOCKS: " + data.getBlocks());
+			data.getRulesSim().put(first, new Double[] {first, new Double(-1)});
 			for (int i = 0; i < data.getBlocks().get(s).size(); i += 2) {
 				Double recordIndex = ((Integer)data.getBlocks().get(s).get(i)).doubleValue();
 				double maxSim = 0;
 				double maxIndex = 0;
 				for (int j = 0; j < blockSims.size(); j++) {
+					if (blockSims.get(j).get(2) < threshold)
+						continue;
 					if (blockSims.get(j).contains(recordIndex) && blockSims.get(j).get(2) > maxSim) {	
 						maxIndex = blockSims.get(j).get(1) == recordIndex ? blockSims.get(j).get(0): blockSims.get(j).get(1);
+						maxSim = blockSims.get(j).get(2);
 					}
 				}
-				data.getRulesSim().put(recordIndex, maxIndex);
+				data.getRulesSim().put(recordIndex, new Double[] { maxIndex, (Double)maxSim });
 			}
 				
 		}
@@ -352,28 +353,41 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				newRow[j] = data.buffer.get(i)[j];
 			RowMeta rowMeta = new RowMeta();
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getColumnName(), ValueMetaInterface.TYPE_INTEGER ));
-			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));		
+			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_STRING ));		
 			
+			String outputSimilarity = "-";
 			if (meta.getMatchMethod().equals("Domain-Independent")) {
-				double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
+				if (i + 1 != data.getGraph().get(i).findSet().getIndex()) {
+					double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
 							Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length())));
-				DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-				symbols.setDecimalSeparator('.');
-				DecimalFormat df = new DecimalFormat("#.#", symbols);
+					DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+					symbols.setDecimalSeparator('.');
+					DecimalFormat df = new DecimalFormat("#.#", symbols);
 				 
-				df.setRoundingMode(RoundingMode.DOWN);
-				similarity = Double.parseDouble(df.format(similarity));
+					df.setRoundingMode(RoundingMode.DOWN);
+					outputSimilarity = df.format(similarity);
+				}
 				
-				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), similarity});
+				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), outputSimilarity});
 				newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
 			}
 			
 			else {
 				Double d = (Double)((double)(i + 1));
-				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { data.getRulesSim().get(d).longValue(), 0.5});
+				if (data.getRulesSim().get(d)[0] == 0)
+					data.getRulesSim().get(d)[0] = d;	
+				if (! d.equals(data.getRulesSim().get(d)[0])) {					
+					DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+					symbols.setDecimalSeparator('.');
+					DecimalFormat df = new DecimalFormat("#.#", symbols);
+				 
+					df.setRoundingMode(RoundingMode.DOWN);
+					outputSimilarity = df.format(data.getRulesSim().get(d)[1]);
+				}
+				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { data.getRulesSim().get(d)[0].longValue(), 
+						outputSimilarity});
 				newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
-			}
-			
+			}			
 			putRow( data.getOutputRowMeta(), newRow);
 		}
 	}

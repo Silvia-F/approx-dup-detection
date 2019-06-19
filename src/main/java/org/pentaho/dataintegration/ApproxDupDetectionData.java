@@ -30,17 +30,21 @@ import java.util.Vector;
 
 /**
  * 
- * This class holds temporary data for the similarity calculations
+ * This class holds temporary data for the approximate duplicate detection calculations
  * 
  */
 public class ApproxDupDetectionData extends BaseStepData implements StepDataInterface {
 
 	private RowMetaInterface outputRowMeta;
-	protected Vector<Node> graph;
-	protected List<Object[]> buffer;
-	protected Map<String, List<Object>> blocks;
-	protected Map<Double, Double> rulesSim;
-	private int rowIndex;
+	protected Vector<Node> graph; // Keeps nodes that form the graph for the domain-independent approach
+	protected List<Object[]> buffer; // Keeps row data for output
+	
+	// Blocks for the rule approach. The key is the value of grouping field and the list has record data needed for the calculations
+	protected Map<String, List<Object>> blocks; 
+	// Key is the index of each record. The array has the index of the record being compared and the similarity between records
+	protected Map<Double, Double[]> rulesSim; 
+	
+	private int rowIndex; // Keeps the index of the last processed row 
 
 	/**
 	* Create a new ApproxDupDetectionData instance
@@ -51,7 +55,7 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 		buffer = new ArrayList<Object[]>( 5000 );
 		
 		blocks = new HashMap<String, List<Object>> ( 5000 );
-		rulesSim = new HashMap<Double, Double> ( 5000 );
+		rulesSim = new HashMap<Double, Double[]> ( 5000 );
 		rowIndex = 0;
 	}
 	
@@ -86,7 +90,7 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 		return blocks;
 	}
 	
-	public Map<Double, Double> getRulesSim() {
+	public Map<Double, Double[]> getRulesSim() {
 		return rulesSim;
 	}
 }

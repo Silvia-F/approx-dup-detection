@@ -59,12 +59,13 @@ import java.util.List;
 public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInterface {
   
 	private static Class<?> PKG = ApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
-	private String matchMethod;
-	private String columnName;
-	private ArrayList<String> matchFields;
-	private double[][] measures;
-	private double[][] convertedMeasures;
-	private double matchThreshold;
+	
+	private String matchMethod; // States which match method to compute
+	private String columnName; // Keeps the name of the output column for the approximate duplicate groups
+	private ArrayList<String> matchFields; // Keeps which fields to match in the rule approach
+	private double[][] measures; // Keeps the weight of each field along with the similarity measure to use for each field
+	private double[][] convertedMeasures; //Keeps similar information to the measures matrix, but the weights are normalized.
+	private double matchThreshold; // Keeps the matching threshold value
 	
 	public ApproxDupDetectionMeta() {
 		super(); // allocate BaseStepMeta
@@ -158,7 +159,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			System.out.println("Problem while adding new row meta!");
 		}
 		try {
-			ValueMetaInterface v = ValueMetaFactory.createValueMeta( "Similarity",  ValueMetaInterface.TYPE_NUMBER );
+			ValueMetaInterface v = ValueMetaFactory.createValueMeta( "Similarity",  ValueMetaInterface.TYPE_STRING );
 			rowMeta.addValueMeta( v );
 		} catch (KettlePluginException e) {
 			System.out.println("Problem while adding new row meta!");

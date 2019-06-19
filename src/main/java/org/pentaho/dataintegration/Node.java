@@ -2,10 +2,10 @@ package org.pentaho.dataintegration;
 
 public class Node implements Comparable<Node> {
 	
-	private String data;
-	private String reversedData;
-	private int index;
-	private Node parent;
+	private String data; // The row data concatenated into a single String
+	private String reversedData; // The converted data String, but the characters in reverse order
+	private int index; // Index of the row in the dataset
+	private Node parent; // The parent Node of the instance
 	
 	public Node(String data, int index) {
 		this.data = data;
@@ -14,6 +14,10 @@ public class Node implements Comparable<Node> {
 		this.index = index;
 	}
 	
+	/**
+	 * Method to obtain the representative of the group, that corresponds to the parent Node
+	 * @return Node corresponding to the representative Node
+	 */
 	public Node findSet() {
 		if (!this.equals(this.parent)) {
 			this.parent = this.parent.findSet();
@@ -21,7 +25,11 @@ public class Node implements Comparable<Node> {
 		return this.parent;
 	}
 	
-	public void link(Node node) {
+	/**
+	 * Method to merge two groups of Nodes
+	 * @param node corresponding to a Node belong to another group to be merged
+	 */	
+	public void union(Node node) {
 		Node x = this.findSet();
 		Node y = node.findSet();
 		if (x.index > y.index) {
@@ -30,18 +38,17 @@ public class Node implements Comparable<Node> {
 		else {
 			y.parent = x;
 		}
-	}
-	
-	public void union(Node node) {
-		this.link(node);
 	}	
+	
+	/**
+	 * Comparator used to order the Nodes based on their data's lexicographic order
+	 */
+	public int compareTo(Node n2) {
+		return this.getData().compareTo(n2.getData());
+	}
 	
 	public String getData() {
 		return this.data;
-	}
-	
-	public int compareTo(Node n2) {
-		return this.getData().compareTo(n2.getData());
 	}
 	
 	public void setReversedData(String data) {
