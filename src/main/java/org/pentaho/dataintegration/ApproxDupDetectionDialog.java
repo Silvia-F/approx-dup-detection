@@ -420,8 +420,11 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		else {
 			wRuleCheck.setSelection(true);
 		}
-		if (meta.getMatchThreshold() != 0)
-			wThreshold.setText(String.valueOf(meta.getMatchThreshold()));
+		if (meta.getMatchThresholdDI() != 0)
+			wThreshold.setText(String.valueOf(meta.getMatchThresholdDI()));
+		
+		if (meta.getMatchThresholdRule() != 0)
+			wRuleThreshold.setText(String.valueOf(meta.getMatchThresholdRule()));
 		
 		wColumnName.setText(meta.getColumnName());
 		
@@ -459,7 +462,8 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		else {
 			meta.setMatchMethod("Rule-Based");
 		}
-		meta.setMatchThreshold(Double.parseDouble(wThreshold.getText()));
+		meta.setMatchThresholdDI(Double.parseDouble(wThreshold.getText()));
+		meta.setMatchThresholdRule(Double.parseDouble(wRuleThreshold.getText()));
 		int nrFields = wFields.nrNonEmpty(); 
 		meta.allocate(nrFields);
 		ArrayList<String> tempFields = new ArrayList<String>();

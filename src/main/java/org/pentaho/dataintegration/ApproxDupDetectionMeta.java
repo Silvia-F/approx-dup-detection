@@ -65,7 +65,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private ArrayList<String> matchFields; // Keeps which fields to match in the rule approach
 	private double[][] measures; // Keeps the weight of each field along with the similarity measure to use for each field
 	private double[][] convertedMeasures; //Keeps similar information to the measures matrix, but the weights are normalized.
-	private double matchThreshold; // Keeps the matching threshold value
+	private double matchThresholdDI; // Keeps the matching threshold value for the domain-independent approach
+	private double matchThresholdRule; // Keeps the matching threshold value for the rule-based approach
 	
 	public ApproxDupDetectionMeta() {
 		super(); // allocate BaseStepMeta
@@ -83,14 +84,15 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public String getXML() {		
 		StringBuilder retval = new StringBuilder(300);
-		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("columnName", columnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchMethod", matchMethod)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("matchThresholdDI", matchThresholdDI)).append(Const.CR);
 		for (int i = 0; i < matchFields.size(); i++) {
 			retval.append("<matchField>").append(Const.CR);
 			retval.append("    " + XMLHandler.addTagValue("fieldName", matchFields.get(i)));
 			retval.append("</matchField>").append(Const.CR);
 		}
+		retval.append(XMLHandler.addTagValue("matchThresholdRule", matchThresholdRule)).append(Const.CR);
 		for (int i = 0; i < measures.length; i++) {
 			retval.append("<measure>").append(Const.CR);
 			retval.append("    " + XMLHandler.addTagValue("name", measures[i][0]));
@@ -108,13 +110,21 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private void readData( Node stepnode ) {
 		matchMethod = XMLHandler.getTagValue(stepnode, "matchMethod");
 		columnName = XMLHandler.getTagValue(stepnode, "columnName");
-		String tempThreshold = XMLHandler.getTagValue(stepnode, "matchThreshold");
+		String tempThresholdDI = XMLHandler.getTagValue(stepnode, "matchThresholdDI");
 		try {
-			if(tempThreshold != null) {
-				matchThreshold = Double.parseDouble(tempThreshold);
+			if(tempThresholdDI != null) {
+				matchThresholdDI = Double.parseDouble(tempThresholdDI);
 			}
 		} catch(Exception ex) {
-			matchThreshold = 0;
+			matchThresholdDI = 0;
+		}
+		String tempThresholdRule = XMLHandler.getTagValue(stepnode, "matchThresholdRule");
+		try {
+			if(tempThresholdRule != null) {
+				matchThresholdRule = Double.parseDouble(tempThresholdRule);
+			}
+		} catch(Exception ex) {
+			matchThresholdRule = 0;
 		}
 		int nrFields = XMLHandler.countNodes(stepnode, "matchField");
 		allocate(nrFields);
@@ -137,7 +147,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	public void setDefault() {
 		matchMethod = "Domain-Independent";
 		columnName = "Group";
-		matchThreshold = 0.6;
+		matchThresholdDI = 0.6;
+		matchThresholdRule = 0.5;
 		allocate(0);		
 	}
 	
@@ -159,7 +170,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			System.out.println("Problem while adding new row meta!");
 		}
 		try {
-			ValueMetaInterface v = ValueMetaFactory.createValueMeta( "Similarity",  ValueMetaInterface.TYPE_STRING );
+			ValueMetaInterface v = ValueMetaFactory.createValueMeta( "Similarity",  ValueMetaInterface.TYPE_NUMBER );
 			rowMeta.addValueMeta( v );
 		} catch (KettlePluginException e) {
 			System.out.println("Problem while adding new row meta!");
@@ -218,12 +229,21 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	public void setColumnName(String name) {
 		this.columnName = name;
 	}
-	public double getMatchThreshold() {
-		return matchThreshold;
+	
+	public double getMatchThresholdDI() {
+		return matchThresholdDI;
 	}
 	
-	public void setMatchThreshold(double threshold) {
-		matchThreshold = threshold;
+	public void setMatchThresholdDI(double threshold) {
+		matchThresholdDI = threshold;
+	}
+	
+	public double getMatchThresholdRule() {
+		return matchThresholdRule;
+	}
+	
+	public void setMatchThresholdRule(double threshold) {
+		matchThresholdRule = threshold;
 	}
 	
 	public ArrayList<String> getMatchFields() {

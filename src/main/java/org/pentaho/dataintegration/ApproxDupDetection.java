@@ -195,7 +195,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	}
 	
 	private void detectDIApproxDups() {
-		double matchThreshold = meta.getMatchThreshold();
+		double matchThreshold = meta.getMatchThresholdDI();
 		LinkedList<Node> queue = new LinkedList<Node>();
 		Vector<Node> orderedGraph = new Vector<Node> ();	
 		orderedGraph.addAll(data.getGraph());
@@ -272,7 +272,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	
 	@SuppressWarnings("unchecked")
 	private void detectRuleApproxDups() {
-		double threshold = meta.getMatchThreshold();
+		double threshold = meta.getMatchThresholdRule();
 		Set<String> keys = data.getBlocks().keySet();
 		for (String s: keys) {
 			ArrayList<ArrayList<Double>> blockSims = new ArrayList<ArrayList<Double>>();
@@ -353,9 +353,9 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				newRow[j] = data.buffer.get(i)[j];
 			RowMeta rowMeta = new RowMeta();
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getColumnName(), ValueMetaInterface.TYPE_INTEGER ));
-			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_STRING ));		
+			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));		
 			
-			String outputSimilarity = "-";
+			Double outputSimilarity = null;
 			if (meta.getMatchMethod().equals("Domain-Independent")) {
 				if (i + 1 != data.getGraph().get(i).findSet().getIndex()) {
 					double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
@@ -365,7 +365,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					DecimalFormat df = new DecimalFormat("#.#", symbols);
 				 
 					df.setRoundingMode(RoundingMode.DOWN);
-					outputSimilarity = df.format(similarity);
+					outputSimilarity = Double.parseDouble(df.format(similarity));
 				}
 				
 				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), outputSimilarity});
@@ -382,7 +382,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					DecimalFormat df = new DecimalFormat("#.#", symbols);
 				 
 					df.setRoundingMode(RoundingMode.DOWN);
-					outputSimilarity = df.format(data.getRulesSim().get(d)[1]);
+					outputSimilarity = Double.parseDouble(df.format(data.getRulesSim().get(d)[1]));
 				}
 				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { data.getRulesSim().get(d)[0].longValue(), 
 						outputSimilarity});
