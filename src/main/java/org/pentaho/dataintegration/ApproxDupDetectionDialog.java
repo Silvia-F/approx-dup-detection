@@ -130,12 +130,106 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wStepname.setLayoutData( fdStepname );
 
+		// Independent Domain Approach Content
+		Group group1 = new Group( shell, SWT.SHADOW_ETCHED_IN );
+		group1.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group1"));
+		FormLayout groupLayout = new FormLayout();
+		groupLayout.marginWidth = Const.MARGIN;
+		groupLayout.marginHeight = Const.MARGIN;
+		group1.setLayout( groupLayout );
+		FormData fdGroup = new FormDataBuilder().fullWidth()
+				.left()
+				.top(wStepname, 15)
+				.result();
+		group1.setLayoutData(fdGroup);	
+		props.setLook(group1);
+		
+		wDomainCheck = new Button(group1, SWT.RADIO);
+		wDomainCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.DomainCheck"));
+		wDomainCheck.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
+		FormData fdDomainCheck = new FormDataBuilder()
+				.left()
+				.top(group1, 2 * Const.MARGIN)
+				.result();
+		wDomainCheck.setLayoutData(fdDomainCheck);
+		
+		Label wlThreshold = new Label( group1, SWT.RIGHT );
+		wlThreshold.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Threshold.Label" ) );
+		props.setLook( wlThreshold );
+
+		FormData fdlThreshold = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( wDomainCheck, 2 * Const.MARGIN )
+				.result();
+		wlThreshold.setLayoutData( fdlThreshold );
+		
+		wThreshold = new Text( group1, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+		props.setLook( wThreshold );
+		wThreshold.addModifyListener( lsMod );
+
+		FormData fdThreshold = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( wDomainCheck, 2 * Const.MARGIN )
+				.result();
+		wThreshold.setLayoutData( fdThreshold );
+		
+		
+		// Matching Rules Approach Content
+		Group group2 = new Group( shell, SWT.SHADOW_ETCHED_IN );
+		group2.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group2"));
+		FormLayout group2Layout = new FormLayout();
+		group2Layout.marginWidth = Const.MARGIN;
+		group2Layout.marginHeight = Const.MARGIN;
+		group2.setLayout( group2Layout );
+		FormData fdGroup2 = new FormDataBuilder().fullWidth()
+				.left()
+				.top(group1, 15)
+				.result();
+		group2.setLayoutData(fdGroup2);	
+		props.setLook(group2);		
+		
+		wRuleCheck = new Button(group2, SWT.RADIO);
+		wRuleCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RuleCheck"));
+		wRuleCheck.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
+		FormData fdRuleCheck = new FormDataBuilder()
+				.left()
+				.top(group2, 5)
+				.result();
+		wRuleCheck.setLayoutData(fdRuleCheck);
+		
+		Label wlColumnName = new Label(group2, SWT.RIGHT);
+		wlColumnName.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.ColumnName.Label" ) );
+		props.setLook(wlColumnName);
+		
+		FormData fdlColumnName = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( wRuleCheck, 4 * Const.MARGIN )
+				.result();
+		wlColumnName.setLayoutData( fdlColumnName );
+		
+		wColumnName = new Text( group2, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+		props.setLook(wColumnName);
+		wColumnName.addModifyListener(lsMod);
+		
+		FormData fdColumnName = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( wRuleCheck, 4 * Const.MARGIN )
+				.result();
+		wColumnName.setLayoutData( fdColumnName );
+		
+		
+	
+		
 		//Tabs
 		CTabFolder wTabFolder = new CTabFolder( shell, SWT.BORDER );
 		props.setLook( wTabFolder, Props.WIDGET_STYLE_TAB );
 		
 		FormData fdTabFolder = new FormData();
-		fdTabFolder.top = new FormAttachment(wStepname, Const.MARGIN * 5);
+		fdTabFolder.top = new FormAttachment(group2, Const.MARGIN * 5);
 		fdTabFolder.width = TAB_WIDTH;
 		wTabFolder.setLayoutData( fdTabFolder );
 		
@@ -184,69 +278,11 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		wTabFolder.setSelection( 0 );
 		
 		//Contents for the first tab
-		wDomainCheck = new Button(wTab1Contents, SWT.RADIO);
-		wDomainCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.DomainCheck"));
-		wDomainCheck.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
-		FormData fdDomainCheck = new FormDataBuilder()
-				.left()
-				.top(wTab1Contents, 2 * Const.MARGIN)
-				.result();
-		wDomainCheck.setLayoutData(fdDomainCheck);
-		
-		wRuleCheck = new Button(wTab1Contents, SWT.RADIO);
-		wRuleCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RuleCheck"));
-		wRuleCheck.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
-		FormData fdRuleCheck = new FormDataBuilder()
-				.left()
-				.top(wDomainCheck, 5)
-				.result();
-		wRuleCheck.setLayoutData(fdRuleCheck);
-		
-		Label wlColumnName = new Label(wTab1Contents, SWT.RIGHT);
-		wlColumnName.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.ColumnName.Label" ) );
-		props.setLook(wlColumnName);
-		
-		FormData fdlColumnName = new FormDataBuilder()
-				.left( 0, 0 )
-				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wRuleCheck, 4 * Const.MARGIN )
-				.result();
-		wlColumnName.setLayoutData( fdlColumnName );
-		
-		wColumnName = new Text( wTab1Contents, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
-		props.setLook(wColumnName);
-		wColumnName.addModifyListener(lsMod);
-		
-		FormData fdColumnName = new FormDataBuilder()
-				.left( props.getMiddlePct(), 0 )
-				.right( 100, -Const.MARGIN )
-				.top( wRuleCheck, 4 * Const.MARGIN )
-				.result();
-		wColumnName.setLayoutData( fdColumnName );		
+				
 		
 		
 		//Contents for the second tab
-		Label wlThreshold = new Label( wTab2Contents, SWT.RIGHT );
-		wlThreshold.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Threshold.Label" ) );
-		props.setLook( wlThreshold );
-
-		FormData fdlThreshold = new FormDataBuilder()
-				.left( 0, 0 )
-				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wTab2Contents, 2 * Const.MARGIN )
-				.result();
-		wlThreshold.setLayoutData( fdlThreshold );
 		
-		wThreshold = new Text( wTab2Contents, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
-		props.setLook( wThreshold );
-		wThreshold.addModifyListener( lsMod );
-
-		FormData fdThreshold = new FormDataBuilder()
-				.left( props.getMiddlePct(), 0 )
-				.right( 100, -Const.MARGIN )
-				.top( wTab2Contents, 2 * Const.MARGIN )
-				.result();
-		wThreshold.setLayoutData( fdThreshold );
 		
 		//Content for the third tab
 		Label wlRuleThreshold = new Label( wTab3Contents, SWT.RIGHT );
