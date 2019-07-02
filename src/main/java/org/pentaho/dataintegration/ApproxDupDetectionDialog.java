@@ -24,15 +24,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.*;
 import org.pentaho.di.core.Const;
-import org.pentaho.di.core.Props;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettleStepException;
 import org.pentaho.di.core.row.RowMetaInterface;
@@ -53,8 +50,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private static Class<?> PKG = ApproxDupDetectionMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 
 	private ApproxDupDetectionMeta meta;
-
-	private static final int TAB_WIDTH = 450;
 	
 	private Text wThreshold;
 	private Text wColumnName;
@@ -84,7 +79,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	}
 
 	public String open() {
-		//Set up window
+		// Set up window
 		Shell parent = getParent();
 		Display display = parent.getDisplay();
 
@@ -99,15 +94,29 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		};
 		changed = meta.hasChanged();
 
-		//Margins
+		
+		// Margins
 		FormLayout formLayout = new FormLayout();
 		formLayout.marginLeft = Const.FORM_MARGIN;
 		formLayout.marginHeight = Const.FORM_MARGIN;
 		shell.setLayout( formLayout );
 		shell.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Shell.Title" ) );
+		
+		
+		// Composites to keep content
+		ScrolledComposite scrolledComposite = new ScrolledComposite(shell, SWT.V_SCROLL);
+		Composite contentComposite = new Composite(scrolledComposite, SWT.NONE);
+		FormLayout contentLayout = new FormLayout();
+		contentLayout.marginRight = Const.MARGIN;
+		contentComposite.setLayout( contentLayout );
+		FormData compositeLayoutData = new FormDataBuilder().fullSize()
+				.result();
+		contentComposite.setLayoutData( compositeLayoutData );
+		props.setLook( contentComposite );
 
+		
 		//Step name label and text field
-		wlStepname = new Label( shell, SWT.RIGHT );
+		wlStepname = new Label( contentComposite, SWT.RIGHT );
 		wlStepname.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Stepname.Label" ) );
 		props.setLook( wlStepname );
 
@@ -118,7 +127,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wlStepname.setLayoutData( fdlStepname );
 		
-		wStepname = new Text( shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+		wStepname = new Text( contentComposite, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
 		wStepname.setText( stepname );
 		props.setLook( wStepname );
 		wStepname.addModifyListener( lsMod );
@@ -130,8 +139,9 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wStepname.setLayoutData( fdStepname );
 
+		
 		// Independent Domain Approach Content
-		Group group1 = new Group( shell, SWT.SHADOW_ETCHED_IN );
+		Group group1 = new Group( contentComposite, SWT.SHADOW_ETCHED_IN );
 		group1.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group1"));
 		FormLayout groupLayout = new FormLayout();
 		groupLayout.marginWidth = Const.MARGIN;
@@ -145,7 +155,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		props.setLook(group1);
 		
 		wDomainCheck = new Button(group1, SWT.RADIO);
-		wDomainCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.DomainCheck"));
+		wDomainCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RunAlgorithm"));
 		wDomainCheck.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
 		FormData fdDomainCheck = new FormDataBuilder()
 				.left()
@@ -177,7 +187,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		
 		// Matching Rules Approach Content
-		Group group2 = new Group( shell, SWT.SHADOW_ETCHED_IN );
+		Group group2 = new Group( contentComposite, SWT.SHADOW_ETCHED_IN );
 		group2.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group2"));
 		FormLayout group2Layout = new FormLayout();
 		group2Layout.marginWidth = Const.MARGIN;
@@ -191,7 +201,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		props.setLook(group2);		
 		
 		wRuleCheck = new Button(group2, SWT.RADIO);
-		wRuleCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RuleCheck"));
+		wRuleCheck.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RunAlgorithm"));
 		wRuleCheck.setBackground( display.getSystemColor( SWT.COLOR_TRANSPARENT ) );
 		FormData fdRuleCheck = new FormDataBuilder()
 				.left()
@@ -199,115 +209,29 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wRuleCheck.setLayoutData(fdRuleCheck);
 		
-		Label wlColumnName = new Label(group2, SWT.RIGHT);
-		wlColumnName.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.ColumnName.Label" ) );
-		props.setLook(wlColumnName);
-		
-		FormData fdlColumnName = new FormDataBuilder()
-				.left( 0, 0 )
-				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wRuleCheck, 4 * Const.MARGIN )
-				.result();
-		wlColumnName.setLayoutData( fdlColumnName );
-		
-		wColumnName = new Text( group2, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
-		props.setLook(wColumnName);
-		wColumnName.addModifyListener(lsMod);
-		
-		FormData fdColumnName = new FormDataBuilder()
-				.left( props.getMiddlePct(), 0 )
-				.right( 100, -Const.MARGIN )
-				.top( wRuleCheck, 4 * Const.MARGIN )
-				.result();
-		wColumnName.setLayoutData( fdColumnName );
-		
-		
-	
-		
-		//Tabs
-		CTabFolder wTabFolder = new CTabFolder( shell, SWT.BORDER );
-		props.setLook( wTabFolder, Props.WIDGET_STYLE_TAB );
-		
-		FormData fdTabFolder = new FormData();
-		fdTabFolder.top = new FormAttachment(group2, Const.MARGIN * 5);
-		fdTabFolder.width = TAB_WIDTH;
-		wTabFolder.setLayoutData( fdTabFolder );
-		
-		CTabItem wTab1 = new CTabItem( wTabFolder, SWT.NONE );
-		wTab1.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Tab1" ) );
-		Composite wTab1Contents = new Composite( wTabFolder, SWT.SHADOW_NONE );
-		props.setLook( wTab1Contents );
-		FormLayout tab1Layout = new FormLayout();
-		tab1Layout.marginWidth = Const.MARGIN;
-		tab1Layout.marginHeight = Const.MARGIN;
-		wTab1Contents.setLayout( tab1Layout );
-		FormData fdTab1 = new FormDataBuilder()
-				.fullSize()
-				.result();
-		wTab1Contents.setLayoutData( fdTab1 );
-		wTab1.setControl( wTab1Contents );
-
-		CTabItem wTab2 = new CTabItem( wTabFolder, SWT.NONE );
-		wTab2.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Tab2" ) );
-		Composite wTab2Contents = new Composite( wTabFolder, SWT.SHADOW_NONE );
-		props.setLook( wTab2Contents );
-		FormLayout tab2Layout = new FormLayout();
-		tab2Layout.marginWidth = Const.MARGIN;
-		tab2Layout.marginHeight = Const.MARGIN;
-		wTab2Contents.setLayout( tab2Layout );
-		FormData fdTab2 = new FormDataBuilder()
-				.fullSize()
-				.result();
-		wTab2Contents.setLayoutData( fdTab2 );
-		wTab2.setControl( wTab2Contents );
-
-		CTabItem wTab3 = new CTabItem( wTabFolder, SWT.NONE );
-		wTab3.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Tab3" ) );
-		Composite wTab3Contents = new Composite( wTabFolder, SWT.NONE );
-		props.setLook( wTab3Contents );
-		FormLayout tab3Layout = new FormLayout();
-		tab3Layout.marginWidth = Const.MARGIN;
-		tab3Layout.marginHeight = Const.MARGIN;
-		wTab3Contents.setLayout( tab3Layout );
-		FormData fdTab3 = new FormDataBuilder()
-				.fullSize()
-				.result();
-		wTab3Contents.setLayoutData( fdTab3 );
-		wTab3.setControl( wTab3Contents );
-
-		wTabFolder.setSelection( 0 );
-		
-		//Contents for the first tab
-				
-		
-		
-		//Contents for the second tab
-		
-		
-		//Content for the third tab
-		Label wlRuleThreshold = new Label( wTab3Contents, SWT.RIGHT );
+		Label wlRuleThreshold = new Label( group2, SWT.RIGHT );
 		wlRuleThreshold.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Threshold.Label" ) );
 		props.setLook( wlRuleThreshold );
 
 		FormData fdlRuleThreshold = new FormDataBuilder()
 				.left( 0, 0 )
 				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wTab3Contents, 2 * Const.MARGIN )
+				.top( wRuleCheck, 2 * Const.MARGIN )
 				.result();
 		wlRuleThreshold.setLayoutData( fdlRuleThreshold );
 		
-		wRuleThreshold = new Text( wTab3Contents, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+		wRuleThreshold = new Text( group2, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
 		props.setLook( wRuleThreshold );
 		wRuleThreshold.addModifyListener( lsMod );
 
 		FormData fdRuleThreshold = new FormDataBuilder()
 				.left( props.getMiddlePct(), 0 )
 				.right( 100, -Const.MARGIN )
-				.top( wTab3Contents, 2 * Const.MARGIN )
+				.top( wRuleCheck, 2 * Const.MARGIN )
 				.result();
 		wRuleThreshold.setLayoutData( fdRuleThreshold );
 		
-		Label wlFields = new Label( wTab3Contents, SWT.NONE );
+		Label wlFields = new Label( group2, SWT.NONE );
 		wlFields.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Fields.Label" ) );
 		props.setLook( wlFields );
 		FormData fdlFields = new FormDataBuilder()
@@ -335,14 +259,13 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 						ColumnInfo.COLUMN_TYPE_TEXT, false, false, 100 )
 		};
 
-		wFields = new TableView(transMeta, wTab3Contents, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI, 
+		wFields = new TableView(transMeta, group2, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI, 
 				colinf, fieldsRows, lsMod, props );
 
 		FormData fdFields = new FormDataBuilder()
 				.left( 0, 0 )
 				.right( 100, 0 )
 				.top(  wlFields, Const.MARGIN )
-				.bottom( 100, -50 )
 				.result();
 		wFields.setLayoutData( fdFields );
 
@@ -398,16 +321,89 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 			}
 		} );
 		
+		
+		// Common Content
+		Group group3 = new Group( contentComposite, SWT.SHADOW_ETCHED_IN );
+		group3.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group3"));
+		FormLayout group3Layout = new FormLayout();
+		group3Layout.marginWidth = Const.MARGIN;
+		group3Layout.marginHeight = Const.MARGIN;
+		group3.setLayout( group3Layout );
+		FormData fdGroup3 = new FormDataBuilder().fullWidth()
+				.left()
+				.top(group2, 15)
+				.result();
+		group3.setLayoutData(fdGroup3);	
+		props.setLook(group3);	
+			
+		Label wlColumnName = new Label(group3, SWT.RIGHT);
+		wlColumnName.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.ColumnName.Label" ) );
+		props.setLook(wlColumnName);
+		
+		FormData fdlColumnName = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( group2, 4 * Const.MARGIN )
+				.result();
+		wlColumnName.setLayoutData( fdlColumnName );
+		
+		wColumnName = new Text( group3, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+		props.setLook(wColumnName);
+		wColumnName.addModifyListener(lsMod);
+		
+		FormData fdColumnName = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( group2, 4 * Const.MARGIN )
+				.result();
+		wColumnName.setLayoutData( fdColumnName );
+		
+		
 		//Cancel and OK buttons for the bottom of the window.
 		wCancel = new Button( shell, SWT.PUSH );
 		wCancel.setText( BaseMessages.getString( PKG, "System.Button.Cancel" ) );
+		FormData fdCancel = new FormDataBuilder()
+				.right(60, -Const.MARGIN)
+				.bottom()
+				.result();
+				wCancel.setLayoutData( fdCancel );
 	
 		wOK = new Button( shell, SWT.PUSH );
 		wOK.setText( BaseMessages.getString( PKG, "System.Button.OK" ) );
-	
-		setButtonPositions( new Button[] { wOK, wCancel }, Const.MARGIN, wTabFolder );
+		FormData fdOk = new FormDataBuilder()
+				.right( wCancel, -Const.MARGIN )
+				.bottom()
+				.result();
+				wOK.setLayoutData( fdOk );
+		
 	
 		//Listeners
+		SelectionListener radio1Listener = new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				wRuleCheck.setSelection(false);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// DO nothing				
+			}
+		};
+		wDomainCheck.addSelectionListener(radio1Listener);
+		
+		SelectionListener radio2Listener = new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				wDomainCheck.setSelection(false);	
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// DO nothing				
+			}
+		};
+		wRuleCheck.addSelectionListener(radio2Listener);
+		
 		lsCancel = new Listener() {
 			public void handleEvent( Event e ) {
 				cancel();
@@ -434,6 +430,20 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				cancel();
 			}
 		} );
+		
+		// Add everything to the scrolled composite
+		scrolledComposite.setContent(contentComposite);
+		scrolledComposite.setExpandVertical(true);
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setMinSize( contentComposite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+
+		scrolledComposite.setLayout(new FormLayout());
+		FormData fdScrolledComposite = new FormDataBuilder().fullWidth()
+				.top()
+				.bottom(wOK, -20)
+				.result();
+		scrolledComposite.setLayoutData(fdScrolledComposite);
+		props.setLook(scrolledComposite);
 	
 		//get parameters from meta
 		getFields();
@@ -494,12 +504,17 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		if (wDomainCheck.getSelection()) {
 			meta.setMatchMethod("Domain-Independent");
+			meta.setMatchThresholdDI(Double.parseDouble(wThreshold.getText()));
+			if (wRuleThreshold.getText().length() > 0)
+				meta.setMatchThresholdRule(Double.parseDouble(wRuleThreshold.getText()));
 		}
 		else {
 			meta.setMatchMethod("Rule-Based");
+			meta.setMatchThresholdRule(Double.parseDouble(wRuleThreshold.getText()));
+			if (wDomainCheck.getText().length() > 0)
+				meta.setMatchThresholdDI(Double.parseDouble(wThreshold.getText()));
 		}
-		meta.setMatchThresholdDI(Double.parseDouble(wThreshold.getText()));
-		meta.setMatchThresholdRule(Double.parseDouble(wRuleThreshold.getText()));
+		
 		int nrFields = wFields.nrNonEmpty(); 
 		meta.allocate(nrFields);
 		ArrayList<String> tempFields = new ArrayList<String>();
