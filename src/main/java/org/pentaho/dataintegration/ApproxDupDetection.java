@@ -129,17 +129,9 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			data.addNode(data_str, data.getIndex());			
 		}
 		else {
-			double maxWeight = 0;
-			String maxField = "";
-			for (int i = 0; i < meta.getMatchFields().size(); i++) {			
-				if (meta.getMatchFields().get(i) != null && meta.getConvertedMeasures()[i][1] > maxWeight) {
-					maxWeight = meta.getConvertedMeasures()[i][1];
-					maxField = meta.getMatchFields().get(i);
-				}
-			}
 			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
-				if (getInputRowMeta().getFieldNames()[i].equals(maxField)) {
-					double threshold= 0.4;
+				if (getInputRowMeta().getFieldNames()[i].equals(meta.getBlockingAttribute())) {
+					double threshold = meta.getBlockingThreshold();
 					boolean found = false;
 					if (data.getBlocks().size() > 0) {
 						String maxBlock = null;

@@ -67,6 +67,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private double[][] convertedMeasures; //Keeps similar information to the measures matrix, but the weights are normalized.
 	private double matchThresholdDI; // Keeps the matching threshold value for the domain-independent approach
 	private double matchThresholdRule; // Keeps the matching threshold value for the rule-based approach
+	private String blockingAttribute; // Attribute used to perform blocking in the rule-based approach
+	private double blockingThreshold; // Similarity threhold to build blocks for the rule-based approach
 	
 	public ApproxDupDetectionMeta() {
 		super(); // allocate BaseStepMeta
@@ -149,6 +151,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		columnName = "Group";
 		matchThresholdDI = 0.6;
 		matchThresholdRule = 0.5;
+		blockingThreshold = 0.3;
 		allocate(0);		
 	}
 	
@@ -264,5 +267,21 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 
 	public double[][] getConvertedMeasures() {
 		return convertedMeasures;
+	}
+	
+	public void setBlockingAttribute(String attribute) {
+		this.blockingAttribute = attribute;
+	}
+	
+	public String getBlockingAttribute() {
+		return blockingAttribute;
+	}
+	
+	public void setBlockingThreshold(double threshold) {
+		this.blockingThreshold = threshold;
+	}
+	
+	public double getBlockingThreshold() {
+		return blockingThreshold;
 	}
 }
