@@ -57,9 +57,11 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private Text wBlockingThreshold;
 	private Button wDomainCheck;
 	private Button wRuleCheck;
+	private Button wCartesianProduct;
+	private Button wRemoveSingletons;
 	private ColumnInfo[] colinf;
 	private TableView wFields;
-	private Combo wBlockAttribute;
+	private Combo wBlockingAttribute;
 	private Button wCancel;
 	private Button wOK;
 	private ModifyListener lsMod;
@@ -322,38 +324,49 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				meta.setChanged();
 			}
 		} );
+
+		wCartesianProduct = new Button(group2, SWT.CHECK);
+		wCartesianProduct.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.CartesianProduct" ) );
+		props.setLook(wCartesianProduct);
 		
-		Label wlBlockAttribute = new Label(group2, SWT.RIGHT);
-		wlBlockAttribute.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.BlockAttribute.Label" ) );
-		props.setLook(wlBlockAttribute);
-		
-		FormData fdlBlockAttribute = new FormDataBuilder()
-				.left( 0, 0 )
-				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wFields, 4 * Const.MARGIN )
-				.result();
-		wlBlockAttribute.setLayoutData( fdlBlockAttribute );
-		
-		wBlockAttribute = new Combo( group2, SWT.READ_ONLY | SWT.LEFT | SWT.BORDER );
-		props.setLook(wBlockAttribute);
-		wBlockAttribute.setItems(fields.toArray(new String[0]));
-		wBlockAttribute.addModifyListener(lsMod);
-		
-		FormData fdBlockAttribute = new FormDataBuilder()
+		FormData fdCartesianProduct = new FormDataBuilder()
 				.left( props.getMiddlePct(), 0 )
 				.right( 100, -Const.MARGIN )
-				.top( wBlockAttribute, 4 * Const.MARGIN )
+				.top( wFields, 4 * Const.MARGIN )
 				.result();
-		wBlockAttribute.setLayoutData( fdBlockAttribute );
+		wCartesianProduct.setLayoutData( fdCartesianProduct );
+		
+		Label wlBlockingAttribute = new Label(group2, SWT.RIGHT);
+		wlBlockingAttribute.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.BlockingAttribute.Label" ) );
+		props.setLook(wlBlockingAttribute);
+		
+		FormData fdlBlockingAttribute = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( wCartesianProduct, 4 * Const.MARGIN )
+				.result();
+		wlBlockingAttribute.setLayoutData( fdlBlockingAttribute );
+		
+		wBlockingAttribute = new Combo( group2, SWT.READ_ONLY | SWT.LEFT | SWT.BORDER );
+		props.setLook(wBlockingAttribute);
+		wBlockingAttribute.setItems(fields.toArray(new String[0]));
+		wBlockingAttribute.addModifyListener(lsMod);
+		
+		FormData fdBlockingAttribute = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( wCartesianProduct, 4 * Const.MARGIN )
+				.result();
+		wBlockingAttribute.setLayoutData( fdBlockingAttribute );
 		
 		Label wlBlockingThreshold = new Label(group2, SWT.RIGHT);
-		wlBlockAttribute.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.BlockingThreshold.Label" ) );
+		wlBlockingThreshold.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.BlockingThreshold.Label" ) );
 		props.setLook(wlBlockingThreshold);
 		
 		FormData fdlBlockingThreshold = new FormDataBuilder()
 				.left( 0, 0 )
 				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wBlockAttribute, 4 * Const.MARGIN )
+				.top( wBlockingAttribute, 4 * Const.MARGIN )
 				.result();
 		wlBlockingThreshold.setLayoutData( fdlBlockingThreshold );
 		
@@ -364,7 +377,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		FormData fdBlockingThreshold = new FormDataBuilder()
 				.left( props.getMiddlePct(), 0 )
 				.right( 100, -Const.MARGIN )
-				.top( wBlockAttribute, 4 * Const.MARGIN )
+				.top( wBlockingAttribute, 4 * Const.MARGIN )
 				.result();
 		wBlockingThreshold.setLayoutData( fdBlockingThreshold );
 		
@@ -404,6 +417,17 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.top( group2, 4 * Const.MARGIN )
 				.result();
 		wColumnName.setLayoutData( fdColumnName );
+		
+		wRemoveSingletons = new Button(group3, SWT.CHECK);
+		wRemoveSingletons.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RemoveSingletons" ) );
+		props.setLook(wRemoveSingletons);
+		
+		FormData fdRemoveSingletons = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( wColumnName, 4 * Const.MARGIN )
+				.result();
+		wRemoveSingletons.setLayoutData( fdRemoveSingletons );
 		
 		
 		//Cancel and OK buttons for the bottom of the window.
@@ -450,6 +474,27 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 			}
 		};
 		wRuleCheck.addSelectionListener(radio2Listener);
+		
+		SelectionListener cartProductListener = new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// Do Nothing				
+			}
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (wCartesianProduct.getSelection()) {
+					wBlockingAttribute.setEnabled(false);
+					wBlockingThreshold.setEnabled(false);
+				}
+				else {
+					wBlockingAttribute.setEnabled(true);
+					wBlockingThreshold.setEnabled(true);
+				}
+				
+			}			
+		};
+		wCartesianProduct.addSelectionListener(cartProductListener);
 		
 		lsCancel = new Listener() {
 			public void handleEvent( Event e ) {
@@ -540,11 +585,19 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 			}			
 			rowCount++;
 		}
-		if (meta.getBlockingAttribute() != null)
-			wBlockAttribute.setText(meta.getBlockingAttribute());
-		else
-			wBlockAttribute.setText(wBlockAttribute.getItem(0));
-		wBlockingThreshold.setText(String.valueOf(meta.getBlockingThreshold()));
+		wCartesianProduct.setSelection(meta.getCartesianProduct());
+		if (meta.getCartesianProduct()) {
+			wBlockingAttribute.setEnabled(false);
+			wBlockingThreshold.setEnabled(false);
+		}
+		else {
+			if (meta.getBlockingAttribute() != null)
+				wBlockingAttribute.setText(meta.getBlockingAttribute());
+			else
+				wBlockingAttribute.setText(wBlockingAttribute.getItem(0));
+			wBlockingThreshold.setText(String.valueOf(meta.getBlockingThreshold()));
+		}
+		wRemoveSingletons.setSelection(meta.getRemoveSingletons());
 	}
 
 	private void cancel() {
@@ -583,10 +636,13 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		measureNames.add("SoundEx");
 		measureNames.add("Refined SoundEx");
 		
-		if (wBlockAttribute.getText() != null)
-			meta.setBlockingAttribute(wBlockAttribute.getText());
-		if (wBlockingThreshold.getText().length() > 0)
-			meta.setBlockingThreshold(Double.parseDouble(wBlockingThreshold.getText()));
+		meta.setCartesianProduct(wCartesianProduct.getSelection());
+		if (! wCartesianProduct.getSelection()) {
+			if (wBlockingAttribute.getText() != null)
+				meta.setBlockingAttribute(wBlockingAttribute.getText());
+			if (wBlockingThreshold.getText().length() > 0)
+				meta.setBlockingThreshold(Double.parseDouble(wBlockingThreshold.getText()));
+		}
 		
 		for (int i = 0; i < nrFields; i++) {
 			if (wFields.table.getItem(i).getText(1).length() > 0) {
@@ -601,6 +657,8 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	
 		if (wColumnName.getText().length() > 0)
 			meta.setColumnName(wColumnName.getText());
+		
+		meta.setRemoveSingletons(wRemoveSingletons.getSelection());
 		dispose();
 	}
 }

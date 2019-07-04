@@ -67,8 +67,11 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private double[][] convertedMeasures; //Keeps similar information to the measures matrix, but the weights are normalized.
 	private double matchThresholdDI; // Keeps the matching threshold value for the domain-independent approach
 	private double matchThresholdRule; // Keeps the matching threshold value for the rule-based approach
+	private boolean cartesianProduct; // If true, the cartesian product of the data is done for the rule-based approach
 	private String blockingAttribute; // Attribute used to perform blocking in the rule-based approach
 	private double blockingThreshold; // Similarity threhold to build blocks for the rule-based approach
+	private boolean removeSingletons; // If true, singleton approximate duplicate groups will be removed from the output
+	
 	
 	public ApproxDupDetectionMeta() {
 		super(); // allocate BaseStepMeta
@@ -87,6 +90,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	public String getXML() {		
 		StringBuilder retval = new StringBuilder(300);
 		retval.append(XMLHandler.addTagValue("columnName", columnName)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("removeSingletons", removeSingletons)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchMethod", matchMethod)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchThresholdDI", matchThresholdDI)).append(Const.CR);
 		for (int i = 0; i < matchFields.size(); i++) {
@@ -101,6 +105,11 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			retval.append("    " + XMLHandler.addTagValue("weight", measures[i][1]));
 			retval.append("</measure>").append(Const.CR);
 		}
+		retval.append(XMLHandler.addTagValue("cartesianProduct", cartesianProduct)).append(Const.CR);
+		if (! cartesianProduct) {
+			retval.append(XMLHandler.addTagValue("blockingAttribute", blockingAttribute)).append(Const.CR);
+			retval.append(XMLHandler.addTagValue("blockingThreshold", blockingThreshold)).append(Const.CR);
+		}			
 		return retval.toString();
 	}		
 	
@@ -112,6 +121,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private void readData( Node stepnode ) {
 		matchMethod = XMLHandler.getTagValue(stepnode, "matchMethod");
 		columnName = XMLHandler.getTagValue(stepnode, "columnName");
+		removeSingletons = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "removeSingletons"));
 		String tempThresholdDI = XMLHandler.getTagValue(stepnode, "matchThresholdDI");
 		try {
 			if(tempThresholdDI != null) {
@@ -144,6 +154,16 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 				measures[i] = new double[] { 0, 0};
 			}			
 		}
+		cartesianProduct = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "cartesianProduct"));
+		if (! cartesianProduct) {
+			blockingAttribute = XMLHandler.getTagValue(stepnode, "blockingAttribute");
+			try {
+				blockingThreshold = Double.parseDouble(XMLHandler.getTagAttribute(stepnode, "blockingThreshold"));
+			} catch(Exception ex) {
+				blockingThreshold = 0.3;
+			}
+				
+		}
 	}
 	
 	public void setDefault() {
@@ -151,7 +171,9 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		columnName = "Group";
 		matchThresholdDI = 0.6;
 		matchThresholdRule = 0.5;
+		cartesianProduct = false;
 		blockingThreshold = 0.3;
+		removeSingletons = false;
 		allocate(0);		
 	}
 	
@@ -269,6 +291,14 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		return convertedMeasures;
 	}
 	
+	public void setCartesianProduct(boolean cartesianProduct) {
+		this.cartesianProduct = cartesianProduct;
+	}
+	
+	public boolean getCartesianProduct() {
+		return cartesianProduct;
+	}
+	
 	public void setBlockingAttribute(String attribute) {
 		this.blockingAttribute = attribute;
 	}
@@ -283,5 +313,13 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public double getBlockingThreshold() {
 		return blockingThreshold;
+	}
+	
+	public void setRemoveSingletons(boolean removeSingletons) {
+		this.removeSingletons = removeSingletons;
+	}
+	
+	public boolean getRemoveSingletons() {
+		return removeSingletons;
 	}
 }
