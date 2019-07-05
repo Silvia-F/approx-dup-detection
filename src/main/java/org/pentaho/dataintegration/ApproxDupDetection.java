@@ -93,8 +93,13 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			// no more input to be expected...
 			if (meta.getMatchMethod().equals("Domain-Independent"))
 				detectDIApproxDups();
-			else
-				detectRuleApproxDups();
+			else {
+				if (meta.getCartesianProduct())
+					detectRuleApproxDupsCartesian();
+				else
+					detectRuleApproxDups();
+			}
+				
 			
 			writeOutput();	
 			setOutputDone();
@@ -129,54 +134,56 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			data.addNode(data_str, data.getIndex());			
 		}
 		else {
-			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
-				if (getInputRowMeta().getFieldNames()[i].equals(meta.getBlockingAttribute())) {
-					double threshold = meta.getBlockingThreshold();
-					boolean found = false;
-					if (data.getBlocks().size() > 0) {
-						String maxBlock = null;
-						double maxSim = 0;
-						for (int j = 0; j < data.getBlocks().size(); j++) {
-							double similarity = 1 - ((double)Utils.getDamerauLevenshteinDistance(data.getBlocks().keySet().toArray()[j].toString(),
-									getInputRowMeta().getString(r, i)) /
-									Math.max(data.getBlocks().keySet().toArray()[j].toString().length(), getInputRowMeta().getString(r, i).length()));
-							if (similarity > maxSim) {
-								maxSim = similarity;
-								maxBlock = data.getBlocks().keySet().toArray()[j].toString();
+			if (! meta.getCartesianProduct()) {
+				for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
+					if (getInputRowMeta().getFieldNames()[i].equals(meta.getBlockingAttribute())) {
+						double threshold = meta.getBlockingThreshold();
+						boolean found = false;
+						if (data.getBlocks().size() > 0) {
+							String maxBlock = null;
+							double maxSim = 0;
+							for (int j = 0; j < data.getBlocks().size(); j++) {
+								double similarity = 1 - ((double)Utils.getDamerauLevenshteinDistance(data.getBlocks().keySet().toArray()[j].toString(),
+										getInputRowMeta().getString(r, i)) /
+										Math.max(data.getBlocks().keySet().toArray()[j].toString().length(), getInputRowMeta().getString(r, i).length()));
+								if (similarity > maxSim) {
+									maxSim = similarity;
+									maxBlock = data.getBlocks().keySet().toArray()[j].toString();
+								}
+							}
+							if (maxSim > threshold) {
+								found = true;
+								data.getBlocks().get(maxBlock).add(data.getIndex());
+								ArrayList<String> fields = new ArrayList<String> ();
+								for (int k = 0; k < meta.getMatchFields().size(); k++) {
+									for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
+										if (meta.getMatchFields().get(k) != null && meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
+											fields.add(getInputRowMeta().getString(r, l));
+											break;
+										}
+									}
+								}
+								data.getBlocks().get(maxBlock).add(fields);
 							}
 						}
-						if (maxSim > threshold) {
-							found = true;
-							data.getBlocks().get(maxBlock).add(data.getIndex());
+						if (!found) {
+							data.getBlocks().put(getInputRowMeta().getString(r, i), new ArrayList<Object> ());
+							data.getBlocks().get(getInputRowMeta().getString(r, i)).add(data.getIndex());
 							ArrayList<String> fields = new ArrayList<String> ();
 							for (int k = 0; k < meta.getMatchFields().size(); k++) {
+								if (meta.getMatchFields().get(k) == null)
+									break;
 								for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
-									if (meta.getMatchFields().get(k) != null && meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
+									if (meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
 										fields.add(getInputRowMeta().getString(r, l));
 										break;
 									}
 								}
 							}
-							data.getBlocks().get(maxBlock).add(fields);
+							data.getBlocks().get(getInputRowMeta().getString(r, i)).add(fields);
 						}
-					}
-					if (!found) {
-						data.getBlocks().put(getInputRowMeta().getString(r, i), new ArrayList<Object> ());
-						data.getBlocks().get(getInputRowMeta().getString(r, i)).add(data.getIndex());
-						ArrayList<String> fields = new ArrayList<String> ();
-						for (int k = 0; k < meta.getMatchFields().size(); k++) {
-							if (meta.getMatchFields().get(k) == null)
-								break;
-							for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
-								if (meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
-									fields.add(getInputRowMeta().getString(r, l));
-									break;
-								}
-							}
-						}
-						data.getBlocks().get(getInputRowMeta().getString(r, i)).add(fields);
-					}
-				}				
+					}				
+				}
 			}
 		}
 		if ( checkFeedback( getLinesRead() ) ) {
@@ -333,8 +340,63 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					}
 				}
 				data.getRulesSim().put(recordIndex, new Double[] { maxIndex, (Double)maxSim });
+			}				
+		}
+	}
+	
+	private void detectRuleApproxDupsCartesian() {
+		System.out.println("MEASURES");
+		for (int i = 0; i < meta.getMeasures().length; i++)
+			System.out.println(meta.getMeasures()[i]);
+		System.out.println("CONVERTED MEASURES");
+		for (int i = 0; i < meta.getConvertedMeasures().length; i++)
+			System.out.println(meta.getConvertedMeasures()[i]);
+		double threshold = meta.getMatchThresholdRule();
+		for (int i = 0; i < data.buffer.size() - 1; i++) {
+			double maxSim = 0;
+			int maxIndex = 0;
+			
+			for (int j = i + 1; j < data.buffer.size(); j++) {
+				double similarity = 0;
+				/*for (int k = 0; k < meta.getConvertedMeasures().length; k++) {
+					switch ((int)meta.getConvertedMeasures()[k][0]) {
+						case(0):								
+							similarity += meta.getConvertedMeasures()[k][1] * (1 - StringUtils.getLevenshteinDistance( a.get(k), b.get(k)) / 
+									(double)Math.max(a.get(k).length(), b.get(k).length()));
+							break;
+						case(1):
+							similarity += meta.getConvertedMeasures()[k][1] * (1 - Utils.getDamerauLevenshteinDistance(a.get(k), b.get(k)) /
+									((double)Math.max(a.get(k).length(), b.get(k).length())));
+							break;
+						case(2):								
+							similarity += meta.getConvertedMeasures()[k][1] * (1 - Math.abs(new NeedlemanWunsch().score(a.get(k), b.get(k)))) /
+									((double)Math.max(a.get(k).length(), b.get(k).length()));
+							break;
+						case(3):
+							similarity += meta.getConvertedMeasures()[k][1] * new Jaro().score(a.get(k), b.get(k));
+							break;
+						case(4):
+							similarity += meta.getConvertedMeasures()[k][1] * new JaroWinkler().score(a.get(k), b.get(k));
+							break;
+						case(5):
+							similarity += meta.getConvertedMeasures()[k][1] * LetterPairSimilarity.getSimiliarity(a.get(k), b.get(k));
+							//pair letter
+							break;
+						case(6):
+							//metaphone [get dophonetic() from fuzzy match]
+							break;
+						case(7):
+							//double matephone [get dophonetic() from fuzzy match]
+							break;
+						case(8):
+							//soundex [get dophonetic() from fuzzy match]
+							break;
+						case(9):
+							// refined soundex [get dophonetic() from fuzzy match]
+							break;
+					}
+				}*/
 			}
-				
 		}
 	}
 	
