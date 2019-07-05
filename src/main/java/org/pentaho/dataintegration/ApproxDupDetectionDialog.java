@@ -58,6 +58,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private Button wDomainCheck;
 	private Button wRuleCheck;
 	private Button wCartesianProduct;
+	private Button wTransitiveClosure;
 	private Button wRemoveSingletons;
 	private ColumnInfo[] colinf;
 	private TableView wFields;
@@ -381,6 +382,17 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wBlockingThreshold.setLayoutData( fdBlockingThreshold );
 		
+		wTransitiveClosure = new Button(group2, SWT.CHECK);
+		wTransitiveClosure.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.TransitiveClosure" ) );
+		props.setLook(wTransitiveClosure);
+		
+		FormData fdTransitiveClosure = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( wBlockingThreshold, 4 * Const.MARGIN )
+				.result();
+		wTransitiveClosure.setLayoutData( fdTransitiveClosure );
+		
 		
 		// Common Content
 		Group group3 = new Group( contentComposite, SWT.SHADOW_ETCHED_IN );
@@ -597,6 +609,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				wBlockingAttribute.setText(wBlockingAttribute.getItem(0));
 			wBlockingThreshold.setText(String.valueOf(meta.getBlockingThreshold()));
 		}
+		wTransitiveClosure.setSelection(meta.getTransitiveClosure());
 		wRemoveSingletons.setSelection(meta.getRemoveSingletons());
 	}
 
@@ -657,7 +670,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	
 		if (wColumnName.getText().length() > 0)
 			meta.setColumnName(wColumnName.getText());
-		
+		meta.setTransitiveClosure(wTransitiveClosure.getSelection());
 		meta.setRemoveSingletons(wRemoveSingletons.getSelection());
 		dispose();
 	}

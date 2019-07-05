@@ -69,7 +69,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private double matchThresholdRule; // Keeps the matching threshold value for the rule-based approach
 	private boolean cartesianProduct; // If true, the cartesian product of the data is done for the rule-based approach
 	private String blockingAttribute; // Attribute used to perform blocking in the rule-based approach
-	private double blockingThreshold; // Similarity threhold to build blocks for the rule-based approach
+	private double blockingThreshold; // Similarity threshold to build blocks for the rule-based approach
+	private boolean transitiveClosure; // If true, groups are presented instead of pairs for the rule-based approach
 	private boolean removeSingletons; // If true, singleton approximate duplicate groups will be removed from the output
 	
 	
@@ -110,6 +111,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			retval.append(XMLHandler.addTagValue("blockingAttribute", blockingAttribute)).append(Const.CR);
 			retval.append(XMLHandler.addTagValue("blockingThreshold", blockingThreshold)).append(Const.CR);
 		}			
+		retval.append(XMLHandler.addTagValue("transitiveClosure", transitiveClosure)).append(Const.CR);
 		return retval.toString();
 	}		
 	
@@ -161,9 +163,9 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 				blockingThreshold = Double.parseDouble(XMLHandler.getTagAttribute(stepnode, "blockingThreshold"));
 			} catch(Exception ex) {
 				blockingThreshold = 0.3;
-			}
-				
+			}				
 		}
+		transitiveClosure = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "transitiveClosure"));
 	}
 	
 	public void setDefault() {
@@ -173,6 +175,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		matchThresholdRule = 0.5;
 		cartesianProduct = false;
 		blockingThreshold = 0.3;
+		transitiveClosure = false;
 		removeSingletons = false;
 		allocate(0);		
 	}
@@ -313,6 +316,14 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public double getBlockingThreshold() {
 		return blockingThreshold;
+	}
+	
+	public void setTransitiveClosure(boolean transitiveClosure) {
+		this.transitiveClosure = transitiveClosure;
+	}
+	
+	public boolean getTransitiveClosure() {
+		return transitiveClosure;
 	}
 	
 	public void setRemoveSingletons(boolean removeSingletons) {

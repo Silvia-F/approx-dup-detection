@@ -339,6 +339,18 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	}
 	
 	private void writeOutput() throws KettleStepException, KettlePluginException {
+		ArrayList<Integer> singletons = null;
+		if (meta.getRemoveSingletons()) {
+			singletons = new ArrayList<Integer>();
+			for (int i = 0; i < data.buffer.size(); i++) {
+				if (data.getGraph().get(i).findSet().getIndex() == i + 1) 
+					singletons.add(data.getGraph().get(i).findSet().getIndex());
+				else
+					singletons.remove(new Integer(data.getGraph().get(i).findSet().getIndex()));
+			}
+			System.out.println("SINGLETONS");
+			System.out.println(singletons);
+		}
 		for (int i = 0; i < data.buffer.size(); i++) {
 			Object[] newRow = new Object[data.buffer.get(i).length + 2];
 			for (int j = 0; j < data.buffer.get(i).length; j++) 
@@ -349,6 +361,8 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			
 			Double outputSimilarity = null;
 			if (meta.getMatchMethod().equals("Domain-Independent")) {
+				if (singletons != null && singletons.contains(data.getGraph().get(i).findSet().getIndex()))
+					continue;
 				if (i + 1 != data.getGraph().get(i).findSet().getIndex()) {
 					double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
 							Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length())));
