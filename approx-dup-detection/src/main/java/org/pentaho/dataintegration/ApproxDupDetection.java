@@ -133,8 +133,20 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			}
 			data.addNode(data_str, data.getIndex());			
 		}
-		else {
-			if (! meta.getCartesianProduct()) {
+		else {			
+			if (meta.getCartesianProduct()) {
+				ArrayList<String> fields = new ArrayList<String>();
+				for (int k = 0; k < meta.getMatchFields().size(); k++) {
+					for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
+						if (meta.getMatchFields().get(k) != null && meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
+							fields.add(getInputRowMeta().getString(r, l));
+							break;
+						}
+					}
+				}
+				data.cartesianFields.add(fields);
+			}
+			else {
 				for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
 					if (getInputRowMeta().getFieldNames()[i].equals(meta.getBlockingAttribute())) {
 						double threshold = meta.getBlockingThreshold();
@@ -344,21 +356,17 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		}
 	}
 	
-	private void detectRuleApproxDupsCartesian() {
-		System.out.println("MEASURES");
-		for (int i = 0; i < meta.getMeasures().length; i++)
-			System.out.println(meta.getMeasures()[i]);
-		System.out.println("CONVERTED MEASURES");
-		for (int i = 0; i < meta.getConvertedMeasures().length; i++)
-			System.out.println(meta.getConvertedMeasures()[i]);
+	private void detectRuleApproxDupsCartesian() {		
 		double threshold = meta.getMatchThresholdRule();
-		for (int i = 0; i < data.buffer.size() - 1; i++) {
+		
+		for (int i = 0; i < data.cartesianFields.size() - 1; i++) {
 			double maxSim = 0;
-			int maxIndex = 0;
-			
-			for (int j = i + 1; j < data.buffer.size(); j++) {
+			Double maxIndex = 0.0;
+			ArrayList<String> a = data.cartesianFields.get(i);
+			for (int j = i + 1; j < data.cartesianFields.size(); j++) {
+				ArrayList<String> b = data.cartesianFields.get(j);
 				double similarity = 0;
-				/*for (int k = 0; k < meta.getConvertedMeasures().length; k++) {
+				for (int k = 0; k < meta.getConvertedMeasures().length; k++) {
 					switch ((int)meta.getConvertedMeasures()[k][0]) {
 						case(0):								
 							similarity += meta.getConvertedMeasures()[k][1] * (1 - StringUtils.getLevenshteinDistance( a.get(k), b.get(k)) / 
@@ -395,9 +403,24 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 							// refined soundex [get dophonetic() from fuzzy match]
 							break;
 					}
-				}*/
+				}
+				if (similarity > maxSim) {
+					maxSim = similarity;
+					maxIndex = new Double(j);
+				}
 			}
+			if (maxSim > threshold) {
+				if (i + 1 < maxIndex + 1) {
+					data.getRulesSim().put(new Double(i + 1), new Double[] { maxIndex + 1, new Double(maxSim) });				
+					data.getRulesSim().put(new Double(maxIndex + 1), new Double[] { new Double(i + 1), new Double(maxSim) });
+				}
+				else if (data.getRulesSim().get(new Double(i + 1)) != null && maxSim >= data.getRulesSim().get(new Double(i + 1))[1])
+					data.getRulesSim().put(new Double(i + 1), new Double[] { maxIndex + 1, new Double(maxSim) });
+			}				
+			else if (data.getRulesSim().get(new Double(i + 1)) == null)
+				data.getRulesSim().put(new Double(i + 1), new Double[] { new Double(i + 1), null });
 		}
+		
 	}
 	
 	private void writeOutput() throws KettleStepException, KettlePluginException {
@@ -410,8 +433,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				else
 					singletons.remove(new Integer(data.getGraph().get(i).findSet().getIndex()));
 			}
-			System.out.println("SINGLETONS");
-			System.out.println(singletons);
 		}
 		for (int i = 0; i < data.buffer.size(); i++) {
 			Object[] newRow = new Object[data.buffer.get(i).length + 2];
@@ -442,8 +463,10 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			
 			else {
 				Double d = (Double)((double)(i + 1));
-				if (data.getRulesSim().get(d)[0] == 0)
+				if (data.getRulesSim().get(d)[0] == 0) {
+					System.out.println("WHY AM I HERE?");
 					data.getRulesSim().get(d)[0] = d;	
+				}
 				if (! d.equals(data.getRulesSim().get(d)[0])) {					
 					DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
 					symbols.setDecimalSeparator('.');
@@ -452,6 +475,8 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					df.setRoundingMode(RoundingMode.DOWN);
 					outputSimilarity = Double.parseDouble(df.format(data.getRulesSim().get(d)[1]));
 				}
+				System.out.println("OUTPUT: ");
+				System.out.println(d +" | " + data.getRulesSim().get(d)[0] + " | " + data.getRulesSim().get(d)[0].longValue());
 				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { data.getRulesSim().get(d)[0].longValue(), 
 						outputSimilarity});
 				newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );

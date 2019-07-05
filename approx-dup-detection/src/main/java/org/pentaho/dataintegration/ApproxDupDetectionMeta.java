@@ -106,12 +106,12 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			retval.append("    " + XMLHandler.addTagValue("weight", measures[i][1]));
 			retval.append("</measure>").append(Const.CR);
 		}
-		retval.append(XMLHandler.addTagValue("cartesianProduct", cartesianProduct)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("cartesianProduct", String.valueOf(cartesianProduct))).append(Const.CR);
 		if (! cartesianProduct) {
 			retval.append(XMLHandler.addTagValue("blockingAttribute", blockingAttribute)).append(Const.CR);
 			retval.append(XMLHandler.addTagValue("blockingThreshold", blockingThreshold)).append(Const.CR);
 		}			
-		retval.append(XMLHandler.addTagValue("transitiveClosure", transitiveClosure)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("transitiveClosure", String.valueOf(transitiveClosure))).append(Const.CR);
 		return retval.toString();
 	}		
 	

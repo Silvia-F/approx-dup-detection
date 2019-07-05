@@ -44,6 +44,8 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	// Key is the index of each record. The array has the index of the record being compared and the similarity between records
 	protected Map<Double, Double[]> rulesSim; 
 	
+	protected ArrayList<ArrayList<String>> cartesianFields; // Keeps data for the rule-bbased approach with cartesian product;
+	
 	private int rowIndex; // Keeps the index of the last processed row 
 
 	/**
@@ -56,6 +58,7 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 		
 		blocks = new HashMap<String, List<Object>> ( 5000 );
 		rulesSim = new HashMap<Double, Double[]> ( 5000 );
+		cartesianFields = new ArrayList<ArrayList<String>>();
 		rowIndex = 0;
 	}
 	
