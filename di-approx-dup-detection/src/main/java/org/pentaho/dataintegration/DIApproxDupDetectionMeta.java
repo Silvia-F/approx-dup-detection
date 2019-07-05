@@ -23,6 +23,7 @@ import org.pentaho.di.core.CheckResult;
 import org.pentaho.di.core.CheckResultInterface;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;
+import org.pentaho.di.core.exception.KettlePluginException;
 import org.pentaho.di.core.exception.KettleStepException;
 import org.pentaho.di.core.exception.KettleXMLException;
 import org.pentaho.di.core.row.RowMetaInterface;
@@ -51,77 +52,140 @@ import java.util.List;
  * Skeleton for PDI Step plugin.
  */
 @Step( id = "DIApproxDupDetection", image = "DIApproxDupDetection.svg", name = "DI Approximate Duplicate Detection",
-    description = "Domain Independent Approximate Duplicate Detection", categoryDescription = "Lookup" )
+description = "Domain Independent Approximate Duplicate Detection", categoryDescription = "Lookup" )
 public class DIApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInterface {
-  
-  private static Class<?> PKG = DIApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 
-  public DIApproxDupDetectionMeta() {
-    super(); // allocate BaseStepMeta
-  }
+	private static Class<?> PKG = DIApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+	
+	private String groupColumnName; // The name for the output column of approximate duplicate groups
+	private String simColumnName; // The name for the output column corresponding to the similarity values
+	private double matchThreshold; // The matching threshold value
+	private boolean removeSingletons; // If true, remove singleton groups from the output
 
-  public void loadXML( Node stepnode, List<DatabaseMeta> databases, IMetaStore metaStore ) throws KettleXMLException {
-    readData( stepnode );
-  }
+	public DIApproxDupDetectionMeta() {
+		super(); // allocate BaseStepMeta
+	}
 
-  public Object clone() {
-    Object retval = super.clone();
-    return retval;
-  }
-  
-  private void readData( Node stepnode ) {
-    // Parse the XML (starting with the given stepnode) to extract the step metadata (into member variables, for example)
-  }
+	public void loadXML( Node stepnode, List<DatabaseMeta> databases, IMetaStore metaStore ) throws KettleXMLException {
+		readData( stepnode );
+	}
 
-  public void setDefault() {
-  }
+	public Object clone() {
+		Object retval = super.clone();
+		return retval;
+	}
 
-  public void readRep( Repository rep, IMetaStore metaStore, ObjectId id_step, List<DatabaseMeta> databases ) throws KettleException {
-  }
-  
-  public void saveRep( Repository rep, IMetaStore metaStore, ObjectId id_transformation, ObjectId id_step )
-    throws KettleException {
-  }
-  
-  public void getFields( RowMetaInterface rowMeta, String origin, RowMetaInterface[] info, StepMeta nextStep, 
-    VariableSpace space, Repository repository, IMetaStore metaStore ) throws KettleStepException {
-    // Default: nothing changes to rowMeta
-  }
-  
-  public void check( List<CheckResultInterface> remarks, TransMeta transMeta, 
-    StepMeta stepMeta, RowMetaInterface prev, String input[], String output[],
-    RowMetaInterface info, VariableSpace space, Repository repository, 
-    IMetaStore metaStore ) {
-    CheckResult cr;
-    if ( prev == null || prev.size() == 0 ) {
-      cr = new CheckResult( CheckResultInterface.TYPE_RESULT_WARNING, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.NotReceivingFields" ), stepMeta ); 
-      remarks.add( cr );
-    }
-    else {
-      cr = new CheckResult( CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.StepRecevingData", prev.size() + "" ), stepMeta );  
-      remarks.add( cr );
-    }
-    
-    // See if we have input streams leading to this step!
-    if ( input.length > 0 ) {
-      cr = new CheckResult( CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.StepRecevingData2" ), stepMeta ); 
-      remarks.add( cr );
-    }
-    else {
-      cr = new CheckResult( CheckResultInterface.TYPE_RESULT_ERROR, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.NoInputReceivedFromOtherSteps" ), stepMeta ); 
-      remarks.add( cr );
-    }
-  }
-  
-  public StepInterface getStep( StepMeta stepMeta, StepDataInterface stepDataInterface, int cnr, TransMeta tr, Trans trans ) {
-    return new DIApproxDupDetection( stepMeta, stepDataInterface, cnr, tr, trans );
-  }
-  
-  public StepDataInterface getStepData() {
-    return new DIApproxDupDetectionData();
-  }
+	private void readData( Node stepnode ) {
+		groupColumnName = XMLHandler.getTagValue(stepnode, "groupColumnName");
+		simColumnName = XMLHandler.getTagValue(stepnode, "simColumnName");
+		try {
+			matchThreshold = Double.parseDouble(XMLHandler.getTagValue(stepnode, "matchThreshold"));
+		} catch (Exception e) {
+			matchThreshold = 0.6;
+		}
+		try {
+			removeSingletons = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "removeSingletons"));
+		} catch (Exception e) {
+			removeSingletons = false;
+		}
+	}
 
-  public String getDialogClassName() {
-    return "org.pentaho.dataintegration.DIApproxDupDetectionDialog";
-  }
+	public void setDefault() {
+		groupColumnName = "Group";
+		simColumnName = "Similarity";
+		matchThreshold = 0.6;
+		removeSingletons = false;
+	}
+
+	public void readRep( Repository rep, IMetaStore metaStore, ObjectId id_step, List<DatabaseMeta> databases ) throws KettleException {
+	}
+
+	public void saveRep( Repository rep, IMetaStore metaStore, ObjectId id_transformation, ObjectId id_step )
+			throws KettleException {
+	}
+
+	public void getFields( RowMetaInterface rowMeta, String origin, RowMetaInterface[] info, StepMeta nextStep, 
+			VariableSpace space, Repository repository, IMetaStore metaStore ) throws KettleStepException {
+		try {
+			ValueMetaInterface v = ValueMetaFactory.createValueMeta( getGroupColumnName(),  ValueMetaInterface.TYPE_INTEGER );
+			rowMeta.addValueMeta( v );
+		} catch (KettlePluginException e) {
+			System.out.println("Problem while adding new row meta!");
+		}
+		try {
+			ValueMetaInterface v = ValueMetaFactory.createValueMeta( getSimColumnName(),  ValueMetaInterface.TYPE_NUMBER );
+			rowMeta.addValueMeta( v );
+		} catch (KettlePluginException e) {
+			System.out.println("Problem while adding new row meta!");
+		}
+	}
+
+	public void check( List<CheckResultInterface> remarks, TransMeta transMeta, 
+			StepMeta stepMeta, RowMetaInterface prev, String input[], String output[],
+			RowMetaInterface info, VariableSpace space, Repository repository, 
+			IMetaStore metaStore ) {
+		CheckResult cr;
+		if ( prev == null || prev.size() == 0 ) {
+			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_WARNING, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.NotReceivingFields" ), stepMeta ); 
+			remarks.add( cr );
+		}
+		else {
+			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.StepRecevingData", prev.size() + "" ), stepMeta );  
+			remarks.add( cr );
+		}
+
+		// See if we have input streams leading to this step!
+		if ( input.length > 0 ) {
+			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.StepRecevingData2" ), stepMeta ); 
+			remarks.add( cr );
+		}
+		else {
+			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_ERROR, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.NoInputReceivedFromOtherSteps" ), stepMeta ); 
+			remarks.add( cr );
+		}
+	}
+
+	public StepInterface getStep( StepMeta stepMeta, StepDataInterface stepDataInterface, int cnr, TransMeta tr, Trans trans ) {
+		return new DIApproxDupDetection( stepMeta, stepDataInterface, cnr, tr, trans );
+	}
+
+	public StepDataInterface getStepData() {
+		return new DIApproxDupDetectionData();
+	}
+
+	public String getDialogClassName() {
+		return "org.pentaho.dataintegration.DIApproxDupDetectionDialog";
+	}
+	
+	public void setGroupColumnName(String groupColumnName) {
+		this.groupColumnName = groupColumnName;
+	}
+	
+	public String getGroupColumnName() {
+		return groupColumnName;
+	}
+	
+	public void setSimColumnName(String simColumnName) {
+		this.simColumnName = simColumnName;
+	}
+	
+	public String getSimColumnName() {
+		return simColumnName;
+	}
+	
+	public void setMatchThrehsold(double matchThreshold) {
+		this.matchThreshold = matchThreshold;
+	}
+	
+	public double getMatchThreshold() {
+		return matchThreshold;
+	}
+	
+	public void setRemoveSingletons(boolean removeSingletons) {
+		this.removeSingletons = removeSingletons;
+	}
+	
+	public boolean getRemoveSingletons() {
+		return removeSingletons;
+	}
 }
