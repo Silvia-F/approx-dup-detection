@@ -89,96 +89,20 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 			
 		if (first) {
 			data.setOutputRowMeta(getInputRowMeta().clone());
-			meta.getFields(data.getOutputRowMeta(), getStepname(), null, null, this, repository, metaStore);
-
-			// Normalize weights
-			double total = 0;
-			for (double[] measure: meta.getMeasures()) {
-				total += measure[1];
-			}
-			for (int i = 0; i < meta.getMeasures().length; i++) {
-				meta.getConvertedMeasures()[i][0] = meta.getMeasures()[i][0];
-				meta.getConvertedMeasures()[i][1] = meta.getMeasures()[i][1] / total;
-			}
-			
+			meta.getFields(data.getOutputRowMeta(), getStepname(), null, null, this, repository, metaStore);			
 			first = false;
 		}
 		data.buffer.add(r);
 		data.incrementIndex();
-		if (meta.getMatchMethod().equals("Domain-Independent")) {			
-			String data_str = new String();			
-			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
-				if (getInputRowMeta().getString(r, i) != null)
-					data_str = data_str.concat(getInputRowMeta().getString(r, i));
-				data_str = data_str.concat(" ");
-			}
-			data.addNode(data_str, data.getIndex());			
+				
+		String data_str = new String();			
+		for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
+			if (getInputRowMeta().getString(r, i) != null)
+				data_str = data_str.concat(getInputRowMeta().getString(r, i));
+			data_str = data_str.concat(" ");
 		}
-		else {			
-			if (meta.getCartesianProduct()) {
-				ArrayList<String> fields = new ArrayList<String>();
-				for (int k = 0; k < meta.getMatchFields().size(); k++) {
-					for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
-						if (meta.getMatchFields().get(k) != null && meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
-							fields.add(getInputRowMeta().getString(r, l));
-							break;
-						}
-					}
-				}
-				data.cartesianFields.add(fields);
-			}
-			else {
-				for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
-					if (getInputRowMeta().getFieldNames()[i].equals(meta.getBlockingAttribute())) {
-						double threshold = meta.getBlockingThreshold();
-						boolean found = false;
-						if (data.getBlocks().size() > 0) {
-							String maxBlock = null;
-							double maxSim = 0;
-							for (int j = 0; j < data.getBlocks().size(); j++) {
-								double similarity = 1 - ((double)Utils.getDamerauLevenshteinDistance(data.getBlocks().keySet().toArray()[j].toString(),
-										getInputRowMeta().getString(r, i)) /
-										Math.max(data.getBlocks().keySet().toArray()[j].toString().length(), getInputRowMeta().getString(r, i).length()));
-								if (similarity > maxSim) {
-									maxSim = similarity;
-									maxBlock = data.getBlocks().keySet().toArray()[j].toString();
-								}
-							}
-							if (maxSim > threshold) {
-								found = true;
-								data.getBlocks().get(maxBlock).add(data.getIndex());
-								ArrayList<String> fields = new ArrayList<String> ();
-								for (int k = 0; k < meta.getMatchFields().size(); k++) {
-									for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
-										if (meta.getMatchFields().get(k) != null && meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
-											fields.add(getInputRowMeta().getString(r, l));
-											break;
-										}
-									}
-								}
-								data.getBlocks().get(maxBlock).add(fields);
-							}
-						}
-						if (!found) {
-							data.getBlocks().put(getInputRowMeta().getString(r, i), new ArrayList<Object> ());
-							data.getBlocks().get(getInputRowMeta().getString(r, i)).add(data.getIndex());
-							ArrayList<String> fields = new ArrayList<String> ();
-							for (int k = 0; k < meta.getMatchFields().size(); k++) {
-								if (meta.getMatchFields().get(k) == null)
-									break;
-								for (int l = 0; l < getInputRowMeta().getFieldNames().length; l++) {
-									if (meta.getMatchFields().get(k).equals(getInputRowMeta().getFieldNames()[l])) {
-										fields.add(getInputRowMeta().getString(r, l));
-										break;
-									}
-								}
-							}
-							data.getBlocks().get(getInputRowMeta().getString(r, i)).add(fields);
-						}
-					}				
-				}
-			}
-		}
+		data.addNode(data_str, data.getIndex());			
+		
 		if ( checkFeedback( getLinesRead() ) ) {
 			if ( log.isBasic() )
 				logBasic( BaseMessages.getString( PKG, "ApproxDupDetection.Log.LineNumber" ) + getLinesRead() );
@@ -216,8 +140,7 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 					queue.removeLast();
 				}
 			}			
-		}	
-		
+		}			
 		for (int i = 0; i < orderedGraph.size(); i++) {
 			StringBuilder reversed = new StringBuilder();
 			reversed.append(orderedGraph.get(i).getData());
@@ -277,48 +200,25 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 			for (int j = 0; j < data.buffer.get(i).length; j++) 
 				newRow[j] = data.buffer.get(i)[j];
 			RowMeta rowMeta = new RowMeta();
-			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getColumnName(), ValueMetaInterface.TYPE_INTEGER ));
-			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( "Similarity", ValueMetaInterface.TYPE_NUMBER ));		
+			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getGroupColumnName(), ValueMetaInterface.TYPE_INTEGER ));
+			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getSimColumnName(), ValueMetaInterface.TYPE_NUMBER ));		
 			
 			Double outputSimilarity = null;
-			if (meta.getMatchMethod().equals("Domain-Independent")) {
-				if (singletons != null && singletons.contains(data.getGraph().get(i).findSet().getIndex()))
-					continue;
-				if (i + 1 != data.getGraph().get(i).findSet().getIndex()) {
-					double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
-							Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length())));
-					DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-					symbols.setDecimalSeparator('.');
-					DecimalFormat df = new DecimalFormat("#.#", symbols);
-				 
-					df.setRoundingMode(RoundingMode.DOWN);
-					outputSimilarity = Double.parseDouble(df.format(similarity));
-				}
-				
-				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), outputSimilarity});
-				newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
+			if (singletons != null && singletons.contains(data.getGraph().get(i).findSet().getIndex()))
+				continue;
+			if (i + 1 != data.getGraph().get(i).findSet().getIndex()) {
+				double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
+						Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length())));
+				DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+				symbols.setDecimalSeparator('.');
+				DecimalFormat df = new DecimalFormat("#.#", symbols);
+			 
+				df.setRoundingMode(RoundingMode.DOWN);
+				outputSimilarity = Double.parseDouble(df.format(similarity));
 			}
-			
-			else {
-				Double d = (Double)((double)(i + 1));
-				if (data.getRulesSim().get(d)[0] == 0) {
-					System.out.println("WHY AM I HERE?");
-					data.getRulesSim().get(d)[0] = d;	
-				}
-				if (! d.equals(data.getRulesSim().get(d)[0])) {					
-					DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-					symbols.setDecimalSeparator('.');
-					DecimalFormat df = new DecimalFormat("#.#", symbols);
-				 
-					df.setRoundingMode(RoundingMode.DOWN);
-					outputSimilarity = Double.parseDouble(df.format(data.getRulesSim().get(d)[1]));
-				}
-				System.out.println("OUTPUT: ");
-				System.out.println(d +" | " + data.getRulesSim().get(d)[0] + " | " + data.getRulesSim().get(d)[0].longValue());
-				RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { data.getRulesSim().get(d)[0].longValue(), 
-						outputSimilarity});
-				newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
-			}			
+				
+			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), outputSimilarity});
+			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );		
 			putRow( data.getOutputRowMeta(), newRow);
 		}
 	}

@@ -21,6 +21,7 @@ package org.pentaho.dataintegration;
 import org.pentaho.di.core.annotations.Step;
 import org.pentaho.di.core.CheckResult;
 import org.pentaho.di.core.CheckResultInterface;
+import org.pentaho.di.core.Const;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettlePluginException;
@@ -44,7 +45,6 @@ import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.metastore.api.IMetaStore;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -89,6 +89,15 @@ public class DIApproxDupDetectionMeta extends BaseStepMeta implements StepMetaIn
 			removeSingletons = false;
 		}
 	}
+	
+	public String getXML() {		
+		StringBuilder retval = new StringBuilder(300);
+		retval.append(XMLHandler.addTagValue("groupColumnName", groupColumnName)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("simColumnName", simColumnName)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("removeSingletons", String.valueOf(removeSingletons))).append(Const.CR);
+		return retval.toString();
+	}		
 
 	public void setDefault() {
 		groupColumnName = "Group";

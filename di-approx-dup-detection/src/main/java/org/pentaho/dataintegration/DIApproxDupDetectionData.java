@@ -18,17 +18,56 @@
  */
 package org.pentaho.dataintegration;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.trans.step.BaseStepData;
 import org.pentaho.di.trans.step.StepDataInterface;
 
 
 public class DIApproxDupDetectionData extends BaseStepData implements StepDataInterface {
-  // Add any execution-specific data here
 
+	private RowMetaInterface outputRowMeta;
+	protected Vector<Node> graph; // Keeps nodes that form the graph for the domain-independent approach
+	protected List<Object[]> buffer; // Keeps row data for output
+	private int rowIndex; // Keeps the index of the last processed row
+	
   /**
    * 
    */
   public DIApproxDupDetectionData() {
     super();
+    graph = new Vector<Node>();
+	buffer = new ArrayList<Object[]>( 5000 );
+	rowIndex = 0;
   }
+  
+  public void setOutputRowMeta(RowMetaInterface outputRowMeta) {
+		this.outputRowMeta = outputRowMeta;
+	}
+	
+	public RowMetaInterface getOutputRowMeta() {
+		return this.outputRowMeta;
+	}
+	
+	/**
+	 * Add node to the graph
+	 */
+	public void addNode(String data, int index) {
+		graph.add(new Node(data, index));
+	}
+	
+	public Vector<Node> getGraph() {
+		return graph;
+	}
+	
+	public void incrementIndex() {
+		rowIndex++;
+	}
+	
+	public int getIndex() {
+		return rowIndex;
+	}
 }
