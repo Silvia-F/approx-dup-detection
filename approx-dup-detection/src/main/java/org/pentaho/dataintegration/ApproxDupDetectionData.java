@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * 
@@ -36,29 +35,24 @@ import java.util.Vector;
 public class ApproxDupDetectionData extends BaseStepData implements StepDataInterface {
 
 	private RowMetaInterface outputRowMeta;
-	protected Vector<Node> graph; // Keeps nodes that form the graph for the domain-independent approach
 	protected List<Object[]> buffer; // Keeps row data for output
+	private int rowIndex; // Keeps the index of the last processed row 
 	
-	// Blocks for the rule approach. The key is the value of grouping field and the list has record data needed for the calculations
+	// Blocks to partition records. The key is the value of grouping field and the list has record data needed for the calculations
 	protected Map<String, List<Object>> blocks; 
 	// Key is the index of each record. The array has the index of the record being compared and the similarity between records
 	protected Map<Double, Double[]> rulesSim; 
-	
-	protected ArrayList<ArrayList<String>> cartesianFields; // Keeps data for the rule-bbased approach with cartesian product;
-	
-	private int rowIndex; // Keeps the index of the last processed row 
 
+	
 	/**
 	* Create a new ApproxDupDetectionData instance
 	*/
 	public ApproxDupDetectionData() {
 		super();
-		graph = new Vector<Node>();
 		buffer = new ArrayList<Object[]>( 5000 );
 		
 		blocks = new HashMap<String, List<Object>> ( 5000 );
 		rulesSim = new HashMap<Double, Double[]> ( 5000 );
-		cartesianFields = new ArrayList<ArrayList<String>>();
 		rowIndex = 0;
 	}
 	
@@ -68,17 +62,6 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	
 	public RowMetaInterface getOutputRowMeta() {
 		return this.outputRowMeta;
-	}
-	
-	/**
-	 * Add node to the graph
-	 */
-	public void addNode(String data, int index) {
-		graph.add(new Node(data, index));
-	}
-	
-	public Vector<Node> getGraph() {
-		return graph;
 	}
 	
 	public void incrementIndex() {

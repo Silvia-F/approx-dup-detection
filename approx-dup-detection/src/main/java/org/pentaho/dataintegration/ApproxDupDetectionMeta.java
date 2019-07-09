@@ -60,17 +60,13 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
   
 	private static Class<?> PKG = ApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 	
-	private String matchMethod; // States which match method to compute
-	private String columnName; // Keeps the name of the output column for the approximate duplicate groups
-	private ArrayList<String> matchFields; // Keeps which fields to match in the rule approach
-	private double[][] measures; // Keeps the weight of each field along with the similarity measure to use for each field
-	private double[][] convertedMeasures; //Keeps similar information to the measures matrix, but the weights are normalized.
-	private double matchThresholdDI; // Keeps the matching threshold value for the domain-independent approach
-	private double matchThresholdRule; // Keeps the matching threshold value for the rule-based approach
-	private boolean cartesianProduct; // If true, the cartesian product of the data is done for the rule-based approach
 	private String blockingAttribute; // Attribute used to perform blocking in the rule-based approach
-	private double blockingThreshold; // Similarity threshold to build blocks for the rule-based approach
-	private boolean transitiveClosure; // If true, groups are presented instead of pairs for the rule-based approach
+	private double matchingThreshold; // Matching threshold fot the total similarity
+	private ArrayList<String> matchFields; // Keeps which fields to match
+	private double[][] measures; // Keeps the weight of each field along with the similarity measure to use for each field
+	private double[][] convertedMeasures; //Keeps similar information to the measures matrix, but the weights are normalized
+	private String groupColumnName; // Name of the output column with approximate duplicate groups	
+	private String simColumnName; // Name of the output column with field similarity
 	private boolean removeSingletons; // If true, singleton approximate duplicate groups will be removed from the output
 	
 	
@@ -90,28 +86,23 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public String getXML() {		
 		StringBuilder retval = new StringBuilder(300);
-		retval.append(XMLHandler.addTagValue("columnName", columnName)).append(Const.CR);
-		retval.append(XMLHandler.addTagValue("removeSingletons", removeSingletons)).append(Const.CR);
-		retval.append(XMLHandler.addTagValue("matchMethod", matchMethod)).append(Const.CR);
-		retval.append(XMLHandler.addTagValue("matchThresholdDI", matchThresholdDI)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("blockingAttribute", blockingAttribute)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("matchingThreshold", matchingThreshold)).append(Const.CR);
 		for (int i = 0; i < matchFields.size(); i++) {
 			retval.append("<matchField>").append(Const.CR);
 			retval.append("    " + XMLHandler.addTagValue("fieldName", matchFields.get(i)));
 			retval.append("</matchField>").append(Const.CR);
 		}
-		retval.append(XMLHandler.addTagValue("matchThresholdRule", matchThresholdRule)).append(Const.CR);
 		for (int i = 0; i < measures.length; i++) {
 			retval.append("<measure>").append(Const.CR);
 			retval.append("    " + XMLHandler.addTagValue("name", measures[i][0]));
 			retval.append("    " + XMLHandler.addTagValue("weight", measures[i][1]));
 			retval.append("</measure>").append(Const.CR);
 		}
-		retval.append(XMLHandler.addTagValue("cartesianProduct", String.valueOf(cartesianProduct))).append(Const.CR);
-		if (! cartesianProduct) {
-			retval.append(XMLHandler.addTagValue("blockingAttribute", blockingAttribute)).append(Const.CR);
-			retval.append(XMLHandler.addTagValue("blockingThreshold", blockingThreshold)).append(Const.CR);
-		}			
-		retval.append(XMLHandler.addTagValue("transitiveClosure", String.valueOf(transitiveClosure))).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("groupColumnName", groupColumnName)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("simColumnName", simColumnName)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("removeSingletons", String.valueOf(removeSingletons))).append(Const.CR);
+		
 		return retval.toString();
 	}		
 	
@@ -121,24 +112,14 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	}
 	  
 	private void readData( Node stepnode ) {
-		matchMethod = XMLHandler.getTagValue(stepnode, "matchMethod");
-		columnName = XMLHandler.getTagValue(stepnode, "columnName");
-		removeSingletons = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "removeSingletons"));
-		String tempThresholdDI = XMLHandler.getTagValue(stepnode, "matchThresholdDI");
+		blockingAttribute = XMLHandler.getTagValue(stepnode, "blockingAttribute");
+		String tempThreshold = XMLHandler.getTagValue(stepnode, "matchingThreshold");
 		try {
-			if(tempThresholdDI != null) {
-				matchThresholdDI = Double.parseDouble(tempThresholdDI);
+			if(tempThreshold != null) {
+				matchingThreshold = Double.parseDouble(tempThreshold);
 			}
 		} catch(Exception ex) {
-			matchThresholdDI = 0;
-		}
-		String tempThresholdRule = XMLHandler.getTagValue(stepnode, "matchThresholdRule");
-		try {
-			if(tempThresholdRule != null) {
-				matchThresholdRule = Double.parseDouble(tempThresholdRule);
-			}
-		} catch(Exception ex) {
-			matchThresholdRule = 0;
+			matchingThreshold = 0;
 		}
 		int nrFields = XMLHandler.countNodes(stepnode, "matchField");
 		allocate(nrFields);
@@ -156,26 +137,15 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 				measures[i] = new double[] { 0, 0};
 			}			
 		}
-		cartesianProduct = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "cartesianProduct"));
-		if (! cartesianProduct) {
-			blockingAttribute = XMLHandler.getTagValue(stepnode, "blockingAttribute");
-			try {
-				blockingThreshold = Double.parseDouble(XMLHandler.getTagAttribute(stepnode, "blockingThreshold"));
-			} catch(Exception ex) {
-				blockingThreshold = 0.3;
-			}				
-		}
-		transitiveClosure = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "transitiveClosure"));
+		groupColumnName = XMLHandler.getTagValue(stepnode, "groupColumnName");
+		simColumnName = XMLHandler.getTagValue(stepnode, "simColumnName");
+		removeSingletons = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "removeSingletons"));
 	}
 	
 	public void setDefault() {
-		matchMethod = "Domain-Independent";
-		columnName = "Group";
-		matchThresholdDI = 0.6;
-		matchThresholdRule = 0.5;
-		cartesianProduct = false;
-		blockingThreshold = 0.3;
-		transitiveClosure = false;
+		matchingThreshold = 0.5;
+		groupColumnName = "Group";
+		simColumnName = "Similarity";
 		removeSingletons = false;
 		allocate(0);		
 	}
@@ -192,13 +162,13 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 			VariableSpace space, Repository repository, IMetaStore metaStore ) throws KettleStepException {
 		
 		try {
-			ValueMetaInterface v = ValueMetaFactory.createValueMeta( getColumnName(),  ValueMetaInterface.TYPE_INTEGER );
+			ValueMetaInterface v = ValueMetaFactory.createValueMeta( getGroupColumnName(),  ValueMetaInterface.TYPE_INTEGER );
 			rowMeta.addValueMeta( v );
 		} catch (KettlePluginException e) {
 			System.out.println("Problem while adding new row meta!");
 		}
 		try {
-			ValueMetaInterface v = ValueMetaFactory.createValueMeta( "Similarity",  ValueMetaInterface.TYPE_NUMBER );
+			ValueMetaInterface v = ValueMetaFactory.createValueMeta( getSimColumnName(),  ValueMetaInterface.TYPE_NUMBER );
 			rowMeta.addValueMeta( v );
 		} catch (KettlePluginException e) {
 			System.out.println("Problem while adding new row meta!");
@@ -242,36 +212,20 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		return "org.pentaho.dataintegration.ApproxDupDetectionDialog";
 	}
 	
-	public String getMatchMethod() {
-		return matchMethod;
+	public void setBlockingAttribute(String attribute) {
+		this.blockingAttribute = attribute;
 	}
 	
-	public void setMatchMethod(String method) {
-		this.matchMethod = method;
+	public String getBlockingAttribute() {
+		return blockingAttribute;
 	}
 	
-	public String getColumnName() {
-		return columnName;
+	public double getMatchingThreshold() {
+		return matchingThreshold;
 	}
 	
-	public void setColumnName(String name) {
-		this.columnName = name;
-	}
-	
-	public double getMatchThresholdDI() {
-		return matchThresholdDI;
-	}
-	
-	public void setMatchThresholdDI(double threshold) {
-		matchThresholdDI = threshold;
-	}
-	
-	public double getMatchThresholdRule() {
-		return matchThresholdRule;
-	}
-	
-	public void setMatchThresholdRule(double threshold) {
-		matchThresholdRule = threshold;
+	public void setMatchingThreshold(double threshold) {
+		matchingThreshold = threshold;
 	}
 	
 	public ArrayList<String> getMatchFields() {
@@ -294,36 +248,20 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		return convertedMeasures;
 	}
 	
-	public void setCartesianProduct(boolean cartesianProduct) {
-		this.cartesianProduct = cartesianProduct;
+	public void setGroupColumnName(String groupColumnName) {
+		this.groupColumnName = groupColumnName;
 	}
 	
-	public boolean getCartesianProduct() {
-		return cartesianProduct;
+	public String getGroupColumnName() {
+		return groupColumnName;
 	}
 	
-	public void setBlockingAttribute(String attribute) {
-		this.blockingAttribute = attribute;
+	public void setSimColumnName(String simColumnName) {
+		this.simColumnName = simColumnName;
 	}
 	
-	public String getBlockingAttribute() {
-		return blockingAttribute;
-	}
-	
-	public void setBlockingThreshold(double threshold) {
-		this.blockingThreshold = threshold;
-	}
-	
-	public double getBlockingThreshold() {
-		return blockingThreshold;
-	}
-	
-	public void setTransitiveClosure(boolean transitiveClosure) {
-		this.transitiveClosure = transitiveClosure;
-	}
-	
-	public boolean getTransitiveClosure() {
-		return transitiveClosure;
+	public String getSimColumnName() {
+		return simColumnName;
 	}
 	
 	public void setRemoveSingletons(boolean removeSingletons) {
