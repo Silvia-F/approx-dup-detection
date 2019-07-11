@@ -81,7 +81,7 @@ public class DIApproxDupDetectionMeta extends BaseStepMeta implements StepMetaIn
 		try {
 			matchThreshold = Double.parseDouble(XMLHandler.getTagValue(stepnode, "matchThreshold"));
 		} catch (Exception e) {
-			matchThreshold = 0.6;
+			matchThreshold = 0.5;
 		}
 		try {
 			removeSingletons = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "removeSingletons"));
@@ -102,7 +102,7 @@ public class DIApproxDupDetectionMeta extends BaseStepMeta implements StepMetaIn
 	public void setDefault() {
 		groupColumnName = "Group";
 		simColumnName = "Similarity";
-		matchThreshold = 0.6;
+		matchThreshold = 0.5;
 		removeSingletons = false;
 	}
 

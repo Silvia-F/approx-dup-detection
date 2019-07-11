@@ -126,13 +126,7 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 				Node queueNode = queue.get(j);
 				
 				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getData(), queueNode.getData()) /
-						Math.max(node.getData().length(), queueNode.getData().length())) >= matchThreshold) {
-					if (node.getIndex() == 69 || node.getIndex() == 70) {
-						System.out.println("\n!!!!!!!!!!!!!!!!!!!!!!!");
-						System.out.println("GOT RECORD " +  node.findSet().union(queueNode));
-						System.out.println("!!!!!!!!!!!!!!!!!!!!!!!\n");
-					}
-						
+						Math.max(node.getData().length(), queueNode.getData().length())) >= matchThreshold) {						
 					queue.addFirst(node.findSet().union(queueNode));
 					queue.remove(j + 1);
 					changed = true;
@@ -175,30 +169,27 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getReversedData(), queueNode.getReversedData()) /
 						Math.max(node.getReversedData().length(), queueNode.getReversedData().length())) >= matchThreshold) {
 					int nodesAboveThreshold = 0;
-					System.out.println(1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(),
-							queueNode.getData()) / Math.max(node.findSet().getData().length(), 
-							queueNode.getData().length())) + "\n");	
+					
+					// Check that all members of the group satisfy the matching threshold to be merged
 					for (int k = 0; k < node.findSet().getChildren().size(); k++) {
 						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getChildren().get(k).getData(),
 								queueNode.getData()) / Math.max(node.findSet().getChildren().get(k).getData().length(), 
 								queueNode.getData().length())) >= matchThreshold) 
 							nodesAboveThreshold++;
 					}
+					if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(),
+							queueNode.getData()) / Math.max(node.findSet().getData().length(), 
+							queueNode.getData().length())) >= matchThreshold) 
+						nodesAboveThreshold++;
+					
 					for (int k = 0; k < queueNode.getChildren().size(); k++) {
 						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(), 
 								queueNode.getChildren().get(k).getData()) / Math.max(node.findSet().getData().length(), 
 								queueNode.getChildren().get(k).getData().length())) >= matchThreshold)  
 							nodesAboveThreshold++;
 					}
-					if (node.findSet().getIndex() == 74) {
-						System.out.println("++++++++++++++++++++++");
-						System.out.println("NODES: " + nodesAboveThreshold);
-						System.out.println("NODE: " + node + " | " + node.findSet().getChildren().size());
-						System.out.println("QUEUENODESET: " + queueNode.findSet() + " | " + queueNode.findSet().getChildren().size());
-						System.out.println("++++++++++++++++++++++");
-					}
-					if (nodesAboveThreshold == node.getChildren().size() + queueNode.getChildren().size()){
-						System.out.println("MERGING " + node.findSet() + " AND " + queueNode);
+					
+					if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1){
 						queue.addFirst(node.findSet().union(queueNode));
 						queue.remove(j + 1);
 						changed = true;
