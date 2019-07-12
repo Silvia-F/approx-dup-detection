@@ -20,6 +20,8 @@ package org.pentaho.dataintegration;
 import com.wcohen.ss.Jaro;
 import com.wcohen.ss.JaroWinkler;
 import com.wcohen.ss.NeedlemanWunsch;
+
+import org.apache.commons.codec.language.Metaphone;
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.exception.KettleException;
@@ -89,7 +91,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 
 	public boolean processRow( StepMetaInterface smi, StepDataInterface sdi ) throws KettleException {
 		Object[] r = getRow(); // get row, set busy!
-		if ( r == null ) {
+		if ( r == null ) {			
 			// no more input to be expected...
 			detectApproxDups();		
 			writeOutput();	
@@ -178,9 +180,11 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 								break;
 							case(5):
 								similarity += meta.getConvertedMeasures()[k][1] * LetterPairSimilarity.getSimiliarity(a.get(k), b.get(k));
-								//pair letter
 								break;
 							case(6):
+								System.out.println("A: "  + a.get(k));
+								System.out.println("B: "  + b.get(k));
+								System.out.println("METAPHONE: " +  ( new Metaphone() ).metaphone( a.get(k) ));
 								//metaphone [get dophonetic() from fuzzy match]
 								break;
 							case(7):

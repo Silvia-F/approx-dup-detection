@@ -188,9 +188,19 @@ public class DIApproxDupDetectionDialog extends BaseStepDialog implements StepDi
 				.top( wGroupColumnName, 4 * Const.MARGIN )
 				.result();
 		wSimColumnName.setLayoutData( fdSimColumnName );
+		
+		Label wlRemoveSingletons = new Label( shell, SWT.RIGHT );
+		wlRemoveSingletons.setText( BaseMessages.getString( PKG, "DIApproxDupDetectionDialog.RemoveSingletons.Label" ) );
+		props.setLook( wlRemoveSingletons );
+
+		FormData fdlRemoveSingletons = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( wSimColumnName, 4 * Const.MARGIN )
+				.result();
+		wlRemoveSingletons.setLayoutData( fdlRemoveSingletons );
 
 		wRemoveSingletons = new Button(shell, SWT.CHECK);
-		wRemoveSingletons.setText( BaseMessages.getString( PKG, "DIApproxDupDetectionDialog.RemoveSingletons" ) );
 		props.setLook(wRemoveSingletons);
 
 		FormData fdRemoveSingletons = new FormDataBuilder()
