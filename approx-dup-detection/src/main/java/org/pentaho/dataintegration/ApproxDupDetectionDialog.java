@@ -200,8 +200,18 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wBlockingAttribute.setLayoutData( fdBlockingAttribute );
 		
+		Label wlCartesianProduct = new Label(group1, SWT.RIGHT);
+		wlCartesianProduct.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.CartesianProduct.Label" ) );
+		props.setLook(wlCartesianProduct);
+		
+		FormData fdlCartesianProduct = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( wBlockingAttribute, 4 * Const.MARGIN )
+				.result();
+		wlCartesianProduct.setLayoutData( fdlCartesianProduct );
+		
 		wCartesianProduct = new Button(group1, SWT.CHECK | SWT.LEFT);
-		wCartesianProduct.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.CartesianProduct" ) );
 		props.setLook(wCartesianProduct);
 		
 		FormData fdCartesianProduct = new FormDataBuilder()
@@ -226,7 +236,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		group2.setLayoutData(fdGroup2);	
 		props.setLook(group2);		
 		
-		Label wlMatchingThreshold = new Label( group2, SWT.LEFT );
+		Label wlMatchingThreshold = new Label( group2, SWT.RIGHT );
 		wlMatchingThreshold.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Threshold.Label" ) );
 		props.setLook( wlMatchingThreshold );
 
@@ -333,7 +343,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		group3.setLayoutData(fdGroup3);	
 		props.setLook(group3);	
 			
-		Label wlGroupColumnName = new Label(group3, SWT.LEFT);
+		Label wlGroupColumnName = new Label(group3, SWT.RIGHT);
 		wlGroupColumnName.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.GroupColumnName.Label" ) );
 		props.setLook(wlGroupColumnName);
 		
@@ -377,8 +387,18 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wSimColumnName.setLayoutData( fdSimColumnName );
 		
+		Label wlRemoveSingletons = new Label(group3, SWT.RIGHT);
+		wlRemoveSingletons.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RemoveSingletons.Label" ) );
+		props.setLook(wlRemoveSingletons);
+		
+		FormData fdlRemoveSingletons = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( wSimColumnName, 4 * Const.MARGIN )
+				.result();
+		wlRemoveSingletons.setLayoutData( fdlRemoveSingletons );
+		
 		wRemoveSingletons = new Button(group3, SWT.CHECK | SWT.RIGHT);
-		wRemoveSingletons.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RemoveSingletons" ) );
 		props.setLook(wRemoveSingletons);
 		
 		FormData fdRemoveSingletons = new FormDataBuilder()
@@ -434,6 +454,25 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				cancel();
 			}
 		} );
+		
+		SelectionListener cartProductListener = new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// Do Nothing				
+			}
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (wCartesianProduct.getSelection()) {
+					wBlockingAttribute.setEnabled(false);
+				}
+				else {
+					wBlockingAttribute.setEnabled(true);
+				}
+				
+			}			
+		};
+		wCartesianProduct.addSelectionListener(cartProductListener);
 		
 		
 		// Add everything to the scrolled composite
