@@ -24,8 +24,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.*;
@@ -51,7 +53,8 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 
 	private ApproxDupDetectionMeta meta;
 	
-	private Combo wBlockingAttribute;
+	private CCombo wBlockingAttribute;
+	private Button wCartesianProduct;
 	private Text wMatchingThreshold;	
 	private ColumnInfo[] colinf;
 	private TableView wFields;
@@ -153,7 +156,27 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		group1.setLayoutData(fdGroup);	
 		props.setLook(group1);
-	
+		
+		// Search the fields in the background
+		final Runnable runnable = new Runnable() {
+			public void run() {
+				StepMeta stepMeta = transMeta.findStep( stepname );
+				if ( stepMeta != null ) {
+					try {
+						RowMetaInterface row = transMeta.getPrevStepFields( stepMeta );
+						// Remember these fields...
+						for ( int i = 0; i < row.size(); i++ ) {
+							ValueMetaInterface field = row.getValueMeta( i );
+							fields.add( field.getName()); 
+						}
+					} catch ( KettleException e ) {
+						logError( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Log.UnableToFindInput" ) );
+					}
+				}
+			}
+		};
+		new Thread( runnable ).start();
+		
 		Label wlBlockingAttribute = new Label(group1, SWT.RIGHT);
 		wlBlockingAttribute.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.BlockingAttribute.Label" ) );
 		props.setLook(wlBlockingAttribute);
@@ -165,7 +188,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wlBlockingAttribute.setLayoutData( fdlBlockingAttribute );
 		
-		wBlockingAttribute = new Combo( group1, SWT.READ_ONLY | SWT.LEFT | SWT.BORDER );
+		wBlockingAttribute = new CCombo( group1, SWT.READ_ONLY | SWT.RIGHT | SWT.BORDER );
 		props.setLook(wBlockingAttribute);
 		wBlockingAttribute.setItems(fields.toArray(new String[0]));
 		wBlockingAttribute.addModifyListener(lsMod);
@@ -176,6 +199,17 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.top( wStepname, 4 * Const.MARGIN )
 				.result();
 		wBlockingAttribute.setLayoutData( fdBlockingAttribute );
+		
+		wCartesianProduct = new Button(group1, SWT.CHECK | SWT.LEFT);
+		wCartesianProduct.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.CartesianProduct" ) );
+		props.setLook(wCartesianProduct);
+		
+		FormData fdCartesianProduct = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( wBlockingAttribute, 4 * Const.MARGIN )
+				.result();
+		wCartesianProduct.setLayoutData( fdCartesianProduct );
 		
 		
 		// Matching Rules Content
@@ -192,7 +226,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		group2.setLayoutData(fdGroup2);	
 		props.setLook(group2);		
 		
-		Label wlMatchingThreshold = new Label( group2, SWT.RIGHT );
+		Label wlMatchingThreshold = new Label( group2, SWT.LEFT );
 		wlMatchingThreshold.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Threshold.Label" ) );
 		props.setLook( wlMatchingThreshold );
 
@@ -270,26 +304,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 						"SoundEx", "Refined SoundEx"};
 			}
 		});
-
-		// Search the fields in the background
-		final Runnable runnable = new Runnable() {
-			public void run() {
-				StepMeta stepMeta = transMeta.findStep( stepname );
-				if ( stepMeta != null ) {
-					try {
-						RowMetaInterface row = transMeta.getPrevStepFields( stepMeta );
-						// Remember these fields...
-						for ( int i = 0; i < row.size(); i++ ) {
-							ValueMetaInterface field = row.getValueMeta( i );
-							fields.add( field.getName()); 
-						}
-					} catch ( KettleException e ) {
-						logError( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Log.UnableToFindInput" ) );
-					}
-				}
-			}
-		};
-		new Thread( runnable ).start();
 		
 		wFields.addModifyListener( new ModifyListener() {
 			public void modifyText( ModifyEvent arg0 ) {
@@ -319,7 +333,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		group3.setLayoutData(fdGroup3);	
 		props.setLook(group3);	
 			
-		Label wlGroupColumnName = new Label(group3, SWT.RIGHT);
+		Label wlGroupColumnName = new Label(group3, SWT.LEFT);
 		wlGroupColumnName.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.GroupColumnName.Label" ) );
 		props.setLook(wlGroupColumnName);
 		
@@ -363,7 +377,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wSimColumnName.setLayoutData( fdSimColumnName );
 		
-		wRemoveSingletons = new Button(group3, SWT.CHECK);
+		wRemoveSingletons = new Button(group3, SWT.CHECK | SWT.RIGHT);
 		wRemoveSingletons.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RemoveSingletons" ) );
 		props.setLook(wRemoveSingletons);
 		
