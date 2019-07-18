@@ -54,7 +54,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private ApproxDupDetectionMeta meta;
 	
 	private CCombo wBlockingAttribute;
-	private Button wCartesianProduct;
 	private Text wMatchingThreshold;	
 	private ColumnInfo[] colinf;
 	private TableView wFields;
@@ -111,7 +110,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		Composite contentComposite = new Composite(scrolledComposite, SWT.NONE);
 		FormLayout contentLayout = new FormLayout();
 		contentLayout.marginRight = Const.MARGIN;
-		contentComposite.setLayout( contentLayout );
+		contentComposite.setLayout(contentLayout);
 		FormData compositeLayoutData = new FormDataBuilder().fullSize()
 				.result();
 		contentComposite.setLayoutData( compositeLayoutData );
@@ -190,6 +189,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		wBlockingAttribute = new CCombo( group1, SWT.READ_ONLY | SWT.RIGHT | SWT.BORDER );
 		props.setLook(wBlockingAttribute);
+		fields.add(0, "");
 		wBlockingAttribute.setItems(fields.toArray(new String[0]));
 		wBlockingAttribute.addModifyListener(lsMod);
 		
@@ -199,27 +199,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.top( wStepname, 4 * Const.MARGIN )
 				.result();
 		wBlockingAttribute.setLayoutData( fdBlockingAttribute );
-		
-		Label wlCartesianProduct = new Label(group1, SWT.RIGHT);
-		wlCartesianProduct.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.CartesianProduct.Label" ) );
-		props.setLook(wlCartesianProduct);
-		
-		FormData fdlCartesianProduct = new FormDataBuilder()
-				.left( 0, 0 )
-				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wBlockingAttribute, 4 * Const.MARGIN )
-				.result();
-		wlCartesianProduct.setLayoutData( fdlCartesianProduct );
-		
-		wCartesianProduct = new Button(group1, SWT.CHECK | SWT.LEFT);
-		props.setLook(wCartesianProduct);
-		
-		FormData fdCartesianProduct = new FormDataBuilder()
-				.left( props.getMiddlePct(), 0 )
-				.right( 100, -Const.MARGIN )
-				.top( wBlockingAttribute, 4 * Const.MARGIN )
-				.result();
-		wCartesianProduct.setLayoutData( fdCartesianProduct );
 		
 		
 		// Matching Rules Content
@@ -454,25 +433,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				cancel();
 			}
 		} );
-		
-		SelectionListener cartProductListener = new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// Do Nothing				
-			}
-			
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				if (wCartesianProduct.getSelection()) {
-					wBlockingAttribute.setEnabled(false);
-				}
-				else {
-					wBlockingAttribute.setEnabled(true);
-				}
-				
-			}			
-		};
-		wCartesianProduct.addSelectionListener(cartProductListener);
 		
 		
 		// Add everything to the scrolled composite
