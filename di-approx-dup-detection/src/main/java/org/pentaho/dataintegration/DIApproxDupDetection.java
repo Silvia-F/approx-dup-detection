@@ -121,36 +121,46 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 		for (int i = 1; i < orderedGraph.size(); i++) {
 			boolean changed = false;
 			Node node = orderedGraph.get(i);
-			
 			for (int j = 0; j < queue.size(); j++) {
 				Node queueNode = queue.get(j);
-				
 				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getData(), queueNode.getData()) /
-						Math.max(node.getData().length(), queueNode.getData().length())) >= matchThreshold) {						
-					queue.addFirst(node.findSet().union(queueNode));
-					queue.remove(j + 1);
-					changed = true;
-					break;
+						Math.max(node.getData().length(), queueNode.getData().length())) >= matchThreshold) {
+					// Check that all members of the group satisfy the matching threshold to be merged
+					int nodesAboveThreshold = 0;
+					for (int k = 0; k < queueNode.getChildren().size(); k++) {
+						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(), 
+								queueNode.getChildren().get(k).getData()) / Math.max(node.findSet().getData().length(), 
+								queueNode.getChildren().get(k).getData().length())) >= matchThreshold)  
+							nodesAboveThreshold++;
+					}
+					if (nodesAboveThreshold == queueNode.getChildren().size()) {
+						queue.addFirst(node.findSet().union(queueNode));
+						queue.remove(j + 1);
+						changed = true;
+						break;
+					}
 				}				
-			}
+			}			
 			if (!changed) {				
 				queue.addFirst(node.findSet());
 				if (queue.size() > 4) {
 					queue.removeLast();
 				}
-			}			
-		}			
-		for (int i = 0; i < orderedGraph.size(); i++) {
+			}	
+		}	
+		for (int i = 0; i < orderedGraph.size(); i++) {			
 			StringBuilder reversed = new StringBuilder();
 			reversed.append(orderedGraph.get(i).getData());
 			orderedGraph.get(i).setReversedData(reversed.reverse().toString());
 		}
+		
 		Collections.sort(orderedGraph, new Comparator<Node>() {
 			public int compare(Node e1, Node e2) {
 				return e1.getReversedData().compareTo(e2.getReversedData());
 			}});
 		queue.clear();
 		queue.addFirst(orderedGraph.get(0).findSet());
+		
 		// Second pass
 		for (int i = 1; i < orderedGraph.size(); i++) {
 			boolean changed = false;
@@ -163,15 +173,15 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 					changed = true;
 					break;
 				}
-			}
-			for (int j = 0; j < queue.size(); j++) {
+			}			
+			for (int j = 0; j < queue.size(); j++) {				
 				Node queueNode = queue.get(j);
 				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getReversedData(), queueNode.getReversedData()) /
 						Math.max(node.getReversedData().length(), queueNode.getReversedData().length())) >= matchThreshold) {
-					int nodesAboveThreshold = 0;
+					int nodesAboveThreshold = 0;	
 					
 					// Check that all members of the group satisfy the matching threshold to be merged
-					for (int k = 0; k < node.findSet().getChildren().size(); k++) {
+					for (int k = 0; k < node.findSet().getChildren().size(); k++) {						
 						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getChildren().get(k).getData(),
 								queueNode.getData()) / Math.max(node.findSet().getChildren().get(k).getData().length(), 
 								queueNode.getData().length())) >= matchThreshold) 
@@ -182,21 +192,22 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 							queueNode.getData().length())) >= matchThreshold) 
 						nodesAboveThreshold++;
 					
-					for (int k = 0; k < queueNode.getChildren().size(); k++) {
+					for (int k = 0; k < queueNode.getChildren().size(); k++) {						
 						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(), 
 								queueNode.getChildren().get(k).getData()) / Math.max(node.findSet().getData().length(), 
 								queueNode.getChildren().get(k).getData().length())) >= matchThreshold)  
 							nodesAboveThreshold++;
 					}
 					
-					if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1){
+					if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1) {							
 						queue.addFirst(node.findSet().union(queueNode));
 						queue.remove(j + 1);
 						changed = true;
 						break;
 					}
 				}
-			}
+				
+			}			
 			if (!changed) {		
 				queue.addFirst(node.findSet());
 				if (queue.size() > 4) {

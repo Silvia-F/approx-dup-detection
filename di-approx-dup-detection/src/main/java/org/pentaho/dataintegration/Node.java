@@ -39,11 +39,23 @@ public class Node implements Comparable<Node> {
 		if (x.index > y.index) {
 			x.parent = y;
 			y.children.add(x);
+			for (int i = 0; i < x.children.size(); i++) {
+				if (! y.children.contains(x.children.get(i))) {
+					x.children.get(i).parent = y;
+					y.children.add(x.children.get(i));
+				}
+			}
 			return y;
 		}
 		else {
 			y.parent = x;
 			x.children.add(y);
+			for (int i = 0; i < y.children.size(); i++) {
+				if (!x.children.contains(y.children.get(i))) {
+					y.children.get(i).parent = x;
+					x.children.add(y.children.get(i));
+				}
+			}
 			return x;
 		}
 	}	
