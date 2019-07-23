@@ -1,0 +1,43 @@
+small Restaurants (4950 comparisons):
+
+	0.4 (11-07): TP = 34 || FN = 16 || FP = 734 || Precision = 0.04 || Recall = 0.68 || F1-Score = 0.07
+
+	0.5 (11-07): TP = 32 || FN = 19 || FP = 83 || Precision = 0.28 || Recall = 0.63 || F1-Score = 0.39
+
+	0.6 (11-07): TP = 30 || FN = 20 || FP = 26 || Precision = 0.54 || Recall = 0.60 || F1-Score = 0.57
+
+	0.7 (11-07): TP = 29 || FN = 21 || FP = 5 || Precision = 0.85 || Recall = 0.58 || F1-Score = 0.69
+
+	------------------------------------------
+	
+	0.4 (23-07): TP = 37 || FN = 13 || FP = 151 || Precision = 0.20 || Recall = 0.74 || F1-Score = 0.31
+
+	0.5 (23-07): TP = 42 || FN = 8 || FP = 20 || Precision = 0.68 || Recall = 0.84 || F1-Score = 0.75
+
+	0.6 (23-07): TP = 36 || FN = 14 || FP = 9 || Precision = 0.8 || Recall = 0.72 || F1-Score = 0.76
+
+	0.7 (23-07): TP = 28 || FN = 22 || FP = 5 || Precision = 0.88 || Recall = 0.56 || F1-Score = 0.68 
+
+	0.8 (23-07): TP = 17 || FN = 33 || FP = 0 || Precision = 1.00 || Recall = 0.34 || F1-Score = 0.51
+
+
+Restaurants (372 816 comparisons):
+	0.4 (11-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.5 (11-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.6 (11-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.7 (11-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	------------------------------------------
+
+	0.4 (23-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	
+	0.5 (23-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	
+	0.6 (23-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	
+	0.7 (23-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.8 (23-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
