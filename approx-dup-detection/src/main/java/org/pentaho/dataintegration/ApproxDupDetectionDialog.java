@@ -53,7 +53,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 
 	private ApproxDupDetectionMeta meta;
 	
-	private CCombo wBlockingAttribute;
+	private TableView wBlockingAttributes;
 	private Text wMatchingThreshold;	
 	private ColumnInfo[] colinf;
 	private TableView wFields;
@@ -69,6 +69,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private boolean changed;
 	
 	private HashMap<String, String[]> fieldMeasures;
+	private ArrayList<String> blockingAttributes;
 	private ArrayList<String> fields;
 	private ArrayList<String> added;
 
@@ -76,6 +77,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		super( parent, (BaseStepMeta) in, tr, sname );
 		meta = (ApproxDupDetectionMeta) in;
 		fieldMeasures = new HashMap<String, String[]> ();
+		blockingAttributes = new ArrayList<String> ();
 		fields = new ArrayList<String> ();
 		added = new ArrayList<String> ();
 	}
@@ -174,33 +176,56 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				}
 			}
 		};
-		new Thread( runnable ).start();
+		new Thread( runnable ).start();	
 		
-		Label wlBlockingAttribute = new Label(group1, SWT.RIGHT);
-		wlBlockingAttribute.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.BlockingAttribute.Label" ) );
-		props.setLook(wlBlockingAttribute);
-		
-		FormData fdlBlockingAttribute = new FormDataBuilder()
+		Label wlBlockingAttributes = new Label( group1, SWT.NONE );
+		wlBlockingAttributes.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.BlockingAttributes.Label" ) );
+		props.setLook( wlBlockingAttributes );
+		FormData fdlBlockingAttributes = new FormDataBuilder()
 				.left( 0, 0 )
-				.right( props.getMiddlePct(), -Const.MARGIN )
 				.top( wStepname, 4 * Const.MARGIN )
 				.result();
-		wlBlockingAttribute.setLayoutData( fdlBlockingAttribute );
-		
-		wBlockingAttribute = new CCombo( group1, SWT.READ_ONLY | SWT.RIGHT | SWT.BORDER );
-		props.setLook(wBlockingAttribute);
-		fields.add(0, "");
-		wBlockingAttribute.setItems(fields.toArray(new String[0]));
-		wBlockingAttribute.addModifyListener(lsMod);
-		
-		FormData fdBlockingAttribute = new FormDataBuilder()
-				.left( props.getMiddlePct(), 0 )
-				.right( 100, -Const.MARGIN )
-				.top( wStepname, 4 * Const.MARGIN )
+		wlBlockingAttributes.setLayoutData( fdlBlockingAttributes );
+
+		ColumnInfo[] colinf1 = new ColumnInfo[] {
+				new ColumnInfo(
+						BaseMessages.getString( PKG, "ApproxDupDetectionDialog.FieldName.Column" ),
+						ColumnInfo.COLUMN_TYPE_CCOMBO, false, true, 100 )
+		};
+
+		wBlockingAttributes = new TableView(transMeta, group1, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI, 
+				colinf1, 3, lsMod, props );
+
+		FormData fdBlockingAttributes = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( 100, 0 )
+				.top(  wlBlockingAttributes, Const.MARGIN )
 				.result();
-		wBlockingAttribute.setLayoutData( fdBlockingAttribute );
+		wBlockingAttributes.setLayoutData( fdBlockingAttributes );
+
+		colinf1[0].setComboValuesSelectionListener( new ComboValuesSelectionListener() {
+			@Override
+			public String[] getComboValues(TableItem arg0, int arg1, int arg2) {
+				fieldMeasures.remove(arg0.getText(1));
+				String[] fieldNames = fields.toArray( new String[fields.size()] );
+				Const.sortStrings( fieldNames );
+				return fieldNames;
+			}			
+		});
 		
-		
+		wBlockingAttributes.addModifyListener( new ModifyListener() {
+			public void modifyText( ModifyEvent arg0 ) {
+				if (arg0.getSource().toString().equals("TableView {}")) { //Is this a valid way to detect fields being deleted?
+					ArrayList<String> items =  new ArrayList<String>(Arrays.asList(wFields.getItems(0)));
+					for (int i = 0; i < added.size(); i++) {
+						if (!items.contains(added.get(i)))
+							blockingAttributes.remove(i);
+					}							
+				}
+				meta.setChanged();
+			}
+		} );
+				
 		// Matching Rules Content
 		Group group2 = new Group( contentComposite, SWT.SHADOW_ETCHED_IN );
 		group2.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group2"));
@@ -222,7 +247,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		FormData fdlMatchingThreshold = new FormDataBuilder()
 				.left( 0, 0 )
 				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wBlockingAttribute, 2 * Const.MARGIN )
+				.top( wBlockingAttributes, 2 * Const.MARGIN )
 				.result();
 		wlMatchingThreshold.setLayoutData( fdlMatchingThreshold );
 		
@@ -233,7 +258,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		FormData fdMatchingThreshold = new FormDataBuilder()
 				.left( props.getMiddlePct(), 0 )
 				.right( 100, -Const.MARGIN )
-				.top( wBlockingAttribute, 2 * Const.MARGIN )
+				.top( wBlockingAttributes, 2 * Const.MARGIN )
 				.result();
 		wMatchingThreshold.setLayoutData( fdMatchingThreshold );		
 		
@@ -465,8 +490,12 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	}
 	
 	private void getFields() {
-		if (meta.getBlockingAttribute() != null)
-			wBlockingAttribute.setText(meta.getBlockingAttribute());
+		int rowCount = 0;
+		for (int i = 0; i < meta.getBlockingAttributes().size(); i++) {
+			wBlockingAttributes.table.getItem(rowCount).setText(new String[] { String.valueOf(rowCount + 1), 
+					meta.getBlockingAttributes().get(i) });
+			rowCount++;
+		}
 		
 		wMatchingThreshold.setText(String.valueOf(meta.getMatchingThreshold()));
 		
@@ -481,7 +510,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		measureNames.add("Double Metaphone");
 		measureNames.add("SoundEx");
 		measureNames.add("Refined SoundEx");
-		int rowCount = 0;
+		rowCount = 0;
 		for (int i = 0; i < meta.getMatchFields().size(); i++) {
 			if (meta.getMatchFields().get(i) != null) {
 				wFields.table.getItem(rowCount).setText(new String[] {String.valueOf(rowCount + 1), meta.getMatchFields().get(i), 
@@ -502,13 +531,17 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private void ok() {
 		stepname = wStepname.getText();
 		
-		if (wBlockingAttribute.getText() != null)
-			meta.setBlockingAttribute(wBlockingAttribute.getText());
+		int nrFields = wFields.nrNonEmpty(); 
+		meta.allocate(nrFields);
+		
+		int nrAttributes = wBlockingAttributes.nrNonEmpty();
+		for (int i = 0; i < nrAttributes; i++) {
+			System.out.println("ADDING ATTRIBUTE: " + wBlockingAttributes.table.getItem(i).getText(1));
+			meta.getBlockingAttributes().add(wBlockingAttributes.table.getItem(i).getText(1));
+		}
 		
 		meta.setMatchingThreshold(Double.parseDouble(wMatchingThreshold.getText()));
 		
-		int nrFields = wFields.nrNonEmpty(); 
-		meta.allocate(nrFields);
 		ArrayList<String> tempFields = new ArrayList<String>();
 		double[][] tempMeasures = new double[nrFields][];
 		ArrayList<String> measureNames = new ArrayList<String>();
@@ -538,6 +571,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		if (wSimColumnName.getText().length() > 0)
 			meta.setSimColumnName(wSimColumnName.getText());
 		meta.setRemoveSingletons(wRemoveSingletons.getSelection());
+		System.out.println("BLOCKING ATTRIBUTES: " + meta.getBlockingAttributes() + "\n");
 		dispose();
 	}
 }

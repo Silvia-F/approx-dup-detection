@@ -60,7 +60,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
   
 	private static Class<?> PKG = ApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 	
-	private String blockingAttribute; // Attribute used to perform blocking in the rule-based approach
+	private ArrayList<String> blockingAttributes; // Attributes used to perform blocking in the rule-based approach
 	private double matchingThreshold; // Matching threshold fot the total similarity
 	private ArrayList<String> matchFields; // Keeps which fields to match
 	private double[][] measures; // Keeps the weight of each field along with the similarity measure to use for each field
@@ -75,7 +75,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	}
 	
 	public void allocate(int nrFields) {
-		this.matchFields = new ArrayList<String>();
+		blockingAttributes = new ArrayList<String> ();
+		this.matchFields = new ArrayList<String> ();
 		this.measures = new double[nrFields][2];
 		this.convertedMeasures = new double[nrFields][2];
 	}
@@ -86,7 +87,11 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public String getXML() {		
 		StringBuilder retval = new StringBuilder(300);
-		retval.append(XMLHandler.addTagValue("blockingAttribute", blockingAttribute)).append(Const.CR);
+		for (int i = 0; i < blockingAttributes.size(); i++) {
+			retval.append("<blockingAttribute>").append(Const.CR);
+			retval.append("    " + XMLHandler.addTagValue("attributeName", blockingAttributes.get(i)));
+			retval.append("</blockingAttribute>").append(Const.CR);
+		}
 		retval.append(XMLHandler.addTagValue("matchingThreshold", matchingThreshold)).append(Const.CR);
 		for (int i = 0; i < matchFields.size(); i++) {
 			retval.append("<matchField>").append(Const.CR);
@@ -112,7 +117,15 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	}
 	  
 	private void readData( Node stepnode ) {
-		blockingAttribute = XMLHandler.getTagValue(stepnode, "blockingAttribute");
+		int nrFields = XMLHandler.countNodes(stepnode, "matchField");
+		allocate(nrFields);
+		
+		int nrAttributes = XMLHandler.countNodes(stepnode, "blockingAttribute");
+		for (int i = 0; i < nrAttributes; i++) {
+			System.out.println(stepnode);
+			Node node = XMLHandler.getSubNodeByNr(stepnode, "blockingAttribute", i);
+			blockingAttributes.add(XMLHandler.getTagValue(node, "attributeName"));
+		}
 		String tempThreshold = XMLHandler.getTagValue(stepnode, "matchingThreshold");
 		try {
 			if(tempThreshold != null) {
@@ -121,8 +134,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		} catch(Exception ex) {
 			matchingThreshold = 0;
 		}
-		int nrFields = XMLHandler.countNodes(stepnode, "matchField");
-		allocate(nrFields);
+		
 		for (int i = 0; i < nrFields; i++) {
 			Node node1 = XMLHandler.getSubNodeByNr(stepnode, "matchField", i);
 			matchFields.add(XMLHandler.getTagValue(node1, "fieldName"));
@@ -212,12 +224,8 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		return "org.pentaho.dataintegration.ApproxDupDetectionDialog";
 	}
 	
-	public void setBlockingAttribute(String attribute) {
-		this.blockingAttribute = attribute;
-	}
-	
-	public String getBlockingAttribute() {
-		return blockingAttribute;
+	public ArrayList<String> getBlockingAttributes() {
+		return blockingAttributes;
 	}
 	
 	public double getMatchingThreshold() {

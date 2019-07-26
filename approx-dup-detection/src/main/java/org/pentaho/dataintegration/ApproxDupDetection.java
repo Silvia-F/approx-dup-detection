@@ -46,7 +46,9 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -117,7 +119,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		data.buffer.add(r);
 		data.incrementIndex();
 		// Cartesian Product
-		if (meta.getBlockingAttribute().length() == 0) {
+		if (meta.getBlockingAttributes().size() == 0) {
 			ArrayList<String> fields = new ArrayList<String> ();
 			for (int j = 0; j < meta.getMatchFields().size(); j++) {
 				for (int k = 0; k < getInputRowMeta().getFieldNames().length; k++) {
@@ -132,32 +134,34 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		}	
 		// Blocking
 		else {
-			for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
-				if (getInputRowMeta().getFieldNames()[i].equals(meta.getBlockingAttribute())) {
-					ArrayList<String> fields = new ArrayList<String> ();
-					for (int j = 0; j < meta.getMatchFields().size(); j++) {
-						for (int k = 0; k < getInputRowMeta().getFieldNames().length; k++) {
-							if (meta.getMatchFields().get(j) != null && meta.getMatchFields().get(j).equals(getInputRowMeta().getFieldNames()[k])) {
-								fields.add(getInputRowMeta().getString(r, k));
-								break;
-							}
-						}
+			String blockingValue = "";
+			for (int i = 0; i < meta.getBlockingAttributes().size(); i++) {
+				for (int j = 0; j < getInputRowMeta().getFieldNames().length; j++) {
+					if (getInputRowMeta().getFieldNames()[j].equals(meta.getBlockingAttributes().get(i))) {
+						blockingValue = blockingValue.concat(getInputRowMeta().getString(r, j));
 					}
-				
-					String fieldValue = getInputRowMeta().getString(r, i);
-					if (data.getBlocks().containsKey(fieldValue)) {
-						data.getBlocks().get(fieldValue).add(data.getIndex());
-						data.getBlocks().get(fieldValue).add(fields);
-					}
-					else {
-						data.getBlocks().put(fieldValue, new ArrayList<Object> ());
-						data.getBlocks().get(fieldValue).add(data.getIndex());
-						data.getBlocks().get(fieldValue).add(fields);
-					}
-				}				
+				}
 			}
-		}
-		
+			ArrayList<String> fields = new ArrayList<String> ();
+			for (int j = 0; j < meta.getMatchFields().size(); j++) {
+				for (int k = 0; k < getInputRowMeta().getFieldNames().length; k++) {
+					if (meta.getMatchFields().get(j) != null && meta.getMatchFields().get(j).equals(getInputRowMeta().getFieldNames()[k])) {
+						fields.add(getInputRowMeta().getString(r, k));
+						break;
+					}
+				}
+			}				
+				
+			if (data.getBlocks().containsKey(blockingValue)) {
+				data.getBlocks().get(blockingValue).add(data.getIndex());
+				data.getBlocks().get(blockingValue).add(fields);
+			}
+			else {
+				data.getBlocks().put(blockingValue, new ArrayList<Object> ());
+				data.getBlocks().get(blockingValue).add(data.getIndex());
+				data.getBlocks().get(blockingValue).add(fields);
+			}
+		}					
 		if ( checkFeedback( getLinesRead() ) ) {
 			if ( log.isBasic() )
 				logBasic( BaseMessages.getString( PKG, "ApproxDupDetection.Log.LineNumber" ) + getLinesRead() );
@@ -222,7 +226,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					temp.add(similarity);
 					blockSim.add(temp);
 				}
-			}	
+			}				
 			blockSims.add(blockSim);
 		}
 		transitiveClosure(blockSims);
@@ -231,19 +235,39 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 
 	private void transitiveClosure(ArrayList<ArrayList<ArrayList<Double>>> blockSims) {
 		transitive = new HashMap<Double, ArrayList<Double>> ();
+		System.out.println(blockSims);
 		for (int i  = 0; i < blockSims.size(); i++) {
 			if (blockSims.get(i).size() == 0)
 				continue;
-			Double representative = blockSims.get(i).get(0).get(0);
-			transitive.put(representative, new ArrayList<Double> ());
-			for (int j = 0; j < blockSims.get(i).size(); j++) {
-				if (blockSims.get(i).get(j).contains(representative) && blockSims.get(i).get(j).get(2) > meta.getMatchingThreshold()) {
-					transitive.get(representative).add(representative.equals(blockSims.get(i).get(j).get(0)) ? 
-							blockSims.get(i).get(j).get(1) : blockSims.get(i).get(j).get(0));
-					transitive.get(representative).add(blockSims.get(i).get(j).get(2));
-				}
+			/*HashSet<Double> test = new HashSet<> ();
+			for (int k = 0; k < blockSims.get(i).size(); k++) {
+				test.add(blockSims.get(i).get(k).get(0));
+				test.add(blockSims.get(i).get(k).get(1));
 			}
+			while (! test.isEmpty()) {*/
+				Double representative = blockSims.get(i).get(0).get(0);
+				
+				transitive.put(representative, new ArrayList<Double> ());
+				
+				
+				for (int j = 0; j < blockSims.get(i).size(); j++) {
+					if (blockSims.get(i).get(j).subList(0, 2).contains(representative) && blockSims.get(i).get(j).get(2) > meta.getMatchingThreshold()) {
+						transitive.get(representative).add(representative.equals(blockSims.get(i).get(j).get(0)) ? 
+								blockSims.get(i).get(j).get(1) : blockSims.get(i).get(j).get(0));
+						transitive.get(representative).add(blockSims.get(i).get(j).get(2));
+						//test.remove(blockSims.get(i).get(j).get(0));
+						//test.remove(blockSims.get(i).get(j).get(0));
+						blockSims.get(i).remove(j);
+					}
+				}
+				if (transitive.get(representative).size() == 0) {
+				
+				}
+			//}
 		}
+		System.out.println("++++++++++++");
+		System.out.println(transitive);
+		System.out.println("++++++++++++");
 	}
 	
 	private void writeOutput() throws KettleStepException, KettlePluginException {
