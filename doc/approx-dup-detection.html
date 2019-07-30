@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<style type="text/css">
+	
+	body {
+		font-family: sans-serif;
+	}
+
+	h2 {
+		margin-bottom: 50px;
+	}
+
+	table {
+		border-collapse: collapse;
+		margin-left: 10px;
+		margin-right: 20px; 
+	}
+</style>
+
+
+<head>
+	<title> Approximate Duplicate Detection Step Help </title>
+</head>
+
+
+<body>
+	<h2> Approximate Duplicate Detection </h1>
+
+	<h3> Description </h3>
+		
+
+	<h3> Options </h3>
+	<p> 
+		The following table describes the options associated with the Approximate Duplicate Detection step
+	</p>
+	<table border="1">
+		<tr>
+			<th> <b>Option</b> </th>
+			<th> <b>Description</b> </th>
+		</tr>
+
+		<tr>
+			<td> Step Name </td>
+			<td> The name of this step as it appears in the transformation workspace. This name must be unique within the transformation. </td>
+		</tr>
+
+
+
+		<tr>
+			<td> Grouping Column Name </td>
+			<td> The name of the output column that contains the group to each the record belongs to.</td>
+		</tr>
+
+		<tr>
+			<td> Similarity Column Name </td>
+			<td> The name of the output column that contains the similarity between the first record of the group and the record in the row. </td>
+		</tr>
+
+		<tr>
+			<td> Remove Non-Duplicates </td>
+			<td> By selecting this option, the records that do not match any other records are removed from the step output. </td>
+		</tr>
+	</table>
+</body>
