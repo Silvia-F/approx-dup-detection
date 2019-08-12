@@ -7,13 +7,13 @@
     <version>RELEASE</version>
   </parent>
 
-  <artifactId>di-approx-dup-detection</artifactId>
+  <artifactId>di-duplicate-detection</artifactId>
   <groupId>org.pentaho.dataintegration</groupId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>DI Approximate Duplicate Detection</name>
-  <description>Domain Independent Approximate Duplicate Detection</description>
+  <name>"Domain-Independent Duplicate Detection"</name>
+  <description>"Step to compute approximate duplicate groups"</description>
 
   <licenses>
     <license>

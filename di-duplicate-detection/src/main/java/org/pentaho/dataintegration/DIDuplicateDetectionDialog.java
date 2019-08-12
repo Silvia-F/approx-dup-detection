@@ -44,9 +44,9 @@ import org.pentaho.di.ui.core.gui.GUIResource;
 import org.pentaho.di.ui.core.widget.TextVar;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
-public class DIApproxDupDetectionDialog extends BaseStepDialog implements StepDialogInterface {
+public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDialogInterface {
 
-	private static Class<?> PKG = DIApproxDupDetectionMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+	private static Class<?> PKG = DIDuplicateDetectionMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 
 	private static final int MARGIN_SIZE = 15;
 	private static final int LABEL_SPACING = 5;
@@ -56,7 +56,7 @@ public class DIApproxDupDetectionDialog extends BaseStepDialog implements StepDi
 	private static final int MEDIUM_FIELD = 250;
 	private static final int SMALL_FIELD = 75;
 
-	private DIApproxDupDetectionMeta meta;
+	private DIDuplicateDetectionMeta meta;
 
 	private Text wThreshold;
 	private Text wGroupColumnName;
@@ -70,9 +70,9 @@ public class DIApproxDupDetectionDialog extends BaseStepDialog implements StepDi
 	private SelectionAdapter lsDef;
 	private boolean changed;
 
-	public DIApproxDupDetectionDialog( Shell parent, Object in, TransMeta tr, String sname ) {
+	public DIDuplicateDetectionDialog( Shell parent, Object in, TransMeta tr, String sname ) {
 		super( parent, (BaseStepMeta) in, tr, sname );
-		meta = (DIApproxDupDetectionMeta) in;
+		meta = (DIDuplicateDetectionMeta) in;
 	}
 
 	public String open() {
@@ -96,11 +96,11 @@ public class DIApproxDupDetectionDialog extends BaseStepDialog implements StepDi
 		formLayout.marginLeft = Const.FORM_MARGIN;
 		formLayout.marginHeight = Const.FORM_MARGIN;
 		shell.setLayout( formLayout );
-		shell.setText( BaseMessages.getString( PKG, "DIApproxDupDetectionDialog.Shell.Title" ) );
+		shell.setText( BaseMessages.getString( PKG, "DIDuplicateDetectionDialog.Shell.Title" ) );
 
 		//Step name label and text field
 		wlStepname = new Label( shell, SWT.RIGHT );
-		wlStepname.setText( BaseMessages.getString( PKG, "DIApproxDupDetectionDialog.Stepname.Label" ) );
+		wlStepname.setText( BaseMessages.getString( PKG, "DIDuplicateDetectionDialog.Stepname.Label" ) );
 		props.setLook( wlStepname );
 
 		fdlStepname = new FormDataBuilder()
@@ -124,7 +124,7 @@ public class DIApproxDupDetectionDialog extends BaseStepDialog implements StepDi
 
 		// Step parameters
 		Label wlThreshold = new Label( shell, SWT.RIGHT );
-		wlThreshold.setText( BaseMessages.getString( PKG, "DIApproxDupDetectionDialog.Threshold.Label" ) );
+		wlThreshold.setText( BaseMessages.getString( PKG, "DIDuplicateDetectionDialog.Threshold.Label" ) );
 		props.setLook( wlThreshold );
 
 		FormData fdlThreshold = new FormDataBuilder()
@@ -143,10 +143,10 @@ public class DIApproxDupDetectionDialog extends BaseStepDialog implements StepDi
 				.right( 100, -Const.MARGIN )
 				.top( wStepname, 2 * Const.MARGIN )
 				.result();
-		wThreshold.setLayoutData( fdThreshold );	
+		wThreshold.setLayoutData( fdThreshold );  
 
 		Label wlGroupColumnName = new Label(shell, SWT.RIGHT);
-		wlGroupColumnName.setText( BaseMessages.getString( PKG, "DIApproxDupDetectionDialog.GroupColumnName.Label" ) );
+		wlGroupColumnName.setText( BaseMessages.getString( PKG, "DIDuplicateDetectionDialog.GroupColumnName.Label" ) );
 		props.setLook(wlGroupColumnName);
 
 		FormData fdlGroupColumnName = new FormDataBuilder()
@@ -168,7 +168,7 @@ public class DIApproxDupDetectionDialog extends BaseStepDialog implements StepDi
 		wGroupColumnName.setLayoutData( fdGroupColumnName );
 		
 		Label wlSimColumnName = new Label(shell, SWT.RIGHT);
-		wlSimColumnName.setText( BaseMessages.getString( PKG, "DIApproxDupDetectionDialog.SimColumnName.Label" ) );
+		wlSimColumnName.setText( BaseMessages.getString( PKG, "DIDuplicateDetectionDialog.SimColumnName.Label" ) );
 		props.setLook(wlSimColumnName);
 
 		FormData fdlSimColumnName = new FormDataBuilder()
@@ -190,7 +190,7 @@ public class DIApproxDupDetectionDialog extends BaseStepDialog implements StepDi
 		wSimColumnName.setLayoutData( fdSimColumnName );
 		
 		Label wlRemoveSingletons = new Label( shell, SWT.RIGHT );
-		wlRemoveSingletons.setText( BaseMessages.getString( PKG, "DIApproxDupDetectionDialog.RemoveSingletons.Label" ) );
+		wlRemoveSingletons.setText( BaseMessages.getString( PKG, "DIDuplicateDetectionDialog.RemoveSingletons.Label" ) );
 		props.setLook( wlRemoveSingletons );
 
 		FormData fdlRemoveSingletons = new FormDataBuilder()

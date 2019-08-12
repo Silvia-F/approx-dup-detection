@@ -51,18 +51,18 @@ import java.util.List;
 /**
  * Skeleton for PDI Step plugin.
  */
-@Step( id = "DIApproxDupDetection", image = "DIApproxDupDetection.svg", name = "DI Approximate Duplicate Detection",
+@Step( id = "DIDuplicateDetection", image = "DIDuplicateDetection.svg", name = "Domain-Independent Duplicate Detection",
 description = "Domain Independent Approximate Duplicate Detection", categoryDescription = "Lookup" )
-public class DIApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInterface {
+public class DIDuplicateDetectionMeta extends BaseStepMeta implements StepMetaInterface {
 
-	private static Class<?> PKG = DIApproxDupDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+	private static Class<?> PKG = DIDuplicateDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 	
 	private String groupColumnName; // The name for the output column of approximate duplicate groups
 	private String simColumnName; // The name for the output column corresponding to the similarity values
 	private double matchThreshold; // The matching threshold value
 	private boolean removeSingletons; // If true, remove singleton groups from the output
 
-	public DIApproxDupDetectionMeta() {
+	public DIDuplicateDetectionMeta() {
 		super(); // allocate BaseStepMeta
 	}
 
@@ -90,14 +90,14 @@ public class DIApproxDupDetectionMeta extends BaseStepMeta implements StepMetaIn
 		}
 	}
 	
-	public String getXML() {		
+	public String getXML() {    
 		StringBuilder retval = new StringBuilder(300);
 		retval.append(XMLHandler.addTagValue("groupColumnName", groupColumnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("simColumnName", simColumnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("removeSingletons", String.valueOf(removeSingletons))).append(Const.CR);
 		return retval.toString();
-	}		
+	}   
 
 	public void setDefault() {
 		groupColumnName = "Group";
@@ -135,35 +135,35 @@ public class DIApproxDupDetectionMeta extends BaseStepMeta implements StepMetaIn
 			IMetaStore metaStore ) {
 		CheckResult cr;
 		if ( prev == null || prev.size() == 0 ) {
-			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_WARNING, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.NotReceivingFields" ), stepMeta ); 
+			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_WARNING, BaseMessages.getString( PKG, "DIDuplicateDetectionMeta.CheckResult.NotReceivingFields" ), stepMeta ); 
 			remarks.add( cr );
 		}
 		else {
-			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.StepRecevingData", prev.size() + "" ), stepMeta );  
+			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString( PKG, "DIDuplicateDetectionMeta.CheckResult.StepRecevingData", prev.size() + "" ), stepMeta );  
 			remarks.add( cr );
 		}
 
 		// See if we have input streams leading to this step!
 		if ( input.length > 0 ) {
-			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.StepRecevingData2" ), stepMeta ); 
+			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString( PKG, "DIDuplicateDetectionMeta.CheckResult.StepRecevingData2" ), stepMeta ); 
 			remarks.add( cr );
 		}
 		else {
-			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_ERROR, BaseMessages.getString( PKG, "DIApproxDupDetectionMeta.CheckResult.NoInputReceivedFromOtherSteps" ), stepMeta ); 
+			cr = new CheckResult( CheckResultInterface.TYPE_RESULT_ERROR, BaseMessages.getString( PKG, "DIDuplicateDetectionMeta.CheckResult.NoInputReceivedFromOtherSteps" ), stepMeta ); 
 			remarks.add( cr );
 		}
 	}
 
 	public StepInterface getStep( StepMeta stepMeta, StepDataInterface stepDataInterface, int cnr, TransMeta tr, Trans trans ) {
-		return new DIApproxDupDetection( stepMeta, stepDataInterface, cnr, tr, trans );
+		return new DIDuplicateDetection( stepMeta, stepDataInterface, cnr, tr, trans );
 	}
 
 	public StepDataInterface getStepData() {
-		return new DIApproxDupDetectionData();
+		return new DIDuplicateDetectionData();
 	}
 
 	public String getDialogClassName() {
-		return "org.pentaho.dataintegration.DIApproxDupDetectionDialog";
+		return "org.pentaho.dataintegration.DIDuplicateDetectionDialog";
 	}
 	
 	public void setGroupColumnName(String groupColumnName) {

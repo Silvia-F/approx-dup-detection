@@ -27,24 +27,24 @@ import org.pentaho.di.trans.step.BaseStepData;
 import org.pentaho.di.trans.step.StepDataInterface;
 
 
-public class DIApproxDupDetectionData extends BaseStepData implements StepDataInterface {
+public class DIDuplicateDetectionData extends BaseStepData implements StepDataInterface {
 
 	private RowMetaInterface outputRowMeta;
 	protected Vector<Node> graph; // Keeps nodes that form the graph for the domain-independent approach
 	protected List<Object[]> buffer; // Keeps row data for output
 	private int rowIndex; // Keeps the index of the last processed row
 	
-  /**
-   * 
-   */
-  public DIApproxDupDetectionData() {
-    super();
-    graph = new Vector<Node>();
+	/**
+	 * 
+	 */
+	public DIDuplicateDetectionData() {
+		super();
+		graph = new Vector<Node>();
 	buffer = new ArrayList<Object[]>( 5000 );
 	rowIndex = 0;
-  }
-  
-  public void setOutputRowMeta(RowMetaInterface outputRowMeta) {
+	}
+	
+	public void setOutputRowMeta(RowMetaInterface outputRowMeta) {
 		this.outputRowMeta = outputRowMeta;
 	}
 	

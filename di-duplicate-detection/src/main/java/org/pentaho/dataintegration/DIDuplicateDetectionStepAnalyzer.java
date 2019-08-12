@@ -27,15 +27,15 @@ import org.pentaho.metaverse.api.analyzer.kettle.step.StepAnalyzer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DIApproxDupDetectionStepAnalyzer extends StepAnalyzer<DIApproxDupDetectionMeta> {
+public class DIDuplicateDetectionStepAnalyzer extends StepAnalyzer<DIDuplicateDetectionMeta> {
   @Override
-  protected Set<StepField> getUsedFields( DIApproxDupDetectionMeta meta ) {
+  protected Set<StepField> getUsedFields( DIDuplicateDetectionMeta meta ) {
     // no incoming fields are used by the Dummy step
     return null;
   }
 
   @Override
-  protected void customAnalyze( DIApproxDupDetectionMeta meta, IMetaverseNode rootNode ) throws MetaverseAnalyzerException {
+  protected void customAnalyze( DIDuplicateDetectionMeta meta, IMetaverseNode rootNode ) throws MetaverseAnalyzerException {
     // add any custom properties or relationships here
     rootNode.setProperty( "do_nothing", true );
   }
@@ -43,7 +43,7 @@ public class DIApproxDupDetectionStepAnalyzer extends StepAnalyzer<DIApproxDupDe
   @Override
   public Set<Class<? extends BaseStepMeta>> getSupportedSteps() {
     Set<Class<? extends BaseStepMeta>> supportedSteps = new HashSet<>();
-    supportedSteps.add( DIApproxDupDetectionMeta.class );
+    supportedSteps.add( DIDuplicateDetectionMeta.class );
     return supportedSteps;
   }
 }

@@ -47,61 +47,61 @@ import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
 
 /**
- 	* Describe your step plugin.
- 	* 
+	* Describe your step plugin.
+	* 
 */
-public class DIApproxDupDetection extends BaseStep implements StepInterface {
-  
-	private static Class<?> PKG = DIApproxDupDetectionMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+public class DIDuplicateDetection extends BaseStep implements StepInterface {
 	
-	private DIApproxDupDetectionData data;
-	private DIApproxDupDetectionMeta meta;
-  
-	public DIApproxDupDetection( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
+	private static Class<?> PKG = DIDuplicateDetectionMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+	
+	private DIDuplicateDetectionData data;
+	private DIDuplicateDetectionMeta meta;
+	
+	public DIDuplicateDetection( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
 			Trans trans ) {
 		super( stepMeta, stepDataInterface, copyNr, transMeta, trans );
 	}
-  
+	
 	/**
-	 	* Initialize and do work where other steps need to wait for...
-	 	*
-	 	* @param stepMetaInterface
-	 	*          The metadata to work with
-	 	* @param stepDataInterface
-	 	*          The data to initialize
-    */
+		* Initialize and do work where other steps need to wait for...
+		*
+		* @param stepMetaInterface
+		*          The metadata to work with
+		* @param stepDataInterface
+		*          The data to initialize
+		*/
 	public boolean init( StepMetaInterface stepMetaInterface, StepDataInterface stepDataInterface ) {
-		meta = (DIApproxDupDetectionMeta) stepMetaInterface;
-		data = (DIApproxDupDetectionData) stepDataInterface;
+		meta = (DIDuplicateDetectionMeta) stepMetaInterface;
+		data = (DIDuplicateDetectionData) stepDataInterface;
 
 		return super.init(stepMetaInterface, stepDataInterface);
 	}
 
-    public boolean processRow( StepMetaInterface smi, StepDataInterface sdi ) throws KettleException {
+		public boolean processRow( StepMetaInterface smi, StepDataInterface sdi ) throws KettleException {
 		Object[] r = getRow(); // get row, set busy!
 		if ( r == null ) {
 			// no more input to be expected...
 			detectApproxDups();
-			writeOutput();	
+			writeOutput();  
 			setOutputDone();
 			return false;
 		}
 			
 		if (first) {
 			data.setOutputRowMeta(getInputRowMeta().clone());
-			meta.getFields(data.getOutputRowMeta(), getStepname(), null, null, this, repository, metaStore);			
+			meta.getFields(data.getOutputRowMeta(), getStepname(), null, null, this, repository, metaStore);      
 			first = false;
 		}
 		data.buffer.add(r);
 		data.incrementIndex();
 				
-		String data_str = new String();			
+		String data_str = new String();     
 		for (int i = 0; i < getInputRowMeta().getFieldNames().length; i++) {
 			if (getInputRowMeta().getString(r, i) != null)
 				data_str = data_str.concat(getInputRowMeta().getString(r, i));
 			data_str = data_str.concat(" ");
 		}
-		data.addNode(data_str, data.getIndex());			
+		data.addNode(data_str, data.getIndex());      
 		
 		if ( checkFeedback( getLinesRead() ) ) {
 			if ( log.isBasic() )
@@ -113,7 +113,7 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 	private void detectApproxDups() {
 		double matchThreshold = meta.getMatchThreshold();
 		LinkedList<Node> queue = new LinkedList<Node>();
-		Vector<Node> orderedGraph = new Vector<Node> ();	
+		Vector<Node> orderedGraph = new Vector<Node> ();  
 		orderedGraph.addAll(data.getGraph());
 		orderedGraph.sort(null);
 		queue.addFirst(orderedGraph.get(0));
@@ -139,16 +139,16 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 						changed = true;
 						break;
 					}
-				}				
-			}			
-			if (!changed) {				
+				}       
+			}     
+			if (!changed) {       
 				queue.addFirst(node.findSet());
 				if (queue.size() > 4) {
 					queue.removeLast();
 				}
-			}	
-		}	
-		for (int i = 0; i < orderedGraph.size(); i++) {			
+			} 
+		} 
+		for (int i = 0; i < orderedGraph.size(); i++) {     
 			StringBuilder reversed = new StringBuilder();
 			reversed.append(orderedGraph.get(i).getData());
 			orderedGraph.get(i).setReversedData(reversed.reverse().toString());
@@ -173,15 +173,15 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 					changed = true;
 					break;
 				}
-			}			
-			for (int j = 0; j < queue.size(); j++) {				
+			}     
+			for (int j = 0; j < queue.size(); j++) {        
 				Node queueNode = queue.get(j);
 				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getReversedData(), queueNode.getReversedData()) /
 						Math.max(node.getReversedData().length(), queueNode.getReversedData().length())) >= matchThreshold) {
-					int nodesAboveThreshold = 0;	
+					int nodesAboveThreshold = 0;  
 					
 					// Check that all members of the group satisfy the matching threshold to be merged
-					for (int k = 0; k < node.findSet().getChildren().size(); k++) {						
+					for (int k = 0; k < node.findSet().getChildren().size(); k++) {           
 						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getChildren().get(k).getData(),
 								queueNode.getData()) / Math.max(node.findSet().getChildren().get(k).getData().length(), 
 								queueNode.getData().length())) >= matchThreshold) 
@@ -192,14 +192,14 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 							queueNode.getData().length())) >= matchThreshold) 
 						nodesAboveThreshold++;
 					
-					for (int k = 0; k < queueNode.getChildren().size(); k++) {						
+					for (int k = 0; k < queueNode.getChildren().size(); k++) {            
 						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(), 
 								queueNode.getChildren().get(k).getData()) / Math.max(node.findSet().getData().length(), 
 								queueNode.getChildren().get(k).getData().length())) >= matchThreshold)  
 							nodesAboveThreshold++;
 					}
 					
-					if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1) {							
+					if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1) {              
 						queue.addFirst(node.findSet().union(queueNode));
 						queue.remove(j + 1);
 						changed = true;
@@ -207,14 +207,14 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 					}
 				}
 				
-			}			
-			if (!changed) {		
+			}     
+			if (!changed) {   
 				queue.addFirst(node.findSet());
 				if (queue.size() > 4) {
 					queue.removeLast();
 				}
 			}
-		}	
+		} 
 	}
 	private void writeOutput() throws KettleStepException, KettlePluginException {
 		ArrayList<Integer> singletons = null;
@@ -233,7 +233,7 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 				newRow[j] = data.buffer.get(i)[j];
 			RowMeta rowMeta = new RowMeta();
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getGroupColumnName(), ValueMetaInterface.TYPE_INTEGER ));
-			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getSimColumnName(), ValueMetaInterface.TYPE_NUMBER ));		
+			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getSimColumnName(), ValueMetaInterface.TYPE_NUMBER ));    
 			
 			Double outputSimilarity = null;
 			if (singletons != null && singletons.contains(data.getGraph().get(i).findSet().getIndex()))
@@ -250,7 +250,7 @@ public class DIApproxDupDetection extends BaseStep implements StepInterface {
 			}
 				
 			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { new Long( data.getGraph().get(i).findSet().getIndex()), outputSimilarity});
-			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );		
+			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );    
 			putRow( data.getOutputRowMeta(), newRow);
 		}
 	}

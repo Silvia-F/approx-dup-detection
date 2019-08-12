@@ -257,7 +257,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 						transitive.get(representative).add(blockSims.get(i).get(j).get(2));
 						//test.remove(blockSims.get(i).get(j).get(0));
 						//test.remove(blockSims.get(i).get(j).get(0));
-						blockSims.get(i).remove(j);
+						//blockSims.get(i).remove(j);
 					}
 				}
 				if (transitive.get(representative).size() == 0) {
