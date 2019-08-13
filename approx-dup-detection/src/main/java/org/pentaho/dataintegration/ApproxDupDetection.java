@@ -46,7 +46,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -239,31 +238,78 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		for (int i  = 0; i < blockSims.size(); i++) {
 			if (blockSims.get(i).size() == 0)
 				continue;
-			/*HashSet<Double> test = new HashSet<> ();
-			for (int k = 0; k < blockSims.get(i).size(); k++) {
-				test.add(blockSims.get(i).get(k).get(0));
-				test.add(blockSims.get(i).get(k).get(1));
-			}
-			while (! test.isEmpty()) {*/
-				Double representative = blockSims.get(i).get(0).get(0);
-				
-				transitive.put(representative, new ArrayList<Double> ());
-				
-				
-				for (int j = 0; j < blockSims.get(i).size(); j++) {
-					if (blockSims.get(i).get(j).subList(0, 2).contains(representative) && blockSims.get(i).get(j).get(2) > meta.getMatchingThreshold()) {
-						transitive.get(representative).add(representative.equals(blockSims.get(i).get(j).get(0)) ? 
-								blockSims.get(i).get(j).get(1) : blockSims.get(i).get(j).get(0));
-						transitive.get(representative).add(blockSims.get(i).get(j).get(2));
-						//test.remove(blockSims.get(i).get(j).get(0));
-						//test.remove(blockSims.get(i).get(j).get(0));
-						//blockSims.get(i).remove(j);
+			Set<Double> thisBlock = new HashSet<Double> ();
+			for (int j = 0; j < blockSims.get(i).size(); j++) {	
+				if (blockSims.get(i).get(j).get(2) >= meta.getMatchingThreshold()) {
+					if (transitive.containsKey(blockSims.get(i).get(j).get(0))) {
+						thisBlock.add(blockSims.get(i).get(j).get(1));
+						transitive.get(blockSims.get(i).get(j).get(0)).add(blockSims.get(i).get(j).get(1));
+						transitive.get(blockSims.get(i).get(j).get(0)).add(blockSims.get(i).get(j).get(2));
+					}
+					else {
+						thisBlock.add(blockSims.get(i).get(j).get(0));
+						thisBlock.add(blockSims.get(i).get(j).get(1));
+						transitive.put(blockSims.get(i).get(j).get(0), new ArrayList<Double> ());
+						transitive.get(blockSims.get(i).get(j).get(0)).add(blockSims.get(i).get(j).get(1));
+						transitive.get(blockSims.get(i).get(j).get(0)).add(blockSims.get(i).get(j).get(2));
 					}
 				}
-				if (transitive.get(representative).size() == 0) {
-				
+			}	
+			System.out.println("TRANSITIVE BEFORE: " + transitive.get(new Double(7)));
+			for (Double d: transitive.keySet()) {
+				if (transitive.get(d).size() > 2)
+					transitive.get(d).add(new Double(0));
+			}
+			intraClusterDistance(thisBlock);
+			System.out.println("TRANSITIVE AFTER: " + transitive.get(new Double(7)));
+			for (int j = 0; j < transitive.keySet().toArray().length; j++) {
+				Double d1 = (Double) transitive.keySet().toArray()[j];
+				for (int k = 0; k < transitive.get(d1).size(); k += 2) {
+					Double d2 = transitive.get(d1).get(k);
+					if (transitive.keySet().contains(d2)) {
+						if (d1.equals(new Double(7))) 
+							System.out.println("ENTERING IF CONTAINSKEY: " + transitive.get(new Double(7)));
+						if (transitive.get(d1).containsAll(transitive.get(d2))) {
+							if (d1.equals(new Double(7)))
+								System.out.println("CONTAINSALL");							
+							transitive.remove(d2);
+							continue;
+						}
+						if (d1.equals(new Double(7)))
+							System.out.println("TRANSITIVE MD: " + transitive.get(new Double(7)) + " | " + transitive.get(new Double(8))+ "\n");
+						if (transitive.get(d1).get(transitive.get(d1).size() - 1) < transitive.get(d2).get(transitive.get(d2).size() - 1)) {
+							int toRemove = transitive.get(d1).indexOf(d2);
+							transitive.get(d1).remove(toRemove + 1);
+							transitive.get(d1).remove(toRemove);
+							if (transitive.get(d1).size() == 0) {
+								transitive.remove(d1);
+								break;
+							}
+							intraClusterDistance(thisBlock);
+						}
+						else {
+							transitive.remove(d2);
+						}
+					}
+					else {
+						if (d1.equals(new Double(7)))
+							System.out.println("ENTERING ELSE: " + transitive.get(new Double(7)));
+						for (int m = j + 1; m  < transitive.keySet().toArray().length; m++) {
+							if (transitive.get(transitive.keySet().toArray()[m]).contains(d2)) {
+								if (transitive.get(d1).get(transitive.get(d1).size() - 1) < 
+										transitive.get(transitive.keySet().toArray()[m]).get(transitive.get(transitive.keySet().toArray()[m]).size() - 1)) {
+									transitive.get(d1).remove(transitive.keySet().toArray()[m]);
+									if (transitive.get(d1).size() == 0) {
+										transitive.remove(d1);
+										break;
+									}
+									intraClusterDistance(thisBlock);
+								}
+							}
+						}
+					}
 				}
-			//}
+			}
 		}
 		System.out.println("++++++++++++");
 		System.out.println(transitive);
@@ -309,6 +355,23 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
 						
 			putRow( data.getOutputRowMeta(), newRow);
+		}
+	}
+	
+	private void intraClusterDistance(Set<Double> thisBlock) {
+		Set<Double> keySet = transitive.keySet();
+		for(Double d: keySet) {
+			if (!thisBlock.contains(d)) 
+				continue;
+			if (transitive.get(d).size() > 2) {
+				double avg = 0;
+				//System.out.println("TRANSITIVE IN DISTANCE " + transitive + "\n");
+				for (int j = 1; j < transitive.get(d).size(); j += 2) {
+					avg += transitive.get(d).get(j);
+				}
+				double measure = (1 / Math.floor(transitive.get(d).size()/ 2)) * avg;
+				transitive.get(d).set(transitive.get(d).size() - 1, measure);
+			}
 		}
 	}
 }
