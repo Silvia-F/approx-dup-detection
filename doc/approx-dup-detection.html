@@ -28,7 +28,14 @@
 	<h2> Approximate Duplicate Detection </h1>
 
 	<h3> Description </h3>
-		
+	<p>
+		The Approximate Duplicate Detection step allows the user to compute groups of records that represent the same real-world entity. <br>
+		These groups are built based on rules provided by the user to define how fields are compared to compute similarity between records.
+	</p>
+
+	<p>
+		The step outputs two columns: The first column corresponds to the grouping of records. Each group contains the records that correspond to one real-world entity. The group identifier is the index of the first record of the group. The second column corresponds to the similarity between a record and the first element of its group. When a record is the first one of its group, the similarity value is null.
+	</p>
 
 	<h3> Options </h3>
 	<p> 
@@ -45,11 +52,24 @@
 			<td> The name of this step as it appears in the transformation workspace. This name must be unique within the transformation. </td>
 		</tr>
 
+		<tr>
+			<td> Blocking Attributes Table </td>
+			<td> The field or fields that will be used to partition the records. If no attribute is chosen, a cartesian product will be made. The attributes chosen for blocking should have a high confidence of being correct throughout the dataset. </td>
+		</tr>
 
+		<tr>
+			<td> Matching Threshold </td>
+			<td> A value between 0 and 1 that corresponds to the minimum value of similarity that must exist between two records for them to be considered approximate duplicates, where 0 corresponds to the records being completely different and 1 corresponds to the records being exactly alike. </td>
+		</tr>
+
+		<tr>
+			<td> Fields Table </td>
+			<td> In this table, the user selects which attributes from the dataset are to be used in the matching process, as well as the similarity measure to use and the weight that each attribute will have in the overall similarity value. </td>
+		</tr>
 
 		<tr>
 			<td> Grouping Column Name </td>
-			<td> The name of the output column that contains the group to each the record belongs to.</td>
+			<td> The name of the output column that contains the group to which each the record belongs to.</td>
 		</tr>
 
 		<tr>
@@ -59,7 +79,7 @@
 
 		<tr>
 			<td> Remove Non-Duplicates </td>
-			<td> By selecting this option, the records that do not match any other records are removed from the step output. </td>
+			<td> By selecting this option, the records that do not match any other records are removed from the step's output. </td>
 		</tr>
 	</table>
 </body>
