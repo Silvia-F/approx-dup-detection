@@ -21,7 +21,10 @@ import com.wcohen.ss.Jaro;
 import com.wcohen.ss.JaroWinkler;
 import com.wcohen.ss.NeedlemanWunsch;
 
+import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.commons.codec.language.Metaphone;
+import org.apache.commons.codec.language.RefinedSoundex;
+import org.apache.commons.codec.language.Soundex;
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.exception.KettleException;
@@ -187,11 +190,11 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 								break;
 							case(1):
 								similarity += meta.getConvertedMeasures()[k][1] * (1 - Utils.getDamerauLevenshteinDistance(a.get(k), b.get(k)) /
-										((double)Math.max(a.get(k).length(), b.get(k).length())));
+										(double)Math.max(a.get(k).length(), b.get(k).length()));
 								break;
 							case(2):								
-								similarity += meta.getConvertedMeasures()[k][1] * (1 - Math.abs(new NeedlemanWunsch().score(a.get(k), b.get(k)))) /
-										((double)Math.max(a.get(k).length(), b.get(k).length()));
+								similarity += meta.getConvertedMeasures()[k][1] * (1 - Math.abs(new NeedlemanWunsch().score(a.get(k), b.get(k))) /
+										(double)Math.max(a.get(k).length(), b.get(k).length()));
 								break;
 							case(3):
 								similarity += meta.getConvertedMeasures()[k][1] * new Jaro().score(a.get(k), b.get(k));
@@ -203,19 +206,28 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 								similarity += meta.getConvertedMeasures()[k][1] * LetterPairSimilarity.getSimiliarity(a.get(k), b.get(k));
 								break;
 							case(6):
-								System.out.println("A: "  + a.get(k));
-								System.out.println("B: "  + b.get(k));
-								System.out.println("METAPHONE: " +  ( new Metaphone() ).metaphone( a.get(k) ));
-								//metaphone [get dophonetic() from fuzzy match]
+								String metaphone1 = (new Metaphone()).metaphone( a.get(k) );
+								String metaphone2 = (new Metaphone()).metaphone( b.get(k) );
+								if (metaphone1.equals(metaphone2))
+									similarity += meta.getConvertedMeasures()[k][1];
 								break;
 							case(7):
-								//double matephone [get dophonetic() from fuzzy match]
+								String doubleMetaphone1 = (new DoubleMetaphone()).doubleMetaphone( a.get(k) );
+								String doubleMetaphone2 = (new DoubleMetaphone()).doubleMetaphone( b.get(k) );
+								if (doubleMetaphone1.equals(doubleMetaphone2))
+									similarity += meta.getConvertedMeasures()[k][1];
 								break;
 							case(8):
-								//soundex [get dophonetic() from fuzzy match]
+								String soundex1 = (new Soundex()).encode( a.get(k) );
+								String soundex2 = (new Soundex()).encode( b.get(k) );
+								if (soundex1.equals(soundex2))
+									similarity += meta.getConvertedMeasures()[k][1];
 								break;
 							case(9):
-								// refined soundex [get dophonetic() from fuzzy match]
+								String refSoundex1 = (new RefinedSoundex()).encode( a.get(k) );
+								String refSoundex2 = (new RefinedSoundex()).encode( b.get(k) );
+								if (refSoundex1.equals(refSoundex2))
+									similarity += meta.getConvertedMeasures()[k][1];
 								break;
 						}
 					}
@@ -255,59 +267,74 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					}
 				}
 			}	
-			System.out.println("TRANSITIVE BEFORE: " + transitive.get(new Double(7)));
+			System.out.println("\nADDING ZEROS: " + transitive + "\n");
 			for (Double d: transitive.keySet()) {
-				if (transitive.get(d).size() > 2)
+				if (transitive.get(d).size() > 2 && thisBlock.contains((d)))
 					transitive.get(d).add(new Double(0));
 			}
+			System.out.println("\nADDING ZEROS: " + transitive + "\n");
 			intraClusterDistance(thisBlock);
-			System.out.println("TRANSITIVE AFTER: " + transitive.get(new Double(7)));
+			System.out.println("TRANSITIVE" + transitive + "\n");
+			outer:
 			for (int j = 0; j < transitive.keySet().toArray().length; j++) {
 				Double d1 = (Double) transitive.keySet().toArray()[j];
-				for (int k = 0; k < transitive.get(d1).size(); k += 2) {
+				for (int k = 0; k < transitive.get(d1).size() - 1; k += 2) {
+					System.out.println("GOT HERE");
 					Double d2 = transitive.get(d1).get(k);
 					if (transitive.keySet().contains(d2)) {
-						if (d1.equals(new Double(7))) 
-							System.out.println("ENTERING IF CONTAINSKEY: " + transitive.get(new Double(7)));
-						if (transitive.get(d1).containsAll(transitive.get(d2))) {
-							if (d1.equals(new Double(7)))
-								System.out.println("CONTAINSALL");							
+						if (transitive.get(d1).containsAll(transitive.get(d2))) {		
+							System.out.println("FIRST");
 							transitive.remove(d2);
 							continue;
 						}
-						if (d1.equals(new Double(7)))
-							System.out.println("TRANSITIVE MD: " + transitive.get(new Double(7)) + " | " + transitive.get(new Double(8))+ "\n");
 						if (transitive.get(d1).get(transitive.get(d1).size() - 1) < transitive.get(d2).get(transitive.get(d2).size() - 1)) {
 							int toRemove = transitive.get(d1).indexOf(d2);
 							transitive.get(d1).remove(toRemove + 1);
 							transitive.get(d1).remove(toRemove);
 							if (transitive.get(d1).size() == 0) {
+								System.out.println("SECOND");
 								transitive.remove(d1);
-								break;
+								continue outer;
 							}
 							intraClusterDistance(thisBlock);
 						}
 						else {
+							System.out.println("THIRD");
 							transitive.remove(d2);
 						}
 					}
 					else {
-						if (d1.equals(new Double(7)))
-							System.out.println("ENTERING ELSE: " + transitive.get(new Double(7)));
 						for (int m = j + 1; m  < transitive.keySet().toArray().length; m++) {
+							System.out.println("SECOND: " + m + ": " + transitive.get(transitive.keySet().toArray()[m]));
 							if (transitive.get(transitive.keySet().toArray()[m]).contains(d2)) {
+								System.out.println("CONTAINS " + d2);
 								if (transitive.get(d1).get(transitive.get(d1).size() - 1) < 
 										transitive.get(transitive.keySet().toArray()[m]).get(transitive.get(transitive.keySet().toArray()[m]).size() - 1)) {
 									transitive.get(d1).remove(transitive.keySet().toArray()[m]);
 									if (transitive.get(d1).size() == 0) {
 										transitive.remove(d1);
-										break;
+										System.out.println("FOURTH");
+										continue outer;
 									}
 									intraClusterDistance(thisBlock);
+								}
+								else {
+									System.out.println("IN REMOVE");
+									int toRemove = transitive.get(transitive.keySet().toArray()[m]).indexOf(d2);
+									System.out.println("D2: " + d2 );
+									System.out.println("Transitive: " + transitive.get(transitive.keySet().toArray()[m]));
+									System.out.println("to remove: " + toRemove);
+									transitive.get(transitive.keySet().toArray()[m]).remove(toRemove + 1);
+									transitive.get(transitive.keySet().toArray()[m]).remove(toRemove);
+									if (transitive.get(transitive.keySet().toArray()[m]).size() == 0) {
+										System.out.println("FIFTH");
+										transitive.remove(transitive.keySet().toArray()[m]);
+									}
 								}
 							}
 						}
 					}
+					System.out.println("JUST BEFORE TURNING: " + transitive);
 				}
 			}
 		}
@@ -365,7 +392,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				continue;
 			if (transitive.get(d).size() > 2) {
 				double avg = 0;
-				//System.out.println("TRANSITIVE IN DISTANCE " + transitive + "\n");
 				for (int j = 1; j < transitive.get(d).size(); j += 2) {
 					avg += transitive.get(d).get(j);
 				}
