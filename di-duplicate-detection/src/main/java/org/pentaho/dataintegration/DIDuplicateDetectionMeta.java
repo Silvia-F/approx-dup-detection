@@ -52,7 +52,7 @@ import java.util.List;
  * Skeleton for PDI Step plugin.
  */
 @Step( id = "DIDuplicateDetection", image = "DIDuplicateDetection.svg", name = "Domain-Independent Duplicate Detection",
-description = "Domain Independent Approximate Duplicate Detection", categoryDescription = "Lookup" )
+description = "Domain Independent Approximate Duplicate Detection", categoryDescription = "Lookup", documentationUrl = "https://web.ist.utl.pt/ist181041/di-dup-detection.html" )
 public class DIDuplicateDetectionMeta extends BaseStepMeta implements StepMetaInterface {
 
 	private static Class<?> PKG = DIDuplicateDetection.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$

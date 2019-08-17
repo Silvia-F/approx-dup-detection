@@ -54,7 +54,7 @@ import java.util.List;
  * This class holds meta data for fields.
  */
 @Step( id = "ApproxDupDetection", image = "ApproxDupDetection.svg", name = "Approximate Duplicate Detection",
-		description = "Approximate Duplicate Detection Step", categoryDescription = "Lookup" )
+		description = "Approximate Duplicate Detection Step", categoryDescription = "Lookup", documentationUrl = "https://web.ist.utl.pt/ist181041/approx-dup-detection.html" )
 
 public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInterface {
   
