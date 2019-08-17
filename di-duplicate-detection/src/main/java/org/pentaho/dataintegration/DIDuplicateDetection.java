@@ -186,17 +186,26 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 								queueNode.getData()) / Math.max(node.findSet().getChildren().get(k).getData().length(), 
 								queueNode.getData().length())) >= matchThreshold) 
 							nodesAboveThreshold++;
+						else
+							break;
 					}
+					if(nodesAboveThreshold != node.findSet().getChildren().size())
+						continue;
+					
 					if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(),
 							queueNode.getData()) / Math.max(node.findSet().getData().length(), 
 							queueNode.getData().length())) >= matchThreshold) 
 						nodesAboveThreshold++;
+					else
+						continue;
 					
 					for (int k = 0; k < queueNode.getChildren().size(); k++) {            
 						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(), 
 								queueNode.getChildren().get(k).getData()) / Math.max(node.findSet().getData().length(), 
 								queueNode.getChildren().get(k).getData().length())) >= matchThreshold)  
 							nodesAboveThreshold++;
+						else 
+							break;
 					}
 					
 					if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1) {              
@@ -205,8 +214,7 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 						changed = true;
 						break;
 					}
-				}
-				
+				}				
 			}     
 			if (!changed) {   
 				queue.addFirst(node.findSet());
