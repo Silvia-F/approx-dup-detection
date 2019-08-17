@@ -277,10 +277,11 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					transitive.get(d).add(new Double(0));
 			}
 			intraClusterDistance(thisBlock);
-
+			
 			outer:
 			for (int j = 0; j < transitive.keySet().toArray().length; j++) {
 				Double d1 = (Double) transitive.keySet().toArray()[j];
+				middle:
 				for (int k = 0; k < transitive.get(d1).size() - 1; k += 2) {
 					Double d2 = transitive.get(d1).get(k);
 					if (transitive.keySet().contains(d2)) {
@@ -307,12 +308,14 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 							if (transitive.get(transitive.keySet().toArray()[m]).contains(d2)) {
 								if (transitive.get(d1).get(transitive.get(d1).size() - 1) < 
 										transitive.get(transitive.keySet().toArray()[m]).get(transitive.get(transitive.keySet().toArray()[m]).size() - 1)) {
-									transitive.get(d1).remove(transitive.keySet().toArray()[m]);
+									transitive.get(d1).remove(transitive.get(d1).indexOf(d2) + 1);
+									transitive.get(d1).remove(d2);									
 									if (transitive.get(d1).size() == 0) {
 										transitive.remove(d1);
 										continue outer;
 									}
 									intraClusterDistance(thisBlock);
+									continue middle;
 								}
 								else {
 									int toRemove = transitive.get(transitive.keySet().toArray()[m]).indexOf(d2);
@@ -332,8 +335,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		}
 	}
 	
-	private void writeOutput() throws KettleStepException, KettlePluginException {
-		
+	private void writeOutput() throws KettleStepException, KettlePluginException {		
 		for (int i = 0; i < data.buffer.size(); i++) {
 			Object[] newRow = new Object[data.buffer.get(i).length + 2];
 			for (int j = 0; j < data.buffer.get(i).length; j++) 
@@ -346,13 +348,14 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			Double outputSimilarity = null;
 			Double index = new Double(i + 1);		
 
-			if (transitive.containsKey(index)) {
+			if (transitive.containsKey(index) || index == 1) {
 				group = index.longValue();
 			}
 			else {
 				for (Double j: transitive.keySet()) {
 					if (transitive.get(j).contains(index)) {
 						group = j.longValue();
+						
 						outputSimilarity = transitive.get(j).get(transitive.get(j).indexOf(index) + 1);
 						
 						DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
