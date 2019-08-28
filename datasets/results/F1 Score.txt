@@ -22,16 +22,16 @@ small Restaurants (4950 comparisons):
 
 
 Restaurants (372 816 comparisons):
-	0.4 (11-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	0.4 (11-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
 
-	0.5 (11-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	0.5 (11-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
 
-	0.6 (11-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	0.6 (11-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
 
-	0.7 (11-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	0.7 (11-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
 
 	------------------------------------------
-
+ 
 	0.4 (23-07): TP = 73 || FN = 39 || FP = 2395 || Precision = 0.03 || Recall = 0.65 || F1-Score = 0.06
 	
 	0.5 (23-07): TP = 69 || FN = 43 || FP = 624 || Precision = 0.11 || Recall = 0.62 || F1-Score = 0.19
@@ -41,6 +41,18 @@ Restaurants (372 816 comparisons):
 	0.7 (23-07): TP = 52 || FN = 60 || FP = 25 || Precision = 0.68 || Recall = 0.46 || F1-Score = 0.55
 
 	0.8 (23-07): TP = 40 || FN = 72 || FP = 4 || Precision = 0.91 || Recall = 0.36 || F1-Score = 0.53
+
+	------------------------------------------
+	(com match a não dar máxima prioridade)
+	0.4 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.5 (26-08): TP = 72 || FN = 40 || FP = 634 || Precision = 0.10 || Recall = 0.64 || F1-Score = 0.17
+
+	0.6 (26-08): TP = 69 || FN = 43 || FP = 159 || Precision = 0.35 || Recall = 0.62 || F1-Score = 0.45
+
+	0.7 (26-08): TP = 52 || FN = 60 || FP = 25 || Precision = 0.68 || Recall = 0.46 || F1-Score = 0.55
+
+	0.8 (26-08): TP = 40 || FN = 72 || FP = 4 || Precision = 0.91 || Recall = 0.36 || F1-Score = 0.53
 
 
 CORA
@@ -54,14 +66,38 @@ CORA
 	
 	0.8 (23-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
 
+	------------------------------------------
+
+	0.4 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.5 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.6 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.7 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.8 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
 
 FEBRL1
-	0.4 (23-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	0.4 (23-07): TP = 395 || FN = 105 || FP = 626 || Precision = 0.39 || Recall = 0.79 || F1-Score = 0.52
 	
-	0.5 (23-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	0.5 (23-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
 	
-	0.6 (23-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	0.6 (23-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
 	
-	0.7 (23-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+	0.7 (23-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
 	
-	0.8 (23-07): TN =  || TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score =
+	0.8 (23-07): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score =
+
+	------------------------------------------
+
+	0.4 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.5 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.6 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.7 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
+
+	0.8 (26-08): TP =  || FN =  || FP =  || Precision =  || Recall =  || F1-Score = 
