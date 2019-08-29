@@ -40,7 +40,7 @@ Restaurants (372 816 comparisons):
 	
 	0.7 (23-07): TP = 52 || FN = 60 || FP = 25 || Precision = 0.68 || Recall = 0.46 || F1-Score = 0.55
 
-	0.8 (23-07): TP = 40 || FN = 72 || FP = 4 || Precision = 0.91 || Recall = 0.36 || F1-Score = 0.53
+	0.8 (23-07): TP = 40 || FN = 72 || FP = 4 || Precision = 0.91 || Recall = 0.36 || F1-Score = 0.52
 
 	------------------------------------------
 	(com match a não dar máxima prioridade)
@@ -53,6 +53,30 @@ Restaurants (372 816 comparisons):
 	0.7 (26-08): TP = 51 || FN = 61 || FP = 26 || Precision = 0.66 || Recall = 0.46 || F1-Score = 0.54
 
 	0.8 (26-08): TP = 40 || FN = 72 || FP = 4 || Precision = 0.91 || Recall = 0.36 || F1-Score = 0.52
+
+	------------------------------------------
+	(versão de 23-07 com needleman-wunsch)
+	0.4 (29-08): TP = 74 || FN = 38 || FP = 2224 || Precision = 0.03 || Recall = 0.66 || F1-Score = 0.06
+
+	0.5 (29-08): TP = 70 || FN = 42 || FP = 629 || Precision = 0.10 || Recall = 0.63 || F1-Score = 0.17
+
+	0.6 (29-08): TP = 69 || FN = 43 || FP = 170 || Precision = 0.29 || Recall = 0.62 || F1-Score = 0.40
+
+	0.7 (29-08): TP = 52 || FN = 60 || FP = 25 || Precision = 0.68 || Recall = 0.46 || F1-Score = 0.55
+
+	0.8 (29-08): TP = 40 || FN = 72 || FP = 4 || Precision = 0.91 || Recall = 0.36 || F1-Score = 0.52
+
+	------------------------------------------
+	(versão de 26-08 com needleman-wunsch)
+	0.4 (29-08-2): TP = 68 || FN = 44 || FP = 2242 || Precision = 0.03 || Recall = 0.61 || F1-Score = 0.06
+
+	0.5 (29-08-2): TP = 71 || FN = 41 || FP = 631 || Precision = 0.10 || Recall = 0.63 || F1-Score = 0.17
+
+	0.6 (29-08-2): TP = 69 || FN = 43 || FP = 159 || Precision = 0.30 || Recall = 0.62 || F1-Score = 0.40
+
+	0.7 (29-08-2): TP = 52 || FN = 60 || FP = 25 || Precision = 0.68 || Recall = 0.46 || F1-Score = 0.55
+
+	0.8 (29-08-2): TP = 40 || FN = 72 || FP = 4 || Precision = 0.91 || Recall = 0.36 || F1-Score = 0.52
 
 
 CORA
@@ -78,6 +102,30 @@ CORA
 
 	0.8 (26-08): TP = 10257 || FN = 54302 || FP = 10 || Precision = 1.00 || Recall = 0.16 || F1-Score = 0.28
 
+	------------------------------------------
+	
+	0.4 (29-08): TP = 35206 || FN = 29353 || FP = 8077 || Precision = 0.81 || Recall = 0.54 || F1-Score = 0.66
+
+	0.5 (29-08): TP = 30903 || FN = 33656 || FP = 2967 || Precision = 0.91 || Recall = 0.48 || F1-Score = 0.63
+
+	0.6 (29-08): TP = 29931 || FN = 34628 || FP = 481 || Precision = 0.98 || Recall = 0.46 || F1-Score = 0.62
+
+	0.7 (29-08): TP = 19299 || FN = 45260 || FP = 50 || Precision = 1.00 || Recall = 0.30 || F1-Score = 0.46
+
+	0.8 (29-08): TP = 11036 || FN = 53523 || FP = 10 || Precision = 1.00 || Recall = 0.17 || F1-Score = 0.29
+
+	------------------------------------------
+	
+	0.4 (29-08-2): TP = 29359 || FN = 35203 || FP = 6917 || Precision = 0.81 || Recall = 0.45 || F1-Score = 0.58
+
+	0.5 (29-08-2): TP = 28858 || FN = 35701 || FP = 3288 || Precision = 0.90 || Recall = 0.45 || F1-Score = 0.60
+
+	0.6 (29-08-2): TP = 30408 || FN = 34151 || FP = 489 || Precision = 0.98 || Recall = 0.47 || F1-Score = 0.64
+
+	0.7 (29-08-2): TP = 18387 || FN = 46172 || FP = 93 || Precision = 1.00 || Recall = 0.28 || F1-Score = 0.44
+
+	0.8 (29-08-2): TP = 11112 || FN = 53447 || FP = 10 || Precision = 1.00 || Recall = 0.17 || F1-Score = 0.30
+
 
 FEBRL1
 	0.4 (23-07): TP = 398 || FN = 102 || FP = 660 || Precision = 0.38 || Recall = 0.80 || F1-Score = 0.52
@@ -96,8 +144,127 @@ FEBRL1
 
 	0.5 (26-08): TP = 483 || FN = 17 || FP = 14 || Precision = 0.97 || Recall = 0.97 || F1-Score = 0.97
 
-	0.6 (26-08): TP = 491 || FN = 9 || FP = 0 || Precision = 1 || Recall = 0.98 || F1-Score = 0.99
+	0.6 (26-08): TP = 491 || FN = 9 || FP = 0 || Precision = 1.00 || Recall = 0.98 || F1-Score = 0.99
 
 	0.7 (26-08): TP = 479 || FN = 21 || FP = 0 || Precision = 1.00 || Recall = 0.96 || F1-Score = 0.98
 
 	0.8 (26-08): TP = 444 || FN = 56 || FP = 0 || Precision = 1.00 || Recall = 0.89 || F1-Score = 0.94
+
+	------------------------------------------
+	
+	0.4 (29-08): TP = 394 || FN = 106 || FP = 637 || Precision = 0.38 || Recall = 0.79 || F1-Score = 0.51
+
+	0.5 (29-08): TP = 484 || FN = 16 || FP = 15 || Precision = 0.97 || Recall = 0.97 || F1-Score = 0.97
+
+	0.6 (29-08): TP = 491 || FN = 9 || FP = 0 || Precision = 1.00 || Recall = 0.98 || F1-Score = 0.99
+
+	0.7 (29-08): TP = 479 || FN = 21 || FP = 0 || Precision = 1.00 || Recall = 0.96 || F1-Score = 0.98
+
+	0.8 (29-08): TP = 442 || FN = 58 || FP = 0 || Precision = 1.00 || Recall = 0.89 || F1-Score = 0.94
+
+	------------------------------------------
+	
+	0.4 (29-08-2): TP = 385 || FN = 115 || FP = 658 || Precision = 0.37 || Recall = 0.77 || F1-Score = 0.50
+
+	0.5 (29-08-2): TP = 483 || FN = 17 || FP = 14 || Precision = 0.97 || Recall = 0.97 || F1-Score = 0.97
+
+	0.6 (29-08-2): TP = 491 || FN = 9 || FP = 0 || Precision = 1.00 || Recall = 0.98 || F1-Score = 0.99
+
+	0.7 (29-08-2): TP = 479 || FN = 21 || FP = 0 || Precision = 1.00 || Recall = 0.96 || F1-Score = 0.98
+
+	0.8 (29-08-2): TP = 442 || FN = 58 || FP = 0 || Precision = 1.00 || Recall = 0.88 || F1-Score = 0.94
+
+
+FEBRL2
+	0.4 (23-07): TP = 1285 || FN = 645 || FP = 4662 || Precision = 0.22 || Recall = 0.67 || F1-Score = 0.33
+	
+	0.5 (23-07): TP = 1793 || FN = 137 || FP = 297 || Precision = 0.86 || Recall = 0.93 || F1-Score = 0.89
+	
+	0.6 (23-07): TP = 1809 || FN = 121 || FP = 34 || Precision = 0.98 || Recall = 0.94 || F1-Score = 0.96
+	
+	0.7 (23-07): TP = 1675 || FN = 255 || FP = 29 || Precision = 0.98 || Recall = 0.87 || F1-Score = 0.92
+	
+	0.8 (23-07): TP = 1397 || FN = 533 || FP = 20 || Precision = 0.99 || Recall = 0.72 || F1-Score = 0.83
+
+	------------------------------------------
+
+	0.4 (26-08): TP = 1283 || FN = 647 || FP = 4594 || Precision = 0.22 || Recall = 0.66 || F1-Score = 0.33
+
+	0.5 (26-08): TP = 1784 || FN = 146 || FP = 305 || Precision = 0.85 || Recall = 0.92 || F1-Score = 0.88
+
+	0.6 (26-08): TP = 1809 || FN = 121 || FP = 34 || Precision = 0.98 || Recall = 0.94 || F1-Score = 0.96
+
+	0.7 (26-08): TP = 1675 || FN = 255 || FP = 29 || Precision = 0.98 || Recall = 0.87 || F1-Score = 0.92
+
+	0.8 (26-08): TP = 1397 || FN = 533 || FP = 20 || Precision = 0.99 || Recall = 0.72 || F1-Score = 0.83
+
+	------------------------------------------
+	
+	0.4 (29-08): TP = 1285 || FN = 645 || FP = 4520 || Precision = 0.22 || Recall = 0.67 || F1-Score = 0.33 
+
+	0.5 (29-08): TP = 1798 || FN = 132 || FP = 280 || Precision = 0.87 || Recall = 0.93 || F1-Score = 0.90
+
+	0.6 (29-08): TP = 1803 || FN = 127 || FP = 34 || Precision = 0.98 || Recall = 0.93 || F1-Score = 0.95
+
+	0.7 (29-08): TP = 1653 || FN = 277 || FP = 29 || Precision = 0.98 || Recall = 0.86 || F1-Score = 0.92
+
+	0.8 (29-08): TP = 1376 || FN = 554 || FP = 20 || Precision = 0.99 || Recall = 0.71 || F1-Score = 0.83
+	------------------------------------------
+	
+	0.4 (29-08-2): TP = 1263 || FN = 667 || FP = 4526 || Precision = 0.22 || Recall = 0.65 || F1-Score = 0.33
+
+	0.5 (29-08-2): TP = 1789 || FN = 141 || FP = 282 || Precision = 0.86 || Recall = 0.93 || F1-Score = 0.89
+
+	0.6 (29-08-2): TP = 1803 || FN = 127 || FP = 34 || Precision = 0.98 || Recall = 0.93 || F1-Score = 0.95
+
+	0.7 (29-08-2): TP = 1653 || FN = 277 || FP = 29 || Precision = 0.98 || Recall = 0.86 || F1-Score = 0.92
+
+	0.8 (29-08-2): TP = 1376 || FN = 554 || FP = 20 || Precision = 0.99 || Recall = 0.71 || F1-Score = 0.83
+
+
+FEBRL3
+	0.4 (23-07): TP = 4400 || FN = 2138 || FP = 4931 || Precision = 0.47 || Recall = 0.67 || F1-Score = 0.55
+	
+	0.5 (23-07): TP = 6214 || FN = 324 || FP = 155 || Precision = 0.98 || Recall = 0.95 || F1-Score = 0.96
+	
+	0.6 (23-07): TP = 6204 || FN = 344 || FP = 0 || Precision = 1.00 || Recall = 0.95 || F1-Score = 0.97
+	
+	0.7 (23-07): TP = 5504 || FN = 1034 || FP = 0 || Precision = 1.00 || Recall = 0.84 || F1-Score = 0.91
+	
+	0.8 (23-07): TP = 4466 || FN = 2072 || FP = 0 || Precision = 1.00 || Recall = 0.68 || F1-Score = 0.81
+
+	------------------------------------------
+
+	0.4 (26-08): TP = 4276 || FN = 2262 || FP = 4691 || Precision = 0.48 || Recall = 0.65 || F1-Score = 0.55
+
+	0.5 (26-08): TP = 6207 || FN = 331 || FP = 155 || Precision = 0.98 || Recall = 0.95 || F1-Score = 0.96
+
+	0.6 (26-08): TP = 6204 || FN = 334 || FP = 0 || Precision = 1.00 || Recall = 0.95 || F1-Score = 0.97
+
+	0.7 (26-08): TP = 5502 || FN = 1036 || FP = 0 || Precision = 1.00 || Recall = 0.84 || F1-Score = 0.91
+
+	0.8 (26-08): TP = 4460 || FN = 2078 || FP = 0 || Precision = 1.00 || Recall = 0.68 || F1-Score = 0.81 
+
+	------------------------------------------
+	
+	0.4 (29-08): TP = 4359 || FN = 2179 || FP = 4697 || Precision = 0.48 || Recall = 0.67 || F1-Score = 0.56
+
+	0.5 (29-08): TP = 6232 || FN = 306 || FP = 131 || Precision = 0.98 || Recall = 0.95 || F1-Score = 0.96
+
+	0.6 (29-08): TP = 6192 || FN = 346 || FP = 0 || Precision = 1.00 || Recall = 0.95 || F1-Score = 0.97
+
+	0.7 (29-08): TP = 5445 || FN = 1093 || FP = 0 || Precision = 1.00 || Recall = 0.83 || F1-Score = 0.91
+
+	0.8 (29-08): TP = 4373 || FN = 2165 || FP = 0 || Precision = 1.00 || Recall = 0.67 || F1-Score = 0.80 
+
+	------------------------------------------
+	
+	0.4 (29-08-2): TP = 4252 || FN = 2286 || FP = 4519 || Precision = 0.48 || Recall = 0.65 || F1-Score = 0.55
+
+	0.5 (29-08-2): TP = 6225 || FN = 313 || FP = 131 || Precision = 0.98 || Recall = 0.95 || F1-Score = 0.96
+
+	0.6 (29-08-2): TP = 6192 || FN = 346 || FP = 0 || Precision = 1.00 || Recall = 0.95 || F1-Score = 0.97
+
+	0.7 (29-08-2): TP = 5443 || FN = 1095 || FP = 0 || Precision = 1.00 || Recall = 0.83 || F1-Score = 0.91
+
+	0.8 (29-08-2): TP = 4367 || FN = 2171 || FP = 0 || Precision = 1.00 || Recall = 0.67 || F1-Score = 0.80
