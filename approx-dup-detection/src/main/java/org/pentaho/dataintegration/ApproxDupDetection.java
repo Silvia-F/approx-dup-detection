@@ -346,10 +346,12 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			
 			long group = i + 1;
 			Double outputSimilarity = null;
-			Double index = new Double(i + 1);		
+			Double index = new Double(i + 1);	
+			boolean found = false;
 
 			if (transitive.containsKey(index) || index == 1) {
 				group = index.longValue();
+				found = true;
 			}
 			else {
 				for (Double j: transitive.keySet()) {
@@ -363,11 +365,13 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 						DecimalFormat df = new DecimalFormat("#.#", symbols);
 						df.setRoundingMode(RoundingMode.DOWN);
 						outputSimilarity = Double.parseDouble(df.format(outputSimilarity));
-						
+						found = true;						
 						break;
 					}					
 				}
 			}
+			if (!found && meta.getRemoveSingletons())
+				continue;
 			
 			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { group, 
 					outputSimilarity});
