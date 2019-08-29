@@ -32,6 +32,7 @@ public class Node implements Comparable<Node> {
 	/**
 	 * Method to merge two groups of Nodes
 	 * @param node corresponding to a Node belong to another group to be merged
+	 * @return Node corresponding to the representative of the new group
 	 */	
 	public Node union(Node node) {
 		Node x = this.findSet();
@@ -79,7 +80,6 @@ public class Node implements Comparable<Node> {
 		return this.reversedData;
 	}
 	
-	//DEBUG
 	public String toString() {
 		return this.getData();
 	}
