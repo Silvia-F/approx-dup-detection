@@ -48,14 +48,6 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 
 	private static Class<?> PKG = DIDuplicateDetectionMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 
-	private static final int MARGIN_SIZE = 15;
-	private static final int LABEL_SPACING = 5;
-	private static final int ELEMENT_SPACING = 10;
-
-	private static final int LARGE_FIELD = 350;
-	private static final int MEDIUM_FIELD = 250;
-	private static final int SMALL_FIELD = 75;
-
 	private DIDuplicateDetectionMeta meta;
 
 	private Text wThreshold;

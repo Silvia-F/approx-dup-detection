@@ -5,14 +5,16 @@ import java.util.ArrayList;
 public class Node implements Comparable<Node> {
 	
 	private String data; // The row data concatenated into a single String
-	private String reversedData; // The converted data String, but the characters in reverse order
+	private String reversedData; // The data String, but the characters in reverse order
 	private int index; // Index of the row in the dataset
 	private Node parent; // The parent Node of the instance
-	private ArrayList<Node> children;
+	private ArrayList<Node> children; // List of node's children to facilitate future comparisons
 	
 	public Node(String data, int index) {
 		this.data = data;
-		this.reversedData = "";
+		StringBuilder reversed = new StringBuilder();
+		reversed.append(data);
+		this.reversedData = reversed.reverse().toString();
 		this.parent = this;
 		this.index = index;
 		this.children = new ArrayList<Node> ();
@@ -72,10 +74,6 @@ public class Node implements Comparable<Node> {
 		return this.data;
 	}
 	
-	public void setReversedData(String data) {
-		this.reversedData = data;
-	}
-	
 	public String getReversedData() {
 		return this.reversedData;
 	}
@@ -86,10 +84,6 @@ public class Node implements Comparable<Node> {
 	
 	public int getIndex() {
 		return this.index;
-	}
-	
-	public void setIndex(int index) {
-		this.index = index;
 	}	
 	
 	public ArrayList<Node> getChildren() {

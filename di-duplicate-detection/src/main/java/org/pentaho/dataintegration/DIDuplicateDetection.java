@@ -148,11 +148,6 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 				}
 			} 
 		} 
-		for (int i = 0; i < orderedGraph.size(); i++) {     
-			StringBuilder reversed = new StringBuilder();
-			reversed.append(orderedGraph.get(i).getData());
-			orderedGraph.get(i).setReversedData(reversed.reverse().toString());
-		}
 		
 		Collections.sort(orderedGraph, new Comparator<Node>() {
 			public int compare(Node e1, Node e2) {

@@ -34,14 +34,12 @@ public class DIDuplicateDetectionData extends BaseStepData implements StepDataIn
 	protected List<Object[]> buffer; // Keeps row data for output
 	private int rowIndex; // Keeps the index of the last processed row
 	
-	/**
-	 * 
-	 */
+
 	public DIDuplicateDetectionData() {
 		super();
 		graph = new Vector<Node>();
-	buffer = new ArrayList<Object[]>( 5000 );
-	rowIndex = 0;
+		buffer = new ArrayList<Object[]>( 5000 );
+		rowIndex = 0;
 	}
 	
 	public void setOutputRowMeta(RowMetaInterface outputRowMeta) {
@@ -51,10 +49,7 @@ public class DIDuplicateDetectionData extends BaseStepData implements StepDataIn
 	public RowMetaInterface getOutputRowMeta() {
 		return this.outputRowMeta;
 	}
-	
-	/**
-	 * Add node to the graph
-	 */
+
 	public void addNode(String data, int index) {
 		graph.add(new Node(data, index));
 	}
