@@ -134,7 +134,7 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 							nodesAboveThreshold++;
 					}
 					if (nodesAboveThreshold == queueNode.getChildren().size()) {
-						queue.addFirst(node.findSet().union(queueNode));
+						queue.addFirst(node.union(queueNode));
 						queue.remove(j + 1);
 						changed = true;
 						break;
