@@ -211,7 +211,7 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 					}
 				}				
 			}     
-			if (!changed) {   
+			if (!changed) { 
 				queue.addFirst(node.findSet());
 				if (queue.size() > 4) {
 					queue.removeLast();
@@ -220,16 +220,6 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 		} 
 	}
 	private void writeOutput() throws KettleStepException, KettlePluginException {
-		ArrayList<Integer> singletons = null;
-		if (meta.getRemoveSingletons()) {
-			singletons = new ArrayList<Integer>();
-			for (int i = 0; i < data.buffer.size(); i++) {
-				if (data.getGraph().get(i).findSet().getIndex() == i + 1) 
-					singletons.add(data.getGraph().get(i).findSet().getIndex());
-				else
-					singletons.remove(new Integer(data.getGraph().get(i).findSet().getIndex()));
-			}
-		}
 		for (int i = 0; i < data.buffer.size(); i++) {
 			Object[] newRow = new Object[data.buffer.get(i).length + 2];
 			for (int j = 0; j < data.buffer.get(i).length; j++) 
@@ -239,7 +229,8 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getSimColumnName(), ValueMetaInterface.TYPE_NUMBER ));    
 			
 			Double outputSimilarity = null;
-			if (singletons != null && singletons.contains(data.getGraph().get(i).findSet().getIndex()))
+			if (meta.getRemoveSingletons() && data.getGraph().get(i).findSet() == data.getGraph().get(i).findSet() &&
+					data.getGraph().get(i).getChildren().size() == 0)
 				continue;
 			if (i + 1 != data.getGraph().get(i).findSet().getIndex()) {
 				double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
