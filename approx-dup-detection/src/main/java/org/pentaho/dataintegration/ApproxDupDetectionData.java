@@ -40,8 +40,6 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	
 	// Blocks to partition records. The key is the value of grouping field and the list has record data needed for the calculations
 	protected Map<String, List<Object>> blocks; 
-	// Key is the index of each record. The array has the index of the record being compared and the similarity between records
-	protected Map<Double, Double[]> rulesSim; 
 
 	
 	/**
@@ -52,7 +50,6 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 		buffer = new ArrayList<Object[]>( 5000 );
 		
 		blocks = new HashMap<String, List<Object>> ( 5000 );
-		rulesSim = new HashMap<Double, Double[]> ( 5000 );
 		rowIndex = 0;
 	}
 	
@@ -74,9 +71,5 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	
 	public Map<String, List<Object>> getBlocks() {
 		return blocks;
-	}
-	
-	public Map<Double, Double[]> getRulesSim() {
-		return rulesSim;
 	}
 }

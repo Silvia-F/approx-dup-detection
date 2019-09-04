@@ -439,7 +439,29 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		};
 		lsOK = new Listener() {
 			public void handleEvent( Event e ) {
-				ok();
+				boolean needsWarning = false;
+				for (int i = 0; i < wFields.getItemCount(); i++) {
+					String field = wFields.getItem(i, 1);
+					String measure = wFields.getItem(i, 2);
+					String weight = wFields.getItem(i, 3);
+					if (field.length() != 0 && (measure.length() == 0 || weight.length() == 0)) {
+						needsWarning = true;
+						break;
+					}	
+					else if (field.length() == 0 && (measure.length() != 0 || weight.length() != 0)) {
+						needsWarning = true;
+						break;
+					}
+				}
+				if (needsWarning || wFields.nrNonEmpty() == 0) {
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Text"));
+					messageBox.setMessage(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message"));
+					messageBox.open();
+				}
+				else {
+					ok();
+				}
 			}
 		};
 	
@@ -536,7 +558,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		int nrAttributes = wBlockingAttributes.nrNonEmpty();
 		for (int i = 0; i < nrAttributes; i++) {
-			System.out.println("ADDING ATTRIBUTE: " + wBlockingAttributes.table.getItem(i).getText(1));
 			meta.getBlockingAttributes().add(wBlockingAttributes.table.getItem(i).getText(1));
 		}
 		
@@ -571,7 +592,6 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		if (wSimColumnName.getText().length() > 0)
 			meta.setSimColumnName(wSimColumnName.getText());
 		meta.setRemoveSingletons(wRemoveSingletons.getSelection());
-		System.out.println("BLOCKING ATTRIBUTES: " + meta.getBlockingAttributes() + "\n");
 		dispose();
 	}
 }
