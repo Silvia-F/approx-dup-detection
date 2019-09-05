@@ -50,7 +50,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -66,6 +65,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	private ApproxDupDetectionData data;
 	private ApproxDupDetectionMeta meta;
 	private HashMap<Double, ArrayList<Double>> groups; // Keeps the groups that will be used for output
+	private HashMap<Double, Double> sims; // Keep average similarity for each record
   
 	public ApproxDupDetection( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
 			Trans trans ) {
@@ -253,6 +253,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			}				
 			blockSims.add(blockSim);
 		}
+		sims = new HashMap<Double, Double> ();
 		createGroups(blockSims);		
 		
 	}
@@ -262,82 +263,55 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		for (int i  = 0; i < blockSims.size(); i++) {
 			if (blockSims.get(i).size() == 0)
 				continue;
-			Set<Double> thisBlock = new HashSet<Double> ();
-			for (int j = 0; j < blockSims.get(i).size(); j++) {	
-				if (blockSims.get(i).get(j).get(2) >= meta.getMatchingThreshold()) {
-					if (groups.containsKey(blockSims.get(i).get(j).get(0))) {
-						thisBlock.add(blockSims.get(i).get(j).get(1));
-						groups.get(blockSims.get(i).get(j).get(0)).add(blockSims.get(i).get(j).get(1));
-						groups.get(blockSims.get(i).get(j).get(0)).add(blockSims.get(i).get(j).get(2));
+			ArrayList<ArrayList<Double>> tempGroups = new ArrayList<ArrayList<Double>> ();
+			ArrayList<Double> currentRecords = new ArrayList<Double> ();	
+			for (int j = 0; j < blockSims.get(i).size(); j++) {
+				if (!currentRecords.contains(blockSims.get(i).get(j).get(0)))
+					currentRecords.add(blockSims.get(i).get(j).get(0));
+				if (!currentRecords.contains(blockSims.get(i).get(j).get(1)))
+					currentRecords.add(blockSims.get(i).get(j).get(1));
+			}
+			
+			int lastIndex = 0;			
+			for(Double d: currentRecords) {
+				ArrayList<Double> currentList = new ArrayList<Double> ();
+				currentList.add(d);
+				for (int j = lastIndex; j < blockSims.get(i).size(); j++) {
+					if (blockSims.get(i).get(j).get(0).equals(d)) {
+						if (blockSims.get(i).get(j).get(2) >= meta.getMatchingThreshold()) {
+							currentList.add(blockSims.get(i).get(j).get(1));
+						}
 					}
 					else {
-						thisBlock.add(blockSims.get(i).get(j).get(0));
-						thisBlock.add(blockSims.get(i).get(j).get(1));
-						groups.put(blockSims.get(i).get(j).get(0), new ArrayList<Double> ());
-						groups.get(blockSims.get(i).get(j).get(0)).add(blockSims.get(i).get(j).get(1));
-						groups.get(blockSims.get(i).get(j).get(0)).add(blockSims.get(i).get(j).get(2));
+						lastIndex = j;
+						break;
 					}
 				}
-			}	
-			for (Double d: groups.keySet()) {
-				if (groups.get(d).size() > 2 && thisBlock.contains((d)))
-					groups.get(d).add(new Double(0));
+				if (currentList.size() > 1) {
+					tempGroups.add(currentList);
+				}
 			}
-			intraClusterDistance(thisBlock);
-			
-			outer:
-			for (int j = 0; j < groups.keySet().toArray().length; j++) {
-				Double d1 = (Double) groups.keySet().toArray()[j];
-				middle:
-				for (int k = 0; k < groups.get(d1).size() - 1; k += 2) {
-					Double d2 = groups.get(d1).get(k);
-					if (groups.keySet().contains(d2)) {
-						if (groups.get(d1).containsAll(groups.get(d2))) {
-							groups.remove(d2);
-							continue;
-						}
-						if (groups.get(d1).get(groups.get(d1).size() - 1) < groups.get(d2).get(groups.get(d2).size() - 1)) {
-							int toRemove = groups.get(d1).indexOf(d2);
-							groups.get(d1).remove(toRemove + 1);
-							groups.get(d1).remove(toRemove);
-							if (groups.get(d1).size() == 0) {
-								groups.remove(d1);
-								continue outer;
-							}
-							intraClusterDistance(thisBlock);
+
+			for (int j = 0; j < currentRecords.size(); j++) {
+				int found = -1;
+				for (int k = 0; k < tempGroups.size(); k++) {
+					if (tempGroups.get(k).contains(currentRecords.get(j))) {
+						if (found < 0) {
+							found = k;
 						}
 						else {
-							groups.remove(d2);
-						}
-					}
-					else {
-						for (int m = j + 1; m  < groups.keySet().toArray().length; m++) {
-							if (groups.get(groups.keySet().toArray()[m]).contains(d2)) {
-								if (groups.get(d1).get(groups.get(d1).size() - 1) < 
-										groups.get(groups.keySet().toArray()[m]).get(groups.get(groups.keySet().toArray()[m]).size() - 1)) {
-									groups.get(d1).remove(groups.get(d1).indexOf(d2) + 1);
-									groups.get(d1).remove(d2);									
-									if (groups.get(d1).size() == 0) {
-										groups.remove(d1);
-										continue outer;
-									}
-									intraClusterDistance(thisBlock);
-									continue middle;
-								}
-								else {
-									int toRemove = groups.get(groups.keySet().toArray()[m]).indexOf(d2);
-									if (groups.get(groups.keySet().toArray()[m]).size() < 3) {
-										groups.remove(groups.keySet().toArray()[m]);
-									}
-									else {
-										groups.get(groups.keySet().toArray()[m]).remove(toRemove + 1);
-										groups.get(groups.keySet().toArray()[m]).remove(toRemove);
-									}
-								}
-							}
+							int result = chooseGroup(tempGroups, currentRecords.get(j), found, k, blockSims.get(i));
+							if (result != -1)
+								found = result;
+							else
+								k = k - 1;
 						}
 					}
 				}
+			}
+			for (int j = 0; j < tempGroups.size(); j++) {
+				computeLastSimilarities(tempGroups, blockSims.get(i));
+				groups.put(tempGroups.get(j).get(0), tempGroups.get(j));
 			}
 		}
 	}
@@ -363,20 +337,22 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			else {
 				for (Double j: groups.keySet()) {
 					if (groups.get(j).contains(index)) {
-						group = j.longValue();
-						
-						outputSimilarity = groups.get(j).get(groups.get(j).indexOf(index) + 1);
-						
-						DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-						symbols.setDecimalSeparator('.');
-						DecimalFormat df = new DecimalFormat("#.#", symbols);
-						df.setRoundingMode(RoundingMode.DOWN);
-						outputSimilarity = Double.parseDouble(df.format(outputSimilarity));
+						group = j.longValue();				
 						found = true;						
 						break;
 					}					
 				}
 			}
+			if (found) {
+				outputSimilarity = sims.get(index);
+				
+				DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+				symbols.setDecimalSeparator('.');
+				DecimalFormat df = new DecimalFormat("#.#", symbols);
+				df.setRoundingMode(RoundingMode.DOWN);
+				outputSimilarity = Double.parseDouble(df.format(outputSimilarity));
+			}
+			
 			if (!found && meta.getRemoveSingletons())
 				continue;
 			
@@ -388,18 +364,96 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		}
 	}
 	
-	private void intraClusterDistance(Set<Double> thisBlock) {
-		Set<Double> keySet = groups.keySet();
-		for(Double d: keySet) {
-			if (!thisBlock.contains(d)) 
-				continue;
-			if (groups.get(d).size() > 2) {
-				double avg = 0;
-				for (int j = 1; j < groups.get(d).size(); j += 2) {
-					avg += groups.get(d).get(j);
+	private int chooseGroup(ArrayList<ArrayList<Double>> groups, Double record, int firstIndex, int secondIndex, ArrayList<ArrayList<Double>> block) {
+		ArrayList<Double> first = groups.get(firstIndex);
+		ArrayList<Double> second = groups.get(secondIndex);
+		if (first.containsAll(second)) {
+			groups.remove(secondIndex); 
+			return -1;
+		}
+		double[] measures1 = computeDistances(first, record, block);
+		double[] measures2 = computeDistances(second, record, block);
+		
+		if (first.size() < 3) {
+			if (measures1[0] >= measures2[0]) {
+				if (second.size() < 3) 
+					groups.remove(second);
+				else
+					second.remove(record);
+				return firstIndex;
+			}
+			else {
+				groups.remove(first);
+				return secondIndex;
+			}
+		}
+		else {
+			if (second.size() < 3) {
+				if (measures1[0] >= measures2[0]) {
+					groups.remove(second);
+					return firstIndex;
 				}
-				double measure = (1 / Math.floor(groups.get(d).size()/ 2)) * avg;
-				groups.get(d).set(groups.get(d).size() - 1, measure);
+				else {
+					first.remove(record);
+					return secondIndex;
+				}
+			}
+			else {
+				if (measures1[1] >= measures2[1]) {
+					second.remove(record);
+					return firstIndex;
+				}
+				else {
+					first.remove(record);
+					return secondIndex;
+				}
+			}				
+		}
+	}
+	
+	private double[] computeDistances(ArrayList<Double> group, Double toRemove, ArrayList<ArrayList<Double>> block) {
+		double withRecord = 0;
+		double withoutRecord = 0;
+		for (int i = 0; i < group.size(); i++) {
+			Double d1 = group.get(i);
+			for (int j = i + 1; j < group.size(); j++) {
+				Double d2 = group.get(j);
+				for (int k = 0; k < block.size(); k++) {
+					if (block.get(k).contains(d1) && block.get(k).contains(d2)) {
+						withRecord += block.get(k).get(2);
+						if (!toRemove.equals(d1) && !toRemove.equals(d2)) {
+							withoutRecord += block.get(k).get(2);
+						}
+					}
+				}
+			}
+		}
+		if (group.size() < 3)
+			return new double[] {withRecord };
+					
+		withRecord = withRecord / (group.size() * (group.size() - 1));
+		withoutRecord = withoutRecord / ((group.size() - 1) * (group.size() - 2));
+		double difference = (withRecord - withoutRecord) / withRecord;
+
+		return new double[] { withRecord, difference };	
+	}
+	
+	private void computeLastSimilarities(ArrayList<ArrayList<Double>> groups, ArrayList<ArrayList<Double>> block) {
+		for (int i = 0; i < groups.size(); i++) {
+			for (int j = 0; j < groups.get(i).size(); j++) {
+				Double sim = new Double(0);
+				int counter = 0;
+				for (int k = 0; k < groups.get(i).size(); k++) {
+					if (j == k)
+						continue;
+					for (int m = 0; m < block.size(); m++) {
+						if (block.get(m).contains(groups.get(i).get(j)) && block.get(m).contains(groups.get(i).get(k))) {
+							sim += block.get(m).get(2);
+							counter++;
+						}
+					}
+				}
+				sims.put(groups.get(i).get(j), sim / counter);
 			}
 		}
 	}
