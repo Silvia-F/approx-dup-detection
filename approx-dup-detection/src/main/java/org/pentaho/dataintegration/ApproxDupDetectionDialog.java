@@ -146,7 +146,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		// Blocking Content
 		Group group1 = new Group( contentComposite, SWT.SHADOW_ETCHED_IN );
-		group1.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group1"));
+		group1.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group1") );
 		FormLayout groupLayout = new FormLayout();
 		groupLayout.marginWidth = Const.MARGIN;
 		groupLayout.marginHeight = Const.MARGIN;
@@ -180,6 +180,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		Label wlBlockingAttributes = new Label( group1, SWT.NONE );
 		wlBlockingAttributes.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.BlockingAttributes.Label" ) );
+		wlBlockingAttributes.setToolTipText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Tooltip") );
 		props.setLook( wlBlockingAttributes );
 		FormData fdlBlockingAttributes = new FormDataBuilder()
 				.left( 0, 0 )
