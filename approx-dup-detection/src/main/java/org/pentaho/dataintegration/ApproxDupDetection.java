@@ -330,7 +330,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			Double index = new Double(i + 1);	
 			boolean found = false;
 
-			if (groups.containsKey(index) || index == 1) {
+			if (groups.containsKey(index)) {
 				group = index.longValue();
 				found = true;
 			}
@@ -345,11 +345,11 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			}
 			if (found) {
 				outputSimilarity = sims.get(index);
-				
 				DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
 				symbols.setDecimalSeparator('.');
 				DecimalFormat df = new DecimalFormat("#.#", symbols);
 				df.setRoundingMode(RoundingMode.DOWN);
+				System.out.println("TESTING " + outputSimilarity);
 				outputSimilarity = Double.parseDouble(df.format(outputSimilarity));
 			}
 			
