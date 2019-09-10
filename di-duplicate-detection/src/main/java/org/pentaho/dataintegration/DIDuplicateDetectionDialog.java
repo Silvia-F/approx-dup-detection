@@ -228,7 +228,26 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 		};
 		lsOK = new Listener() {
 			public void handleEvent( Event e ) {
-				ok();
+				Double temp = null;
+				try {
+					temp = Double.parseDouble(wThreshold.getText());
+				}
+				catch (Exception ex){
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Text"));
+					messageBox.setMessage(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message"));
+					messageBox.open();
+					return;
+				}				
+				if ( temp != null && (temp < 0 || temp > 1)) {
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Text"));
+					messageBox.setMessage(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message"));
+					messageBox.open();
+				}
+				else {
+					ok();
+				}
 			}
 		};
 
@@ -237,7 +256,26 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 
 		lsDef = new SelectionAdapter() {
 			public void widgetDefaultSelected( SelectionEvent e ) {
-				ok();
+				Double temp = null;
+				try {
+					temp = Double.parseDouble(wThreshold.getText());
+				}
+				catch (Exception ex){
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Text"));
+					messageBox.setMessage(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message"));
+					messageBox.open();
+					return;
+				}				
+				if ( temp != null && (temp < 0 || temp > 1)) {
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Text"));
+					messageBox.setMessage(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message"));
+					messageBox.open();
+				}
+				else {
+					ok();
+				}
 			}
 		};
 		wStepname.addSelectionListener( lsDef );
