@@ -440,7 +440,9 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		};
 		lsOK = new Listener() {
 			public void handleEvent( Event e ) {
+				// Verify that the fields table is correctly filled
 				boolean needsWarning = false;
+				String warning = "";
 				for (int i = 0; i < wFields.getItemCount(); i++) {
 					String field = wFields.getItem(i, 1);
 					String measure = wFields.getItem(i, 2);
@@ -455,9 +457,24 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 					}
 				}
 				if (needsWarning || wFields.nrNonEmpty() == 0) {
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message1"));
+				}
+				
+				// Verify the matching threshold value falls within [0,1]
+				Double temp = null;
+				try {
+					temp = Double.parseDouble(wMatchingThreshold.getText());
+				}
+				catch (Exception ex) {
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message2"));
+				}
+				if (temp != null && (temp < 0 || temp > 1)) {
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message2"));
+				}
+				if (warning.length() > 0) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
 					messageBox.setText(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Text"));
-					messageBox.setMessage(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message"));
+					messageBox.setMessage(warning);
 					messageBox.open();
 				}
 				else {
@@ -471,7 +488,46 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	
 		lsDef = new SelectionAdapter() {
 			public void widgetDefaultSelected( SelectionEvent e ) {
-				ok();
+				// Verify that the fields table is correctly filled
+				boolean needsWarning = false;
+				String warning = "";
+				for (int i = 0; i < wFields.getItemCount(); i++) {
+					String field = wFields.getItem(i, 1);
+					String measure = wFields.getItem(i, 2);
+					String weight = wFields.getItem(i, 3);
+					if (field.length() != 0 && (measure.length() == 0 || weight.length() == 0)) {
+						needsWarning = true;
+						break;
+					}	
+					else if (field.length() == 0 && (measure.length() != 0 || weight.length() != 0)) {
+						needsWarning = true;
+						break;
+					}
+				}
+				if (needsWarning || wFields.nrNonEmpty() == 0) {
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message1"));
+				}
+				
+				// Verify the matching threshold value falls within [0,1]
+				Double temp = null;
+				try {
+					temp = Double.parseDouble(wMatchingThreshold.getText());
+				}
+				catch (Exception ex) {
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message2"));
+				}
+				if (temp != null && (temp < 0 || temp > 1)) {
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message2"));
+				}
+				if (warning.length() > 0) {
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Text"));
+					messageBox.setMessage(warning);
+					messageBox.open();
+				}
+				else {
+					ok();
+				}
 			}
 		};
 		wStepname.addSelectionListener( lsDef );
