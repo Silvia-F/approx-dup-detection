@@ -64,8 +64,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	
 	private ApproxDupDetectionData data;
 	private ApproxDupDetectionMeta meta;
-	private HashMap<Double, ArrayList<Double>> groups; // Keeps the groups that will be used for output
-	private HashMap<Double, Double> sims; // Keep average similarity for each record
+	private ArrayList<RecordGroup> recordGroups;
   
 	public ApproxDupDetection( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
 			Trans trans ) {
@@ -98,7 +97,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		}
 			
 		if (first) {	
-			
+			recordGroups = new ArrayList<RecordGroup> ();
 			data.setOutputRowMeta(getInputRowMeta().clone());
 			meta.getFields(data.getOutputRowMeta(), getStepname(), null, null, this, repository, metaStore);
 
@@ -181,6 +180,7 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		ArrayList<ArrayList<ArrayList<Double>>> blockSims = new ArrayList<ArrayList<ArrayList<Double>>> ();
 		Set<String> keys = data.getBlocks().keySet();
 		
+		// Iterate through each block
 		for (String s: keys) {
 			ArrayList<ArrayList<Double>> blockSim = new ArrayList<ArrayList<Double>>();
 			for (int i = 1; i < data.getBlocks().get(s).size(); i +=  2) {
@@ -253,33 +253,33 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			}				
 			blockSims.add(blockSim);
 		}
-		sims = new HashMap<Double, Double> ();
 		createGroups(blockSims);		
-		
 	}
 
 	private void createGroups(ArrayList<ArrayList<ArrayList<Double>>> blockSims) {
-		groups = new HashMap<Double, ArrayList<Double>> ();
-		for (int i  = 0; i < blockSims.size(); i++) {
-			if (blockSims.get(i).size() == 0)
+		// Iterate through the blocks
+		while (blockSims.size() > 0) {
+			if (blockSims.get(0).size() == 0) {
+				blockSims.remove(0);
 				continue;
-			ArrayList<ArrayList<Double>> tempGroups = new ArrayList<ArrayList<Double>> ();
-			ArrayList<Double> currentRecords = new ArrayList<Double> ();	
-			for (int j = 0; j < blockSims.get(i).size(); j++) {
-				if (!currentRecords.contains(blockSims.get(i).get(j).get(0)))
-					currentRecords.add(blockSims.get(i).get(j).get(0));
-				if (!currentRecords.contains(blockSims.get(i).get(j).get(1)))
-					currentRecords.add(blockSims.get(i).get(j).get(1));
+			}
+			ArrayList<RecordGroup> tempGroups = new ArrayList<RecordGroup> ();
+			ArrayList<Double> currentRecords = new ArrayList<Double> (); // Keep all element indexes of the block
+			
+			for (int j = 0; j < blockSims.get(0).size(); j++) {
+				if (!currentRecords.contains(blockSims.get(0).get(j).get(0)))
+					currentRecords.add(blockSims.get(0).get(j).get(0));
+				if (!currentRecords.contains(blockSims.get(0).get(j).get(1)))
+					currentRecords.add(blockSims.get(0).get(j).get(1));
 			}
 			
 			int lastIndex = 0;			
 			for(Double d: currentRecords) {
-				ArrayList<Double> currentList = new ArrayList<Double> ();
-				currentList.add(d);
-				for (int j = lastIndex; j < blockSims.get(i).size(); j++) {
-					if (blockSims.get(i).get(j).get(0).equals(d)) {
-						if (blockSims.get(i).get(j).get(2) >= meta.getMatchingThreshold()) {
-							currentList.add(blockSims.get(i).get(j).get(1));
+				RecordGroup group = new RecordGroup(d);
+				for (int j = lastIndex; j < blockSims.get(0).size(); j++) {
+					if (blockSims.get(0).get(j).get(0).equals(d)) {
+						if (blockSims.get(0).get(j).get(2) >= meta.getMatchingThreshold()) {
+							group.addElement(blockSims.get(0).get(j));
 						}
 					}
 					else {
@@ -287,20 +287,22 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 						break;
 					}
 				}
-				if (currentList.size() > 1) {
-					tempGroups.add(currentList);
-				}
+				if (group.getElements().size() > 1) {
+					tempGroups.add(group);
+				}				
+			}			
+			for (RecordGroup rg: tempGroups) {
+				rg.addSims(blockSims.get(0));
 			}
-
 			for (int j = 0; j < currentRecords.size(); j++) {
 				int found = -1;
 				for (int k = 0; k < tempGroups.size(); k++) {
-					if (tempGroups.get(k).contains(currentRecords.get(j))) {
+					if (tempGroups.get(k).getElements().contains(currentRecords.get(j))) {
 						if (found < 0) {
 							found = k;
 						}
 						else {
-							int result = chooseGroup(tempGroups, currentRecords.get(j), found, k, blockSims.get(i));
+							int result = decideGroup(tempGroups, currentRecords.get(j), found, k);
 							if (result != -1)
 								found = result;
 							else
@@ -309,14 +311,80 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					}
 				}
 			}
-			for (int j = 0; j < tempGroups.size(); j++) {
-				computeLastSimilarities(tempGroups, blockSims.get(i));
-				groups.put(tempGroups.get(j).get(0), tempGroups.get(j));
+			for (RecordGroup rg: tempGroups) {
+				System.out.println("\n" + rg.getElements());
+				rg.calculateOutputSims();
+				if (rg.getId().equals(new Double(1))) {				
+				}
 			}
+				
+			recordGroups.addAll(tempGroups);
+			blockSims.remove(0);
+		}
+		blockSims.clear();
+	}
+	
+	
+	
+	private int decideGroup(ArrayList<RecordGroup> groups, Double record, int firstIndex, int secondIndex) {
+		RecordGroup g1 = groups.get(firstIndex);
+		RecordGroup g2 = groups.get(secondIndex);
+		
+		if (g1.getElements().containsAll(g2.getElements())) {
+			groups.remove(g2);
+			return -1;
+		}
+		double[] distances1 = g1.computeDistances(record);
+		double[] distances2 = g2.computeDistances(record);
+		
+		if (g1.getElements().size() < 3) {
+			if (distances1[0] >= distances2[0]) {
+				if (g2.getElements().size() < 3) 
+					groups.remove(g2);
+				else 
+					g2.getElements().remove(record);
+				return firstIndex;
+			}
+			else {
+				groups.remove(g1);
+				return secondIndex;
+			}
+		}
+		else {
+			if (g2.getElements().size() < 3) {
+				if (distances1[0] >= distances2[0]) {
+					groups.remove(g2);
+					return firstIndex;
+				}
+				else {
+					g1.getElements().remove(record);
+					return secondIndex;
+				}
+			}
+			else {
+				if (distances1[1] >= distances2[1]) {
+					g2.getElements().remove(record);
+					return firstIndex;
+				}
+				else {
+					g1.getElements().remove(record);
+					return secondIndex;
+				}				
+			}	
 		}
 	}
 	
 	private void writeOutput() throws KettleStepException, KettlePluginException {		
+		HashMap<Double, ArrayList<Double>> mapping = new HashMap<Double, ArrayList<Double>> ();
+		while (recordGroups.size() > 0) {
+			for (Double elem: recordGroups.get(0).getElements()) {
+				ArrayList<Double> temp = new ArrayList<Double> ();
+				temp.add(recordGroups.get(0).getId());
+				temp.add(recordGroups.get(0).getOutputSims().get(elem));
+				mapping.put(elem, temp);
+			}
+			recordGroups.remove(0);
+		}
 		for (int i = 0; i < data.buffer.size(); i++) {
 			Object[] newRow = new Object[data.buffer.get(i).length + 2];
 			for (int j = 0; j < data.buffer.get(i).length; j++) 
@@ -325,35 +393,22 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getGroupColumnName(), ValueMetaInterface.TYPE_INTEGER ));
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getSimColumnName(), ValueMetaInterface.TYPE_NUMBER ));		
 			
+			Double index = new Double(i + 1);
 			long group = i + 1;
 			Double outputSimilarity = null;
-			Double index = new Double(i + 1);	
-			boolean found = false;
 
-			if (groups.containsKey(index)) {
-				group = index.longValue();
-				found = true;
-			}
-			else {
-				for (Double j: groups.keySet()) {
-					if (groups.get(j).contains(index)) {
-						group = j.longValue();				
-						found = true;						
-						break;
-					}					
-				}
-			}
-			if (found) {
-				outputSimilarity = sims.get(index);
+			if (mapping.containsKey(index)) {
+				group = mapping.get(index).get(0).longValue();
+				
+				outputSimilarity = mapping.get(index).get(1);
 				DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
 				symbols.setDecimalSeparator('.');
 				DecimalFormat df = new DecimalFormat("#.#", symbols);
 				df.setRoundingMode(RoundingMode.DOWN);
-				System.out.println("TESTING " + outputSimilarity);
 				outputSimilarity = Double.parseDouble(df.format(outputSimilarity));
 			}
 			
-			if (!found && meta.getRemoveSingletons())
+			else if (meta.getRemoveSingletons())
 				continue;
 			
 			RowMetaAndData newRowMD = new RowMetaAndData(rowMeta, new Object[] { group, 
@@ -361,100 +416,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
 						
 			putRow( data.getOutputRowMeta(), newRow);
-		}
-	}
-	
-	private int chooseGroup(ArrayList<ArrayList<Double>> groups, Double record, int firstIndex, int secondIndex, ArrayList<ArrayList<Double>> block) {
-		ArrayList<Double> first = groups.get(firstIndex);
-		ArrayList<Double> second = groups.get(secondIndex);
-		if (first.containsAll(second)) {
-			groups.remove(secondIndex); 
-			return -1;
-		}
-		double[] measures1 = computeDistances(first, record, block);
-		double[] measures2 = computeDistances(second, record, block);
-		
-		if (first.size() < 3) {
-			if (measures1[0] >= measures2[0]) {
-				if (second.size() < 3) 
-					groups.remove(second);
-				else
-					second.remove(record);
-				return firstIndex;
-			}
-			else {
-				groups.remove(first);
-				return secondIndex;
-			}
-		}
-		else {
-			if (second.size() < 3) {
-				if (measures1[0] >= measures2[0]) {
-					groups.remove(second);
-					return firstIndex;
-				}
-				else {
-					first.remove(record);
-					return secondIndex;
-				}
-			}
-			else {
-				if (measures1[1] >= measures2[1]) {
-					second.remove(record);
-					return firstIndex;
-				}
-				else {
-					first.remove(record);
-					return secondIndex;
-				}
-			}				
-		}
-	}
-	
-	private double[] computeDistances(ArrayList<Double> group, Double toRemove, ArrayList<ArrayList<Double>> block) {
-		double withRecord = 0;
-		double withoutRecord = 0;
-		for (int i = 0; i < group.size(); i++) {
-			Double d1 = group.get(i);
-			for (int j = i + 1; j < group.size(); j++) {
-				Double d2 = group.get(j);
-				for (int k = 0; k < block.size(); k++) {
-					if (block.get(k).contains(d1) && block.get(k).contains(d2)) {
-						withRecord += block.get(k).get(2);
-						if (!toRemove.equals(d1) && !toRemove.equals(d2)) {
-							withoutRecord += block.get(k).get(2);
-						}
-					}
-				}
-			}
-		}
-		if (group.size() < 3)
-			return new double[] {withRecord };
-					
-		withRecord = withRecord / (group.size() * (group.size() - 1));
-		withoutRecord = withoutRecord / ((group.size() - 1) * (group.size() - 2));
-		double difference = (withRecord - withoutRecord) / withRecord;
-
-		return new double[] { withRecord, difference };	
-	}
-	
-	private void computeLastSimilarities(ArrayList<ArrayList<Double>> groups, ArrayList<ArrayList<Double>> block) {
-		for (int i = 0; i < groups.size(); i++) {
-			for (int j = 0; j < groups.get(i).size(); j++) {
-				Double sim = new Double(0);
-				int counter = 0;
-				for (int k = 0; k < groups.get(i).size(); k++) {
-					if (j == k)
-						continue;
-					for (int m = 0; m < block.size(); m++) {
-						if (block.get(m).contains(groups.get(i).get(j)) && block.get(m).contains(groups.get(i).get(k))) {
-							sim += block.get(m).get(2);
-							counter++;
-						}
-					}
-				}
-				sims.put(groups.get(i).get(j), sim / counter);
-			}
 		}
 	}
 }
