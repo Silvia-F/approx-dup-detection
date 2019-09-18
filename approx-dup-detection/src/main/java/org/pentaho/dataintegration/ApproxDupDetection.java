@@ -49,7 +49,8 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Set;
 
@@ -175,11 +176,8 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void detectApproxDups() {
-		//List of matrices where each matrix corresponds to a block where we keep the similarities between pairs of records
-		ArrayList<ArrayList<ArrayList<Double>>> blockSims = new ArrayList<ArrayList<ArrayList<Double>>> ();
-		Set<String> keys = data.getBlocks().keySet();
-		
+	private void detectApproxDups() {		
+		Set<String> keys = data.getBlocks().keySet(); 
 		// Iterate through each block
 		for (String s: keys) {
 			ArrayList<ArrayList<Double>> blockSim = new ArrayList<ArrayList<Double>>();
@@ -250,132 +248,55 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 					temp.add(similarity);
 					blockSim.add(temp);
 				}
-			}				
-			blockSims.add(blockSim);
-		}
-		createGroups(blockSims);		
+			}			
+			if (blockSim.size() > 0)
+				createGroups(blockSim);
+		}	
 	}
 
-	private void createGroups(ArrayList<ArrayList<ArrayList<Double>>> blockSims) {
-		// Iterate through the blocks
-		while (blockSims.size() > 0) {
-			if (blockSims.get(0).size() == 0) {
-				blockSims.remove(0);
-				continue;
+
+	
+	private void createGroups(ArrayList<ArrayList<Double>> block) {
+		ArrayList<RecordGroup> groups = new ArrayList<RecordGroup> ();
+		Double first = new Double(-1); // First element of the group, to be used as an id.
+		int index = -1; // index of the current group in the list
+		for (ArrayList<Double> lst: block) {
+			if (first.equals(lst.get(0))) {
+				if (lst.get(2) >= meta.getMatchingThreshold())
+					groups.get(index).addElement(lst);
 			}
-			ArrayList<RecordGroup> tempGroups = new ArrayList<RecordGroup> ();
-			ArrayList<Double> currentRecords = new ArrayList<Double> (); // Keep all element indexes of the block
-			
-			for (int j = 0; j < blockSims.get(0).size(); j++) {
-				if (!currentRecords.contains(blockSims.get(0).get(j).get(0)))
-					currentRecords.add(blockSims.get(0).get(j).get(0));
-				if (!currentRecords.contains(blockSims.get(0).get(j).get(1)))
-					currentRecords.add(blockSims.get(0).get(j).get(1));
-			}
-			
-			int lastIndex = 0;			
-			for(Double d: currentRecords) {
-				RecordGroup group = new RecordGroup(d);
-				for (int j = lastIndex; j < blockSims.get(0).size(); j++) {
-					if (blockSims.get(0).get(j).get(0).equals(d)) {
-						if (blockSims.get(0).get(j).get(2) >= meta.getMatchingThreshold()) {
-							group.addElement(blockSims.get(0).get(j));
-						}
-					}
-					else {
-						lastIndex = j;
-						break;
-					}
-				}
-				if (group.getElements().size() > 1) {
-					tempGroups.add(group);
-				}				
-			}			
-			for (RecordGroup rg: tempGroups) {
-				rg.addSims(blockSims.get(0));
-			}
-			for (int j = 0; j < currentRecords.size(); j++) {
-				int found = -1;
-				for (int k = 0; k < tempGroups.size(); k++) {
-					if (tempGroups.get(k).getElements().contains(currentRecords.get(j))) {
-						if (found < 0) {
-							found = k;
-						}
-						else {
-							int result = decideGroup(tempGroups, currentRecords.get(j), found, k);
-							if (result != -1)
-								found = result;
-							else
-								k = k - 1;
-						}
-					}
+			else {							
+				if (lst.get(2) >= meta.getMatchingThreshold()) {
+					RecordGroup group = new RecordGroup(lst.get(0));	
+					first = lst.get(0);
+					group.addElement(lst);
+					groups.add(group);
+					index++;
 				}
 			}
-			for (RecordGroup rg: tempGroups) {
-				System.out.println("\n" + rg.getElements());
-				rg.calculateOutputSims();
-				if (rg.getId().equals(new Double(1))) {				
+		}
+		for (int i = 0; i < groups.size(); i++) {
+			RecordGroup group1 = groups.get(i);
+			for (int j = i+ 1; j < groups.size(); j++) {
+				RecordGroup group2 = groups.get(j);
+				if (group1.getElements().containsAll(group2.getElements())) {
+					groups.remove(group2); 
+					j--;
 				}
-			}
+				else {
+					// Iterate through the group's elements to see if it belongs to more than one group
+					for (int = 0) { 
+						
+					}
+				}
 				
-			recordGroups.addAll(tempGroups);
-			blockSims.remove(0);
+			}
 		}
-		blockSims.clear();
-	}
-	
-	
-	
-	private int decideGroup(ArrayList<RecordGroup> groups, Double record, int firstIndex, int secondIndex) {
-		RecordGroup g1 = groups.get(firstIndex);
-		RecordGroup g2 = groups.get(secondIndex);
 		
-		if (g1.getElements().containsAll(g2.getElements())) {
-			groups.remove(g2);
-			return -1;
-		}
-		double[] distances1 = g1.computeDistances(record);
-		double[] distances2 = g2.computeDistances(record);
-		
-		if (g1.getElements().size() < 3) {
-			if (distances1[0] >= distances2[0]) {
-				if (g2.getElements().size() < 3) 
-					groups.remove(g2);
-				else 
-					g2.getElements().remove(record);
-				return firstIndex;
-			}
-			else {
-				groups.remove(g1);
-				return secondIndex;
-			}
-		}
-		else {
-			if (g2.getElements().size() < 3) {
-				if (distances1[0] >= distances2[0]) {
-					groups.remove(g2);
-					return firstIndex;
-				}
-				else {
-					g1.getElements().remove(record);
-					return secondIndex;
-				}
-			}
-			else {
-				if (distances1[1] >= distances2[1]) {
-					g2.getElements().remove(record);
-					return firstIndex;
-				}
-				else {
-					g1.getElements().remove(record);
-					return secondIndex;
-				}				
-			}	
-		}
 	}
-	
+
 	private void writeOutput() throws KettleStepException, KettlePluginException {		
-		HashMap<Double, ArrayList<Double>> mapping = new HashMap<Double, ArrayList<Double>> ();
+		/*HashMap<Double, ArrayList<Double>> mapping = new HashMap<Double, ArrayList<Double>> ();
 		while (recordGroups.size() > 0) {
 			for (Double elem: recordGroups.get(0).getElements()) {
 				ArrayList<Double> temp = new ArrayList<Double> ();
@@ -416,6 +337,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
 						
 			putRow( data.getOutputRowMeta(), newRow);
-		}
+		}*/
 	}
 }
