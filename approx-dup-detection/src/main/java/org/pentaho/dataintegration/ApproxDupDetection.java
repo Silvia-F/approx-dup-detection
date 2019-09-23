@@ -49,10 +49,13 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 
 /**
@@ -275,34 +278,131 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				}
 			}
 		}
-		for (int i = 0; i < groups.size(); i++) {
-			RecordGroup group1 = groups.get(i);
-			for (int j = i+ 1; j < groups.size(); j++) {
-				RecordGroup group2 = groups.get(j);
-				if (group1.getElements().containsAll(group2.getElements())) {
-					groups.remove(group2); 
-					j--;
-				}
-				else {
-					// Iterate through the group's elements to see if it belongs to more than one group
-					for (int = 0) { 
-						
-					}
-				}
-				
-			}
+		for (RecordGroup group: groups) {
+			group.addSims(block);
 		}
 		
+		outer:
+		for (int i = 0; i < groups.size(); i++) {
+			RecordGroup group1 = groups.get(i);			
+			middle:
+			for (int j = 0; j < group1.getElements().size(); j++) {
+				Double elem = group1.getElements().get(j);
+				for (int k = i + 1; k < groups.size(); k++) {
+					RecordGroup group2 = groups.get(k);
+					if (group1.getElements().containsAll(group2.getElements())) {
+						groups.remove(group2);
+						k--;
+					}
+					else {
+						if (group2.getElements().contains(elem)) {		
+							double[] distances1 = group1.computeDistances(elem);
+							double[] distances2 = group2.computeDistances(elem);
+							if (group1.getElements().size() < 3) {
+								if (distances1[0] < distances2[0]) {
+									groups.remove(group1);
+									i--;
+									continue outer;
+								}
+								else {
+									if (group2.getElements().size() < 3) {
+										groups.remove(group2);
+										k--;
+										continue;
+									}
+									group2.removeElement(elem);
+								}
+							}
+							else {
+								if (group2.getElements().size() < 3) {
+									if (distances1[0] < distances2[0]) {
+										group1.removeElement(elem);
+										j--;
+										continue middle;
+									}
+									else {
+										groups.remove(group2);
+										k--;
+									}
+								}
+								else {
+									if (distances1[1] < distances2[1]) {
+										group1.removeElement(elem);
+										j--;
+										continue middle;
+									}
+									else {
+										group2.removeElement(elem);
+									}
+								}					
+							}
+						}
+					}
+				}	
+			}
+		}
+		for (int i = 0; i < recordGroups.size(); i++) {
+			boolean found = false;
+			for(ArrayList<Double> lst: recordGroups.get(i).getSims()) {
+				if (lst.get(2) >= meta.getMatchingThreshold()) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				recordGroups.remove(i);
+				i--;				
+			}
+		}
+		finalVerification(groups);
+		recordGroups.addAll(groups);
+	}
+	
+	private void finalVerification(ArrayList<RecordGroup> groups) {
+		for (RecordGroup g: groups) {
+			while (g.getOutputSim() < meta.getMatchingThreshold()) {
+				TreeMap<Double, Double> toVerify = new TreeMap<Double, Double> ();
+				for (ArrayList<Double> lst: g.getSims()) {
+					if (lst.get(2) < meta.getMatchingThreshold()) {					
+						toVerify.put(lst.get(0), new Double(0));
+						toVerify.put(lst.get(1), new Double(0));
+					}
+				}
+				for (Double d: toVerify.keySet()) {
+					int counter = 0;
+					for (ArrayList<Double> lst: g.getSims()) {
+						if (lst.contains(d)) {
+							toVerify.put(d, toVerify.get(d) + lst.get(2));
+							counter++;
+						}
+					}
+					toVerify.put(d, toVerify.get(d) / counter);
+				}
+				double min = 1;
+				Double minIndex = new Double(0);
+				for (Double d: toVerify.keySet()) {
+					if (toVerify.get(d) < min) {
+						min = toVerify.get(d);
+						minIndex = d;
+					}
+				}
+				g.removeElement(minIndex);
+			}
+		}
 	}
 
-	private void writeOutput() throws KettleStepException, KettlePluginException {		
-		/*HashMap<Double, ArrayList<Double>> mapping = new HashMap<Double, ArrayList<Double>> ();
+	private void writeOutput() throws KettleStepException, KettlePluginException {				
+		HashMap<Double, ArrayList<Double>> mapping = new HashMap<Double, ArrayList<Double>> ();
 		while (recordGroups.size() > 0) {
+			if (recordGroups.get(0).getElements().size() < 2) {
+				recordGroups.remove(0);
+				continue;
+			}
+			Double outputSim = recordGroups.get(0).getOutputSim();
 			for (Double elem: recordGroups.get(0).getElements()) {
-				ArrayList<Double> temp = new ArrayList<Double> ();
-				temp.add(recordGroups.get(0).getId());
-				temp.add(recordGroups.get(0).getOutputSims().get(elem));
-				mapping.put(elem, temp);
+				mapping.put(elem, new ArrayList<Double> ());
+				mapping.get(elem).add(recordGroups.get(0).getId());
+				mapping.get(elem).add(outputSim);
 			}
 			recordGroups.remove(0);
 		}
@@ -318,15 +418,16 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			long group = i + 1;
 			Double outputSimilarity = null;
 
-			if (mapping.containsKey(index)) {
+			if (mapping.containsKey(index)) {				
 				group = mapping.get(index).get(0).longValue();
 				
-				outputSimilarity = mapping.get(index).get(1);
+				outputSimilarity = mapping.get(index).get(1);	
 				DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
 				symbols.setDecimalSeparator('.');
 				DecimalFormat df = new DecimalFormat("#.#", symbols);
 				df.setRoundingMode(RoundingMode.DOWN);
 				outputSimilarity = Double.parseDouble(df.format(outputSimilarity));
+				
 			}
 			
 			else if (meta.getRemoveSingletons())
@@ -337,6 +438,6 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			newRow = RowDataUtil.addRowData( newRow, getInputRowMeta().size(), newRowMD.getData() );
 						
 			putRow( data.getOutputRowMeta(), newRow);
-		}*/
+		}
 	}
 }
