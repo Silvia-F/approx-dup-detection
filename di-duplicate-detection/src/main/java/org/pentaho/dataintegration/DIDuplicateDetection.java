@@ -229,7 +229,8 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 			rowMeta.addValueMeta(ValueMetaFactory.createValueMeta( meta.getSimColumnName(), ValueMetaInterface.TYPE_NUMBER ));    
 			
 			Double outputSimilarity = null;
-			if (meta.getRemoveSingletons() && data.getGraph().get(i).findSet() == data.getGraph().get(i).findSet() &&
+			
+			if (meta.getRemoveSingletons() && data.getGraph().get(i) == data.getGraph().get(i).findSet() &&
 					data.getGraph().get(i).getChildren().size() == 0)
 				continue;
 			if (i + 1 != data.getGraph().get(i).findSet().getIndex()) {
