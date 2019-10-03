@@ -34,7 +34,7 @@
 	</p>
 
 	<p>
-		The step outputs two columns: The first column corresponds to the grouping of records. Each group contains the records that correspond to one real-world entity. The group identifier is the index of the first record of the group. The second column corresponds to the similarity between a record and the first element of its group. When a record is the first one of its group, the similarity value is null.
+		The step outputs two columns: The first column corresponds to the grouping of records. Each group contains the records that correspond to one real-world entity. The group identifier is the index of the first record of the group. The second column corresponds to the similarity between a record and the remaining elements of its group.
 	</p>
 
 	<h3> Options </h3>
@@ -74,7 +74,7 @@
 
 		<tr>
 			<td> Similarity Column Name </td>
-			<td> The name of the output column that contains the similarity between the first record of the group and the record in the row. </td>
+			<td> The name of the output column that contains the average similarity of the record in the row with the remaining elements of its group. </td>
 		</tr>
 
 		<tr>
