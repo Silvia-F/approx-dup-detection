@@ -57,6 +57,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private TableView wFields;
 	private Text wGroupColumnName;
 	private Text wSimColumnName;
+	private Button wRemoveDuplicates;	
 	private Button wRemoveSingletons;	
 	private Button wCancel;
 	private Button wOK;
@@ -331,10 +332,19 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 			}
 		} );
 		
+		Button wGetFields = new Button( group2, SWT.PUSH );
+		wGetFields.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.GetFields") );
+		
+		FormData fdGetFields = new FormDataBuilder()
+				.left( props.getMiddlePct(), 25 )
+				.top( wFields, Const.MARGIN )
+				.result();
+		wGetFields.setLayoutData( fdGetFields );
+		
 		
 		// Output Content
 		Group group3 = new Group( contentComposite, SWT.SHADOW_ETCHED_IN );
-		group3.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group3"));
+		group3.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.Group3") );
 		FormLayout group3Layout = new FormLayout();
 		group3Layout.marginWidth = Const.MARGIN;
 		group3Layout.marginHeight = Const.MARGIN;
@@ -390,6 +400,27 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wSimColumnName.setLayoutData( fdSimColumnName );
 		
+		Label wlRemoveDuplicates = new Label( group3, SWT.RIGHT );
+		wlRemoveDuplicates.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RemoveDuplicates.Label" ) );
+		props.setLook (wlRemoveDuplicates );
+		
+		FormData fdlRemoveDuplicates = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( wSimColumnName, 4 * Const.MARGIN )
+				.result();
+		wlRemoveDuplicates.setLayoutData( fdlRemoveDuplicates );
+		
+		wRemoveDuplicates = new Button(group3, SWT.CHECK | SWT.RIGHT);
+		props.setLook(wRemoveDuplicates);
+		
+		FormData fdRemoveDuplicates = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( wSimColumnName, 4 * Const.MARGIN )
+				.result();
+		wRemoveDuplicates.setLayoutData( fdRemoveDuplicates );
+		
 		Label wlRemoveSingletons = new Label(group3, SWT.RIGHT);
 		wlRemoveSingletons.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.RemoveSingletons.Label" ) );
 		props.setLook(wlRemoveSingletons);
@@ -397,7 +428,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		FormData fdlRemoveSingletons = new FormDataBuilder()
 				.left( 0, 0 )
 				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wSimColumnName, 4 * Const.MARGIN )
+				.top( wRemoveDuplicates, 4 * Const.MARGIN )
 				.result();
 		wlRemoveSingletons.setLayoutData( fdlRemoveSingletons );
 		
@@ -407,7 +438,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		FormData fdRemoveSingletons = new FormDataBuilder()
 				.left( props.getMiddlePct(), 0 )
 				.right( 100, -Const.MARGIN )
-				.top( wSimColumnName, 4 * Const.MARGIN )
+				.top( wRemoveDuplicates, 4 * Const.MARGIN )
 				.result();
 		wRemoveSingletons.setLayoutData( fdRemoveSingletons );
 		
@@ -419,7 +450,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.right(60, -Const.MARGIN)
 				.bottom()
 				.result();
-				wCancel.setLayoutData( fdCancel );
+		wCancel.setLayoutData( fdCancel );
 	
 		wOK = new Button( shell, SWT.PUSH );
 		wOK.setText( BaseMessages.getString( PKG, "System.Button.OK" ) );
