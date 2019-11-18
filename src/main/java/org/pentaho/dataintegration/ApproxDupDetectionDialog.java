@@ -667,7 +667,15 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		
 		wGroupColumnName.setText(meta.getGroupColumnName());
 		wSimColumnName.setText(meta.getSimColumnName());
-		wRemoveSingletons.setSelection(meta.getRemoveSingletons());
+		
+		if (meta.getRemoveDuplicates()) {
+			wRemoveDuplicates.setSelection(meta.getRemoveDuplicates());
+			wRemoveSingletons.setEnabled(false);
+		}
+		else if(meta.getRemoveSingletons()) {
+			wRemoveSingletons.setSelection(meta.getRemoveSingletons());
+			wRemoveDuplicates.setEnabled(false);
+		}
 	}
 
 	private void cancel() {
@@ -716,6 +724,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 		if (wSimColumnName.getText().length() > 0)
 			meta.setSimColumnName(wSimColumnName.getText());
 		meta.setRemoveSingletons(wRemoveSingletons.getSelection());
+		meta.setRemoveDuplicates(wRemoveDuplicates.getSelection());
 		dispose();
 	}
 }

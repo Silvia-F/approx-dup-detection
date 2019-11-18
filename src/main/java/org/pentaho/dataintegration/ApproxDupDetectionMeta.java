@@ -68,6 +68,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private String groupColumnName; // Name of the output column with approximate duplicate groups	
 	private String simColumnName; // Name of the output column with field similarity
 	private boolean removeSingletons; // If true, singleton approximate duplicate groups will be removed from the output
+	private boolean removeDuplicates; // If true, only the first record of each group will be added to the output
 	
 	
 	public ApproxDupDetectionMeta() {
@@ -107,6 +108,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		retval.append(XMLHandler.addTagValue("groupColumnName", groupColumnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("simColumnName", simColumnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("removeSingletons", String.valueOf(removeSingletons))).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("removeDuplicates", String.valueOf(removeDuplicates))).append(Const.CR);
 		
 		return retval.toString();
 	}		
@@ -152,6 +154,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		groupColumnName = XMLHandler.getTagValue(stepnode, "groupColumnName");
 		simColumnName = XMLHandler.getTagValue(stepnode, "simColumnName");
 		removeSingletons = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "removeSingletons"));
+		removeDuplicates = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "removeDuplicates"));
 	}
 	
 	public void setDefault() {
@@ -159,6 +162,7 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		groupColumnName = "Group";
 		simColumnName = "Similarity";
 		removeSingletons = false;
+		removeDuplicates = false;
 		allocate(0);		
 	}
 	
@@ -278,5 +282,13 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public boolean getRemoveSingletons() {
 		return removeSingletons;
+	}
+	
+	public void setRemoveDuplicates(boolean removeDuplicates) {
+		this.removeDuplicates = removeDuplicates;
+	}
+	
+	public boolean getRemoveDuplicates() {
+		return removeDuplicates;
 	}
 }

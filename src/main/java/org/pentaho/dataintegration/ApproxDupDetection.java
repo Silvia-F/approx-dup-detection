@@ -421,6 +421,9 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 			if (mapping.containsKey(index)) {				
 				group = mapping.get(index).get(0).longValue();
 				
+				if (meta.getRemoveDuplicates() && group != index)
+					continue;
+				
 				outputSimilarity = mapping.get(index).get(1);	
 				DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
 				symbols.setDecimalSeparator('.');
