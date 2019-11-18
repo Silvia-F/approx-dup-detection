@@ -57,6 +57,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 	private TableView wFields;
 	private Text wGroupColumnName;
 	private Text wSimColumnName;
+	private Button wGetFields;
 	private Button wRemoveDuplicates;	
 	private Button wRemoveSingletons;	
 	private Button wCancel;
@@ -332,7 +333,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 			}
 		} );
 		
-		Button wGetFields = new Button( group2, SWT.PUSH );
+		wGetFields = new Button( group2, SWT.PUSH );
 		wGetFields.setText( BaseMessages.getString( PKG, "ApproxDupDetectionDialog.GetFields") );
 		
 		FormData fdGetFields = new FormDataBuilder()
@@ -411,7 +412,7 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				.result();
 		wlRemoveDuplicates.setLayoutData( fdlRemoveDuplicates );
 		
-		wRemoveDuplicates = new Button(group3, SWT.CHECK | SWT.RIGHT);
+		wRemoveDuplicates = new Button(group3, SWT.CHECK | SWT.RIGHT);		
 		props.setLook(wRemoveDuplicates);
 		
 		FormData fdRemoveDuplicates = new FormDataBuilder()
@@ -461,7 +462,44 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				wOK.setLayoutData( fdOk );
 		
 	
-		//Listeners		
+		//Listeners	
+		SelectionListener selectedListener = new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				meta.setChanged();				
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				//Do Nothing
+			}	
+		};
+		wRemoveDuplicates.addSelectionListener( selectedListener );
+		wRemoveSingletons.addSelectionListener( selectedListener );
+		
+		SelectionAdapter lsRemove = new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+				if (wRemoveDuplicates.getSelection())
+					wRemoveSingletons.setEnabled(false);
+				else if (wRemoveSingletons.getSelection()) 
+					wRemoveDuplicates.setEnabled(false);
+				if (!wRemoveDuplicates.getSelection() && !wRemoveSingletons.getEnabled())
+					wRemoveSingletons.setEnabled(true);
+				if (!wRemoveSingletons.getSelection() && !wRemoveDuplicates.getEnabled())
+					wRemoveDuplicates.setEnabled(true);
+			}
+		};		
+		wRemoveDuplicates.addSelectionListener(lsRemove);
+		wRemoveSingletons.addSelectionListener(lsRemove);
+				
+		Listener lsGetFields = new Listener() {
+			public void handleEvent( Event e ) {
+				for (int i = 0; i < fields.size(); i++) {
+					wFields.table.getItem(i).setText(1, fields.get(i));
+				}
+			}
+		};
+		wGetFields.addListener( SWT.Selection, lsGetFields );
+				
 		lsCancel = new Listener() {
 			public void handleEvent( Event e ) {
 				cancel();
