@@ -510,10 +510,17 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 				// Verify that the fields table is correctly filled
 				boolean needsWarning = false;
 				String warning = "";
+				double total = 0;
 				for (int i = 0; i < wFields.getItemCount(); i++) {
 					String field = wFields.getItem(i, 1);
 					String measure = wFields.getItem(i, 2);
 					String weight = wFields.getItem(i, 3);
+					try {
+						total += Double.valueOf(weight);
+					}
+					catch (Exception ex) {
+						total += 0;
+					}
 					if (field.length() != 0 && (measure.length() == 0 || weight.length() == 0)) {
 						needsWarning = true;
 						break;
@@ -522,9 +529,12 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 						needsWarning = true;
 						break;
 					}
-				}
+				}				
 				if (needsWarning || wFields.nrNonEmpty() == 0) {
-					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message1"));
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message1" ));
+				}
+				if (total != 1) {
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message2" ));
 				}
 				
 				// Verify the matching threshold value falls within [0,1]
@@ -533,10 +543,10 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 					temp = Double.parseDouble(wMatchingThreshold.getText());
 				}
 				catch (Exception ex) {
-					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message2"));
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message3" ));
 				}
 				if (temp != null && (temp < 0 || temp > 1)) {
-					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message2"));
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message3" ));
 				}
 				if (warning.length() > 0) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
@@ -581,10 +591,10 @@ public class ApproxDupDetectionDialog extends BaseStepDialog implements StepDial
 					temp = Double.parseDouble(wMatchingThreshold.getText());
 				}
 				catch (Exception ex) {
-					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message2"));
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message3"));
 				}
 				if (temp != null && (temp < 0 || temp > 1)) {
-					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message2"));
+					warning = warning.concat(BaseMessages.getString( PKG, "ApproxDupDetectionDialog.MessageBox.Message3"));
 				}
 				if (warning.length() > 0) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
