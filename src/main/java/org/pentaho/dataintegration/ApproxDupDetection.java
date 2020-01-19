@@ -94,26 +94,16 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 		Object[] r = getRow(); // get row, set busy!
 		if ( r == null ) {			
 			// no more input to be expected...
+			recordGroups = new ArrayList<RecordGroup> ();
 			detectApproxDups();		
 			writeOutput();	
 			setOutputDone();
 			return false;
 		}
 			
-		if (first) {	
-			recordGroups = new ArrayList<RecordGroup> ();
+		if (first) {			
 			data.setOutputRowMeta(getInputRowMeta().clone());
 			meta.getFields(data.getOutputRowMeta(), getStepname(), null, null, this, repository, metaStore);
-
-			// Normalize weights
-			double total = 0;
-			for (double[] measure: meta.getMeasures()) {
-				total += measure[1];
-			}
-			for (int i = 0; i < meta.getMeasures().length; i++) {
-				meta.getConvertedMeasures()[i][0] = meta.getMeasures()[i][0];
-				meta.getConvertedMeasures()[i][1] = meta.getMeasures()[i][1] / total;
-			}
 			
 			// Prepare for cartesian product
 			data.getBlocks().put("", new ArrayList<Object>() );
@@ -189,59 +179,60 @@ public class ApproxDupDetection extends BaseStep implements StepInterface {
 				for (int j = i + 2; j < data.getBlocks().get(s).size(); j += 2) {
 					ArrayList<String> b = (ArrayList<String>)data.getBlocks().get(s).get(j); //Second record to compare
 					double similarity = 0;
+					
 					// Iterate through the fields that were chosen to perform the matching
-					for (int k = 0; k < meta.getConvertedMeasures().length; k++) { 
+					for (int k = 0; k < meta.getMeasures().length; k++) { 
 						String first = a.get(k) != null ? a.get(k) : "";
 						String second = b.get(k) != null ? b.get(k) : "";
 						if (first.length() + second.length() == 0) {
 							continue;
 						}
-						switch ((int)meta.getConvertedMeasures()[k][0]) {
+						switch ((int)meta.getMeasures()[k][0]) {
 							case(0):								
-								similarity += meta.getConvertedMeasures()[k][1] * (1 - StringUtils.getLevenshteinDistance(first, second) / 
+								similarity += meta.getMeasures()[k][1] * (1 - StringUtils.getLevenshteinDistance(first, second) / 
 										(double)Math.max(first.length(), first.length()));
 								break;
 							case(1):
-								similarity += meta.getConvertedMeasures()[k][1] * (1 - Utils.getDamerauLevenshteinDistance(first, second) /
+								similarity += meta.getMeasures()[k][1] * (1 - Utils.getDamerauLevenshteinDistance(first, second) /
 										(double)Math.max(first.length(), second.length()));
 								break;
 							case(2):								
-								similarity += meta.getConvertedMeasures()[k][1] * (1 - Math.abs(new NeedlemanWunsch().score(first, second)) /
+								similarity += meta.getMeasures()[k][1] * (1 - Math.abs(new NeedlemanWunsch().score(first, second)) /
 										(double)Math.max(first.length(), second.length()));
 								break;
 							case(3):
-								similarity += meta.getConvertedMeasures()[k][1] * new Jaro().score(first, second);
+								similarity += meta.getMeasures()[k][1] * new Jaro().score(first, second);
 								break;
 							case(4):
-								similarity += meta.getConvertedMeasures()[k][1] * new JaroWinkler().score(first, second);
+								similarity += meta.getMeasures()[k][1] * new JaroWinkler().score(first, second);
 								break;
 							case(5):
-								similarity += meta.getConvertedMeasures()[k][1] * LetterPairSimilarity.getSimiliarity(first, second);
+								similarity += meta.getMeasures()[k][1] * LetterPairSimilarity.getSimiliarity(first, second);
 								break;
 							//Starting here we only have phonetic measures. These only output 0 or 1 as similarity values.
 							case(6):
 								String metaphone1 = (new Metaphone()).metaphone(first);
 								String metaphone2 = (new Metaphone()).metaphone(second);
 								if (metaphone1.equals(metaphone2))
-									similarity += meta.getConvertedMeasures()[k][1];
+									similarity += meta.getMeasures()[k][1];
 								break;
 							case(7):
 								String doubleMetaphone1 = (new DoubleMetaphone()).doubleMetaphone(first);
 								String doubleMetaphone2 = (new DoubleMetaphone()).doubleMetaphone(second);
 								if (doubleMetaphone1.equals(doubleMetaphone2))
-									similarity += meta.getConvertedMeasures()[k][1];
+									similarity += meta.getMeasures()[k][1];
 								break;
 							case(8):
 								String soundex1 = (new Soundex()).encode(first);
 								String soundex2 = (new Soundex()).encode(second);
 								if (soundex1.equals(soundex2))
-									similarity += meta.getConvertedMeasures()[k][1];
+									similarity += meta.getMeasures()[k][1];
 								break;
 							case(9):
 								String refSoundex1 = (new RefinedSoundex()).encode(first);
 								String refSoundex2 = (new RefinedSoundex()).encode(second);
 								if (refSoundex1.equals(refSoundex2))
-									similarity += meta.getConvertedMeasures()[k][1];
+									similarity += meta.getMeasures()[k][1];
 								break;
 						}
 					}

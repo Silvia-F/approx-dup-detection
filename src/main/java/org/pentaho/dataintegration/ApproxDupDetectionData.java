@@ -39,7 +39,7 @@ public class ApproxDupDetectionData extends BaseStepData implements StepDataInte
 	private int rowIndex; // Keeps the index of the last processed row 
 	
 	// Blocks to partition records. The key is the value of grouping field and the list has record data needed for the calculations
-	protected Map<String, List<Object>> blocks; 
+	private Map<String, List<Object>> blocks; 
 
 	
 	/**

@@ -64,7 +64,6 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	private double matchingThreshold; // Matching threshold fot the total similarity
 	private ArrayList<String> matchFields; // Keeps which fields to match
 	private double[][] measures; // Keeps the weight of each field along with the similarity measure to use for each field
-	private double[][] convertedMeasures; //Keeps similar information to the measures matrix, but the weights are normalized
 	private String groupColumnName; // Name of the output column with approximate duplicate groups	
 	private String simColumnName; // Name of the output column with field similarity
 	private boolean removeSingletons; // If true, singleton approximate duplicate groups will be removed from the output
@@ -79,7 +78,6 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 		blockingAttributes = new ArrayList<String> ();
 		this.matchFields = new ArrayList<String> ();
 		this.measures = new double[nrFields][2];
-		this.convertedMeasures = new double[nrFields][2];
 	}
 	
 	public void loadXML( Node stepnode, List<DatabaseMeta> databases, IMetaStore metaStore ) throws KettleXMLException {
@@ -254,10 +252,6 @@ public class ApproxDupDetectionMeta extends BaseStepMeta implements StepMetaInte
 	
 	public void setMeasures(double[][] measures) {
 		this.measures = measures;
-	}
-
-	public double[][] getConvertedMeasures() {
-		return convertedMeasures;
 	}
 	
 	public void setGroupColumnName(String groupColumnName) {
